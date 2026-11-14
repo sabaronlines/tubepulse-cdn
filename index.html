@@ -37,7 +37,6 @@
             box-shadow: 0 10px 30px rgba(255, 42, 133, 0.15);
         }
 
-        /* Floating Background Particles Animation */
         @keyframes floatParticle {
             0% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
             50% { transform: translateY(-40px) translateX(20px) scale(1.1); opacity: 0.6; }
@@ -54,7 +53,6 @@
             animation: floatParticle 9s ease-in-out infinite;
         }
 
-        /* Animated Footer Wave */
         @keyframes waveMotion {
             0% { transform: translateX(0); }
             50% { transform: translateX(-25%); }
@@ -66,6 +64,7 @@
             animation: waveMotion 12s linear infinite;
         }
     </style>
+    <!-- Dynamic Header Scripts & Verification Meta Tags Injection from Admin Panel -->
     <script>
         const savedHeadScripts = localStorage.getItem('admin_header_ads');
         if(savedHeadScripts) { document.write(savedHeadScripts); }
@@ -93,7 +92,7 @@
             </div>
         </header>
 
-        <!-- Main Container (Fully Responsive across Mobile, Tablet, Laptop, iPad) -->
+        <!-- Main Container -->
         <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
             
             <!-- Hero Search Card -->
@@ -139,7 +138,7 @@
                     </div>
                 </div>
 
-                <!-- 2. Media Download Links Section -->
+                <!-- 2. Media Download Links Section (Proxy Streams) -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
                     <h3 class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
                     <div id="downloadsList" class="space-y-2.5"></div>
@@ -208,7 +207,7 @@
         </div>
     </footer>
 
-    <!-- Modals (Disclaimer, Privacy, Terms, Contact Support Card) -->
+    <!-- Modals -->
     <div id="disclaimerModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> Professional Disclaimer</h3>
@@ -296,7 +295,6 @@
         let rawTranscriptData = [];
         let currentVideoTitle = "media";
 
-        // Scroll Progress Bar Logic
         window.addEventListener('scroll', () => {
             const winScroll = document.documentElement.scrollTop;
             const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -316,7 +314,6 @@
             }
 
             const currentTheme = localStorage.getItem('admin_theme') || 'pink-neon';
-            // Theme setup for clean white background with pink neon
             document.body.className = `min-h-screen font-sans flex flex-col justify-between relative overflow-x-hidden theme-${currentTheme}`;
 
             const logoAnim = localStorage.getItem('admin_logo_anim') || 'pulse-neon';
