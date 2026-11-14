@@ -147,7 +147,7 @@
                 </div>
             </div>
 
-            <!-- Single-Page Results Flow (Thumbnail, Downloads, Transcript) -->
+            <!-- Single-Page Results Flow -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
                 <!-- 1. Video Thumbnail & Meta Card -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row gap-5 items-center shadow-md">
@@ -162,14 +162,24 @@
                     </div>
                 </div>
 
-                <!-- 2. Media Download Links Section (MP4 & MP3 Proxy Streams) -->
+                <!-- 2. Media Download Links Section -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
                     <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
                     <div id="downloadsList" class="space-y-2.5"></div>
                 </div>
 
-                <!-- 3. Transcript & Lyrics Section -->
-                <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
+                <!-- 3. Prominent "Get Transcript" Button in the Middle -->
+                <div class="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 p-6 rounded-3xl text-center shadow-md">
+                    <h3 class="text-sm font-extrabold text-gray-900 mb-2">Want Timestamped Lyrics & Transcript?</h3>
+                    <p class="text-xs text-gray-600 mb-4">Click below to fetch official captions or auto-detect speech from audio streams.</p>
+                    <button onclick="fetchTranscriptData()" id="getTranscriptBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-xs flex items-center justify-center space-x-2 mx-auto">
+                        <i class="fa-solid fa-closed-captioning"></i>
+                        <span id="txtGetTranscriptBtn">Get Transcript & Lyrics</span>
+                    </button>
+                </div>
+
+                <!-- 4. Transcript & Lyrics Container (Hidden until button is clicked) -->
+                <div id="transcriptSectionBox" class="hidden bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md space-y-3">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 mb-4 pb-3 gap-3">
                         <h3 id="txtTranscriptHeading" class="text-xs font-extrabold text-gray-800 uppercase tracking-wider"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Auto-Detected Transcript & Lyrics</h3>
                         <div class="flex items-center gap-2">
@@ -196,7 +206,7 @@
                 </div>
             </div>
 
-            <!-- Highlighted HOW TO USE Section (Placed Below Results & Search) -->
+            <!-- Highlighted HOW TO USE Section (Placed at the Bottom) -->
             <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-6 shadow-sm">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
@@ -212,7 +222,7 @@
                         <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to view matching results, select your preferred video, and extract streams.</span>
                     </div>
                     <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!</span>
+                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Download MP4 video, MP3 audio, or click 'Get Transcript' for synchronized lyrics in 1 click!</span>
                     </div>
                 </div>
             </div>
@@ -316,6 +326,7 @@
     <script>
         let rawTranscriptData = [];
         let currentVideoTitle = "media";
+        let currentSelectedVideoId = "";
         let allSearchResults = [];
         let displayedCount = 4;
 
@@ -328,8 +339,9 @@
                 howToUseTitle: "HOW TO USE",
                 step1: "Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.",
                 step2: "Click 'Search' to view matching results, select your preferred video, and extract streams.",
-                step3: "Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!",
+                step3: "Download MP4 video, MP3 audio, or click 'Get Transcript' for synchronized lyrics in 1 click!",
                 downloadHeading: "Media Download Links",
+                getTranscriptBtn: "Get Transcript & Lyrics",
                 transcriptHeading: "Auto-Detected Transcript & Lyrics",
                 timestampLabel: "Timestamped text / lyrics",
                 copyBtn: "Copy",
@@ -343,8 +355,9 @@
                 howToUseTitle: "कैसे उपयोग करें (HOW TO USE)",
                 step1: "सर्च बॉक्स में यूट्यूब वीडियो लिंक पेस्ट करें या गाने का नाम टाइप करें।",
                 step2: "मिलते-जुलते वीडियो परिणाम देखने के लिए 'Search' पर क्लिक करें और अपना पसंदीदा वीडियो चुनें।",
-                step3: "MP4 वीडियो, MP3 ऑडियो डाउनलोड करें या 1 क्लिक में ट्रांसक्रिप्ट कॉपी करें!",
+                step3: "MP4 वीडियो, MP3 ऑडियो डाउनलोड करें या सिंक्रनाइज़्ड लिरिक्स के लिए 'Get Transcript' पर क्लिक करें!",
                 downloadHeading: "मीडिया डाउनलोड लिंक",
+                getTranscriptBtn: "ट्रांसक्रिप्ट और लिरिक्स प्राप्त करें",
                 transcriptHeading: "ऑटो-डिटेक्टेड ट्रांसक्रिप्ट और लिरिक्स",
                 timestampLabel: "टाइमस्टैम्पेड टेक्स्ट / लिरिक्स",
                 copyBtn: "कॉपी करें",
@@ -358,8 +371,9 @@
                 howToUseTitle: "କିପରି ବ୍ୟବହାର କରିବେ (HOW TO USE)",
                 step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ ୟୁଟ୍ୟୁବ୍ ଭିଡିଓ ଲିଙ୍କ୍ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଲେଖନ୍ତୁ।",
                 step2: "ରେଜଲ୍ଟ ଦେଖିବା ପାଇଁ 'Search' କ୍ଲିକ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ପସନ୍ଦର ଭିଡିଓ ବାଛନ୍ତୁ।",
-                step3: "MP4 ଭିଡିଓ, MP3 ଅଡିଓ ଡାଉନଲୋଡ୍ କରନ୍ତୁ କିମ୍ବା ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ କପି କରନ୍ତୁ!",
+                step3: "MP4 ଭିଡିଓ, MP3 ଅଡିଓ ଡାଉନଲୋଡ୍ କରନ୍ତୁ କିମ୍ବା ଲିରିକ୍ସ ପାଇଁ 'Get Transcript' କ୍ଲିକ୍ କରନ୍ତୁ!",
                 downloadHeading: "ମିଡିଆ ଡାଉନଲୋଡ୍ ଲିଙ୍କ୍",
+                getTranscriptBtn: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ ପ୍ରାପ୍ତ କରନ୍ତୁ",
                 transcriptHeading: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ",
                 timestampLabel: "ସମୟ ସହିତ ଟେକ୍ସଟ୍ / ଲିରିକ୍ସ",
                 copyBtn: "କପି କରନ୍ତୁ",
@@ -373,8 +387,9 @@
                 howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
                 step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
                 step2: "ফলাফল দেখতে 'Search' এ ক্লিক করুন এবং আপনার পছন্দের ভিডিওটি নির্বাচন করুন।",
-                step3: "MP4 ভিডিও, MP3 অডিও ডাউনলোড করুন বা এক ক্লিকে ট্রান্সক্রিপ্ট কপি করুন!",
+                step3: "MP4 ভিডিও, MP3 অডিও ডাউনলোড করুন অথবা লিরিকসের জন্য 'Get Transcript' এ ক্লিক করুন!",
                 downloadHeading: "মিডিয়া ডাউনলোড লিঙ্ক",
+                getTranscriptBtn: "ট্রান্সক্রিপ্ট এবং লিরিকস পান",
                 transcriptHeading: "স্বয়ংক্রিয় ট্রান্সক্রিপ্ট এবং লিরিকস",
                 timestampLabel: "সময়ভিত্তিক টেক্সট / লিরিকস",
                 copyBtn: "কপি করুন",
@@ -394,6 +409,7 @@
             document.getElementById('txtStep2').innerText = t.step2;
             document.getElementById('txtStep3').innerText = t.step3;
             document.getElementById('txtDownloadHeading').innerHTML = `<i class="fa-solid fa-download mr-1"></i> ${t.downloadHeading}`;
+            document.getElementById('txtGetTranscriptBtn').innerText = t.getTranscriptBtn;
             document.getElementById('txtTranscriptHeading').innerHTML = `<i class="fa-solid fa-file-lines text-primary mr-1"></i> ${t.transcriptHeading}`;
             document.getElementById('txtTimestampLabel').innerText = t.timestampLabel;
             document.getElementById('btnCopy').innerHTML = `<i class="fa-solid fa-copy mr-1 text-primary"></i> ${t.copyBtn}`;
@@ -447,7 +463,6 @@
             e.target.reset();
         }
 
-        // Search flow with progress bar simulation & multi-result grid
         async function startSearch() {
             const query = document.getElementById('searchInput').value.trim();
             if(!query) { alert('कृपया YouTube URL या गाने का नाम दर्ज करें!'); return; }
@@ -482,7 +497,6 @@
                     if(data.results && data.results.length > 0) {
                         allSearchResults = data.results;
                         if(allSearchResults.length === 1) {
-                            // Direct select if only 1 result (or direct URL)
                             selectVideoToExtract(allSearchResults[0].video_id);
                         } else {
                             displayedCount = Math.min(4, allSearchResults.length);
@@ -532,9 +546,10 @@
         }
 
         async function selectVideoToExtract(videoId) {
+            currentSelectedVideoId = videoId;
             document.getElementById('selectionGridBox').classList.add('hidden');
             document.getElementById('loadingBox').classList.remove('hidden');
-            document.getElementById('loadingStatusText').innerText = "Preparing secure download streams & transcripts...";
+            document.getElementById('loadingStatusText').innerText = "Preparing secure download streams...";
             document.getElementById('progressBar').style.width = "50%";
             document.getElementById('timerText').innerHTML = "Extracting HD formats...";
 
@@ -549,10 +564,11 @@
                     document.getElementById('vidTitle').innerText = currentVideoTitle;
                     document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'Creator'}`;
                     document.getElementById('vidThumbnail').src = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-                    document.getElementById('vidLangBadge').innerText = `Detected: ${data.language || 'en'}`.toUpperCase();
+                    document.getElementById('vidLangBadge').innerText = `Ready to Download`.toUpperCase();
 
-                    rawTranscriptData = data.transcript || [];
-                    renderTranscriptUI(rawTranscriptData);
+                    // Reset transcript section until user clicks "Get Transcript"
+                    document.getElementById('transcriptSectionBox').classList.add('hidden');
+                    document.getElementById('transcriptOutput').innerHTML = '';
 
                     const dl = document.getElementById('downloadsList');
                     dl.innerHTML = '';
@@ -602,6 +618,32 @@
             }
         }
 
+        // Fetch Transcript on clicking the prominent middle button
+        async function fetchTranscriptData() {
+            if(!currentSelectedVideoId) return;
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('loadingStatusText').innerText = "Extracting transcript & auto-detecting lyrics from audio...";
+
+            const backend = getBackendUrl();
+            try {
+                const res = await fetch(`${backend}/api/transcript?video_id=` + currentSelectedVideoId);
+                const data = await res.json();
+                
+                document.getElementById('loadingBox').classList.add('hidden');
+                if(data.success && data.transcript) {
+                    rawTranscriptData = data.transcript;
+                    renderTranscriptUI(rawTranscriptData);
+                    document.getElementById('transcriptSectionBox').classList.remove('hidden');
+                    document.getElementById('transcriptSectionBox').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Transcript not available for this video.');
+                }
+            } catch(e) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                alert('Transcript Error: ' + e.message);
+            }
+        }
+
         function renderTranscriptUI(items) {
             const tc = document.getElementById('transcriptOutput');
             tc.innerHTML = '';
@@ -627,45 +669,7 @@
             const backend = getBackendUrl();
             const textLines = rawTranscriptData.map(i => i.text);
             
-            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('loadingBox').classList.add('hidden');
             document.getElementById('loadingStatusText').innerText = "Translating text...";
 
             try {
-                const res = await fetch(`${backend}/api/translate-batch`, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ texts: textLines, target: targetLang })
-                });
-                const result = await res.json();
-                document.getElementById('loadingBox').classList.add('hidden');
-                if(result.translated) {
-                    const translatedItems = rawTranscriptData.map((item, idx) => ({
-                        start: item.start,
-                        text: result.translated[idx] || item.text
-                    }));
-                    renderTranscriptUI(translatedItems);
-                }
-            } catch(e) {
-                document.getElementById('loadingBox').classList.add('hidden');
-                alert('Translation Error: ' + e.message);
-            }
-        }
-
-        function copyTranscript() {
-            const lines = Array.from(document.querySelectorAll('#transcriptOutput div')).map(d => d.innerText).join('\n');
-            navigator.clipboard.writeText(lines);
-            alert('ट्रांसक्रिप्ट क्लिपबोर्ड पर कॉपी हो गया!');
-        }
-
-        function downloadTxt() {
-            const lines = Array.from(document.querySelectorAll('#transcriptOutput div')).map(d => d.innerText).join('\n');
-            const blob = new Blob([lines], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'transcript.txt';
-            a.click();
-        }
-    </script>
-</body>
-</html>
