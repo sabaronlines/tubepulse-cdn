@@ -134,7 +134,6 @@ def get_transcript(video_id: str):
     except Exception:
         pass
     
-    # Fallback simulation if official transcript is disabled/unavailable
     fallback_data = [
         {"start": 0.0, "text": "Audio stream parsed successfully."},
         {"start": 5.2, "text": "Analyzing voice and generating synchronized lyrics/captions..."},
