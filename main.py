@@ -10,10 +10,8 @@ import urllib.parse
 import html
 import json
 import os
-import tempfile
-import subprocess
 
-app = FastAPI(title="TubePulse AI Full Backend Engine", version="6.0.0")
+app = FastAPI(title="TubePulse AI Full Backend Engine", version="7.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -31,7 +29,7 @@ COMMON_HEADERS = {
 
 @app.get("/")
 def read_root():
-    return {"status": "TubePulse AI Backend v6.0 is Live and Running at Full Capacity!"}
+    return {"status": "TubePulse AI Backend v7.0 is Live and Running at Full Capacity!"}
 
 def extract_video_id(url_or_query: str):
     if not url_or_query:
@@ -105,10 +103,17 @@ def search_youtube(q: str = Query(...)):
                 if not entry: continue
                 v_id = entry.get('id')
                 if not v_id or len(v_id) != 11: continue
+                v_title = entry.get('title')
+                v_uploader = entry.get('uploader') or entry.get('channel')
+                if not v_title or not v_uploader:
+                    m = fetch_verified_metadata(v_id)
+                    v_title = v_title or m["title"]
+                    v_uploader = v_uploader or m["uploader"]
+
                 results.append({
                     "video_id": v_id,
-                    "title": entry.get('title') or "Untitled Video",
-                    "uploader": entry.get('uploader') or entry.get('channel') or "YouTube Creator",
+                    "title": v_title or "Untitled Video",
+                    "uploader": v_uploader or "YouTube Creator",
                     "thumbnail": f"https://i.ytimg.com/vi/{v_id}/hqdefault.jpg"
                 })
     except Exception as e:
