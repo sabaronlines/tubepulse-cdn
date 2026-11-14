@@ -18,7 +18,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Root route for UptimeRobot 24/7 keep-alive check
 @app.get("/")
 def read_root():
     return {"status": "TubePulse AI Backend is Live and Running!"}
