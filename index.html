@@ -228,46 +228,84 @@
         </div>
     </footer>
 
-    <!-- Modals -->
+    <!-- AI Generated Professional Legal Modals & Support Card -->
     <div id="disclaimerModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> Professional Disclaimer</h3>
-            <p class="mb-3">TubePulse AI operates strictly as an independent web utility designed for educational, research, and personal review purposes.</p>
-            <button onclick="toggleModal('disclaimerModal')" class="mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 px-4 rounded-xl text-xs w-full shadow">Close Window</button>
+            <div class="space-y-3 leading-relaxed">
+                <p>TubePulse AI operates strictly as an independent web utility and media extraction platform designed for educational, research, personal review, and accessibility enhancements.</p>
+                <p><strong>Copyright Compliance:</strong> We do not host, store, or pirate any copyrighted audio or video files on our infrastructure. All media streams, metadata, and transcripts are dynamically retrieved from public YouTube URLs using public APIs and open-source parsing libraries.</p>
+                <p><strong>Limitation of Liability:</strong> Users assume full responsibility for complying with YouTube's Terms of Service, community guidelines, and regional copyright laws before downloading or redistributing any media content processed through this platform.</p>
+            </div>
+            <button onclick="toggleModal('disclaimerModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
     </div>
+
     <div id="privacyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-shield-halved text-primary mr-2"></i> Privacy Policy</h3>
-            <p class="mb-3">We maintain a strict zero-log policy regarding user search queries and downloaded file streams.</p>
-            <button onclick="toggleModal('privacyModal')" class="mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 px-4 rounded-xl text-xs w-full shadow">Close Window</button>
+            <div class="space-y-3 leading-relaxed">
+                <p>Your privacy is of paramount importance to TubePulse AI. We maintain a strict zero-log policy regarding user search queries, video URLs, and extracted file streams.</p>
+                <p><strong>Data Collection:</strong> We do not collect, store, or sell personal user identifiers, browsing habits, or IP addresses. All processing occurs securely in real-time.</p>
+                <p><strong>Third-Party Advertisements:</strong> Third-party ad networks integrated into this platform may utilize cookies or web beacons to display contextually relevant advertisements based on user interaction across the web.</p>
+            </div>
+            <button onclick="toggleModal('privacyModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
     </div>
+
     <div id="termsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-file-contract text-secondary mr-2"></i> Terms & Conditions</h3>
-            <p class="mb-3">Use this platform strictly in accordance with YouTube terms and regional copyright guidelines.</p>
-            <button onclick="toggleModal('termsModal')" class="mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 px-4 rounded-xl text-xs w-full shadow">Close Window</button>
+            <div class="space-y-3 leading-relaxed">
+                <p>By accessing and utilizing TubePulse AI, you agree to abide by the following terms:</p>
+                <p><strong>1. Acceptable Use:</strong> You agree not to use this platform for mass automated web scraping, commercial exploitation, copyright infringement, or malicious distributed activities.</p>
+                <p><strong>2. Service Availability:</strong> The platform is provided on an "as-is" and "as-available" basis. We reserve the right to modify, suspend, or terminate features or backend streaming nodes at any time without prior notice.</p>
+                <p><strong>3. Indemnification:</strong> You agree to indemnify and hold harmless TubePulse AI operators from any claims arising out of your improper use of the service.</p>
+            </div>
+            <button onclick="toggleModal('termsModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
     </div>
+
+    <!-- Contact Admin & Support Card Modal -->
     <div id="contactModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
                 <h3 class="font-bold text-sm text-gray-900 flex items-center"><i class="fa-solid fa-headset text-primary mr-2"></i> Contact Admin & Support</h3>
                 <button onclick="toggleModal('contactModal')" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
+
             <form onsubmit="submitSupportForm(event)" class="space-y-3">
-                <input type="text" id="supName" required placeholder="Your Name" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs">
-                <input type="email" id="supEmail" required placeholder="Your Email" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs">
-                <textarea id="supMessage" rows="3" required placeholder="Describe issue..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs"></textarea>
-                <input type="file" id="supFile" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-1.5 text-[11px]">
-                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 rounded-xl shadow text-xs">Send Message</button>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Your Full Name:</label>
+                    <input type="text" id="supName" required placeholder="Enter your name" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Your Email Address:</label>
+                    <input type="email" id="supEmail" required placeholder="name@example.com" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Describe Your Issue / Message:</label>
+                    <textarea id="supMessage" rows="3" required placeholder="Explain error or query..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Upload Error Screenshot (Optional):</label>
+                    <input type="file" id="supFile" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-500 text-[11px] file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-primary file:text-white hover:file:opacity-90">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition text-xs mt-2">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> Send Message to Admin
+                </button>
             </form>
-            <div class="mt-4 pt-3 border-t border-gray-100 text-center space-y-2">
-                <p class="text-[11px] text-gray-500 font-semibold">Join Communities:</p>
+
+            <div class="mt-6 pt-4 border-t border-gray-100 text-center space-y-2">
+                <p class="text-[11px] text-gray-500 font-semibold">Join Our Official Communities:</p>
                 <div class="flex justify-center gap-3">
-                    <a id="communityWhatsApp" href="https://whatsapp.com" target="_blank" class="bg-green-50 text-green-700 px-3 py-1.5 rounded-xl font-bold text-[11px]">WhatsApp</a>
-                    <a id="communityTelegram" href="https://telegram.org" target="_blank" class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-xl font-bold text-[11px]">Telegram</a>
+                    <a id="communityWhatsApp" href="https://whatsapp.com" target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-3 py-2 rounded-xl font-bold text-[11px] hover:bg-green-100 transition flex items-center">
+                        <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> WhatsApp
+                    </a>
+                    <a id="communityTelegram" href="https://telegram.org" target="_blank" class="bg-blue-50 text-blue-700 border border-blue-200 px-3 py-2 rounded-xl font-bold text-[11px] hover:bg-blue-100 transition flex items-center">
+                        <i class="fa-brands fa-telegram mr-1 text-sm"></i> Telegram
+                    </a>
                 </div>
             </div>
         </div>
@@ -338,7 +376,7 @@
                 howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
                 step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
                 step2: "ফলাফল দেখতে 'Search' এ ক্লিক করুন এবং আপনার পছন্দের ভিডিওটি নির্বাচন করুন।",
-                step3: "MP3, HD ভিডিও ডাউনলোড করুন অথবা লিরিকসের জন্য 'Get Transcript' এ ক্লিক করুন!",
+                step3: "MP4 ভিডিও, MP3 অডিও ডাউনলোড করুন অথবা লিরিকসের জন্য 'Get Transcript' এ ক্লিক করুন!",
                 downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ট্রান্সক্রিপ্ট এবং লিরিকস পান",
                 transcriptHeading: "স্বয়ংক্রিয় ট্রান্সক্রিপ্ট এবং লিরিকস",
@@ -421,7 +459,9 @@
             e.preventDefault();
             const name = document.getElementById('supName').value;
             const email = document.getElementById('supEmail').value;
-            alert(`Thank you, ${name}! Your request has been submitted.`);
+            const fileInput = document.getElementById('supFile');
+            let fileInfo = fileInput.files.length > 0 ? ` (Attached: ${fileInput.files[0].name})` : '';
+            alert(`Thank you, ${name}! Your support request has been submitted successfully.\nWe will contact you at ${email} shortly.${fileInfo}`);
             toggleModal('contactModal');
             e.target.reset();
         }
@@ -509,7 +549,6 @@
             renderVideoGrid();
         }
 
-        // Preparing Timer Workflow for Downloads
         function triggerPreparingFile(url, filename, fileType) {
             document.getElementById('loadingBox').classList.remove('hidden');
             const statusEl = document.getElementById('loadingStatusText');
@@ -530,7 +569,6 @@
                 statusEl.innerText = "File ready! Starting secure download...";
                 timerEl.innerHTML = `<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Success!</span>`;
                 
-                // Trigger download
                 const a = document.createElement('a');
                 a.href = url;
                 a.target = "_blank";
@@ -561,7 +599,6 @@
                 document.getElementById('loadingBox').classList.add('hidden');
                 if(data.video_id) {
                     currentVideoTitle = data.title || "YouTube Video";
-                    // Display actual Title and Channel Name correctly
                     document.getElementById('vidTitle').innerText = currentVideoTitle;
                     document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'YouTube Creator'}`;
                     document.getElementById('vidThumbnail').src = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
@@ -573,7 +610,6 @@
                     const dl = document.getElementById('downloadsList');
                     dl.innerHTML = '';
                     
-                    // Render MP4 Video Links with Workflow Timer
                     if(data.downloads && data.downloads.length > 0) {
                         data.downloads.forEach(d => {
                             const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${d.resolution}.${d.ext}`;
@@ -587,7 +623,6 @@
                         });
                     }
 
-                    // Render MP3 Audio Links (128kbps - 320kbps) with Workflow Timer
                     if(data.audio_downloads && data.audio_downloads.length > 0) {
                         data.audio_downloads.forEach(d => {
                             const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_audio.mp3`;
@@ -601,7 +636,6 @@
                         });
                     }
 
-                    // Thumbnail Download (HD Max Resolution)
                     const thumbUrl = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
                     const thumbFileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_thumbnail.jpg`;
                     const thumbProxy = `${backend}/api/download-proxy?url=${encodeURIComponent(thumbUrl)}&filename=${encodeURIComponent(thumbFileName)}`;
@@ -622,7 +656,6 @@
             }
         }
 
-        // Progressive Workflow for Transcript & Lyrics
         async function fetchTranscriptData() {
             if(!currentSelectedVideoId) return;
             document.getElementById('loadingBox').classList.remove('hidden');
@@ -657,7 +690,7 @@
                         document.getElementById('transcriptSectionBox').classList.remove('hidden');
                         document.getElementById('transcriptSectionBox').scrollIntoView({ behavior: 'smooth' });
                     } else {
-                        alert('Transcript not available for this video.');
+                        alert(data.error || 'Transcript not available for this video.');
                     }
                 }, 600);
             } catch(e) {
