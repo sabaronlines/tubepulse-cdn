@@ -18,6 +18,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Root route for UptimeRobot 24/7 keep-alive check
+@app.get("/")
+def read_root():
+    return {"status": "TubePulse AI Backend is Live and Running!"}
+
 def extract_video_id(url_or_query: str):
     if len(url_or_query) == 11 and not " " in url_or_query:
         return url_or_query
