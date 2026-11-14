@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TubePulse AI - Admin</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    :root { --primary: #ff2a85; --secondary: #ff65a3; }
+    body { background: #fcfcfd; color: #1a1a24; font-family: Inter, system-ui, sans-serif; min-height: 100vh; }
+    .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 1.5rem; padding: 1.5rem; box-shadow: 0 6px 20px rgba(0,0,0,.05); margin-bottom: 1.5rem; }
+    .title { font-weight: 800; font-size: .95rem; margin-bottom: .75rem; }
+    .label { display: block; font-size: .75rem; font-weight: 600; color: #4b5563; margin: .6rem 0 .3rem; }
+    .input { width: 100%; background: #f9fafb; border: 1px solid #d1d5db; border-radius: .9rem; padding: .65rem .9rem; font-size: .85rem; }
+    .input:focus { outline: none; border-color: var(--primary); background: #fff; }
+    textarea.input { min-height: 110px; font-family: monospace; }
+    .btn { background: linear-gradient(90deg, var(--primary), var(--secondary)); color: #fff; font-weight: 700; border: 0; border-radius: .9rem; padding: .7rem 1.1rem; font-size: .8rem; cursor: pointer; }
+    .btn:hover { opacity: .92; }
+    .btn-gray { background: #f3f4f6; color: #1f2937; border: 1px solid #d1d5db; }
+    .btn-red { background: #dc2626; }
+    .msg { font-size: .78rem; font-weight: 600; margin-top: .75rem; min-height: 1rem; }
+    .ok { color: #16a34a; }
+    .err { color: #dc2626; }
+    .hidden { display: none !important; }
+    .row { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: .9rem; }
+    .brand { background: linear-gradient(90deg, var(--primary), #a855f7); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 800; }
+</style>
+</head>
+<body>
+
+<header style="border-bottom:1px solid #e5e7eb;background:#fff;padding:1rem 1.25rem;display:flex;justify-content:space-between;align-items:center;">
+    <div class="brand" style="font-size:1.1rem;"><i class="fa-solid fa-shield-halved" style="color:var(--primary)"></i> TubePulse AI Admin</div>
+    <div style="display:flex;gap:.5rem;">
+        <a href="/app" class="btn btn-gray" style="text-decoration:none;">Site kholen</a>
+        <button id="logoutBtn" class="btn btn-red hidden">Logout</button>
+    </div>
+</header>
+
+<main style="max-width:720px;margin:0 auto;padding:1.5rem 1rem;">
+
+    <!-- Login -->
+    <section id="loginView" class="hidden">
+        <div class="card" style="max-width:420px;margin:2rem auto;">
+            <div class="title"><i class="fa-solid fa-lock" style="color:var(--primary)"></i> Admin Login</div>
+            <form id="loginForm">
+                <label class="label" for="loginEmail">Email</label>
+                <input class="input" id="loginEmail" type="email" required autocomplete="username">
+                <label class="label" for="loginPassword">Password</label>
+                <input class="input" id="loginPassword" type="password" required autocomplete="current-password">
+                <button class="btn" type="submit" style="margin-top:1rem;width:100%;">Login</button>
+                <p id="loginMsg" class="msg"></p>
+            </form>
+        </div>
+    </section>
+
+    <!-- Panel -->
+    <section id="panelView" class="hidden">
+
+        <div class="card">
+            <div class="title"><i class="fa-solid fa-sliders" style="color:var(--primary)"></i> Site settings</div>
+            <form id="settingsForm">
+                <label class="label" for="siteTitle">Site title</label>
+                <input class="input" id="siteTitle" maxlength="60" required>
+
+                <label class="label" for="accentColor">Accent color</label>
+                <input class="input" id="accentColor" type="color" style="height:44px;padding:.3rem;">
+
+                <label class="label" for="headerAd">Header ad script (sirf trusted ad network ka code)</label>
+                <textarea class="input" id="headerAd" maxlength="20000"></textarea>
+
+                <label class="label" for="waLink">WhatsApp community link (https://)</label>
+                <input class="input" id="waLink" maxlength="300" placeholder="https://chat.whatsapp.com/...">
+
+                <label class="label" for="tgLink">Telegram community link (https://)</label>
+                <input class="input" id="tgLink" maxlength="300" placeholder="https://t.me/...">
+
+                <div class="row"><button class="btn" type="submit">Settings save karein</button></div>
+                <p id="settingsMsg" class="msg"></p>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="title"><i class="fa-brands fa-youtube" style="color:#dc2626"></i> YouTube Data API key</div>
+            <p id="keyStatus" class="msg" style="margin-top:0;color:#374151;"></p>
+            <p style="font-size:.75rem;color:#6b7280;margin-top:.4rem;">Key sirf server par save hoti hai. Ye dobara poori nahi dikhai jaayegi.</p>
+            <form id="keyForm">
+                <label class="label" for="keyInput">Nayi API key paste karein</label>
+                <input class="input" id="keyInput" type="password" autocomplete="off" spellcheck="false" placeholder="AIza...">
+                <div class="row">
+                    <button class="btn" type="submit">Key save karein</button>
+                    <button class="btn btn-gray" type="button" id="testKeyBtn">Key test karein</button>
+                    <button class="btn btn-red" type="button" id="removeKeyBtn">Key hatayein</button>
+                </div>
+                <p id="keyMsg" class="msg"></p>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="title"><i class="fa-solid fa-user-shield" style="color:var(--primary)"></i> Admin login badlein</div>
+            <form id="credForm">
+                <label class="label" for="curPass">Current password</label>
+                <input class="input" id="curPass" type="password" required autocomplete="current-password">
+
+                <label class="label" for="newEmail">Naya email</label>
+                <input class="input" id="newEmail" type="email" required autocomplete="off">
+
+                <label class="label" for="newPass">Naya password (kam se kam 10, letter aur number)</label>
+                <input class="input" id="newPass" type="password" required minlength="10" autocomplete="new-password">
+
+                <div class="row"><button class="btn" type="submit">Credentials badlein</button></div>
+                <p id="credMsg" class="msg"></p>
+            </form>
+        </div>
+
+    </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+
+async function api(path, method = 'GET', body) {
+    const r = await fetch(path, {
+        method,
+        credentials: 'same-origin',
+        headers: body ? { 'Content-Type': 'application/json' } : {},
+        body: body ? JSON.stringify(body) : undefined,
+    });
+    let data = {};
+    try { data = await r.json(); } catch (_) {}
+    if (!r.ok) {
+        let msg = data.detail || `HTTP ${r.status}`;
+        if (Array.isArray(msg)) msg = msg.map(d => d.msg).join(', ');
+        throw new Error(msg);
+    }
+    return data;
+}
+
+function say(el, text, ok) {
+    el.textContent = text;
+    el.className = 'msg ' + (ok ? 'ok' : 'err');
+}
+
+function showView(name) {
+    $('loginView').classList.toggle('hidden', name !== 'login');
+    $('panelView').classList.toggle('hidden', name !== 'panel');
+    $('logoutBtn').classList.toggle('hidden', name !== 'panel');
+}
+
+async function loadPanel() {
+    const s = await api('/api/admin/settings');
+    $('siteTitle').value = s.site_title || '';
+    $('accentColor').value = s.accent_color || '#ff2a85';
+    $('headerAd').value = s.header_ad_script || '';
+    $('waLink').value = s.whatsapp_url || '';
+    $('tgLink').value = s.telegram_url || '';
+    $('keyStatus').textContent = s.youtube_key_set
+        ? `Key set hai: ${s.youtube_key_hint || '(env variable se)'}`
+        : 'Key set nahi hai. Search tab tak kaam nahi karega jab tak key add na ho.';
+    $('keyStatus').className = 'msg ' + (s.youtube_key_set ? 'ok' : 'err');
+    showView('panel');
+}
+
+async function init() {
+    try {
+        const me = await api('/api/admin/me');
+        if (me.authenticated) return loadPanel();
+    } catch (_) {}
+    showView('login');
+}
+
+$('loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        await api('/api/admin/login', 'POST', {
+            email: $('loginEmail').value.trim(),
+            password: $('loginPassword').value,
+        });
+        $('loginPassword').value = '';
+        say($('loginMsg'), '', true);
+        await loadPanel();
+    } catch (err) {
+        say($('loginMsg'), err.message, false);
+    }
+});
+
+$('logoutBtn').addEventListener('click', async () => {
+    await api('/api/admin/logout', 'POST').catch(() => {});
+    showView('login');
+});
+
+$('settingsForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        await api('/api/admin/settings', 'PUT', {
+            site_title: $('siteTitle').value.trim(),
+            accent_color: $('accentColor').value,
+            header_ad_script: $('headerAd').value,
+            whatsapp_url: $('waLink').value.trim(),
+            telegram_url: $('tgLink').value.trim(),
+        });
+        say($('settingsMsg'), 'Settings save ho gayi.', true);
+    } catch (err) {
+        say($('settingsMsg'), err.message, false);
+    }
+});
+
+$('keyForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        await api('/api/admin/youtube-key', 'POST', { key: $('keyInput').value.trim() });
+        $('keyInput').value = '';
+        say($('keyMsg'), 'Key save ho gayi.', true);
+        await loadPanel();
+    } catch (err) {
+        say($('keyMsg'), err.message, false);
+    }
+});
+
+$('testKeyBtn').addEventListener('click', async () => {
+    say($('keyMsg'), 'Test ho raha hai...', true);
+    try {
+        const r = await api('/api/admin/youtube-key/test', 'POST');
+        say($('keyMsg'), r.message, r.ok);
+    } catch (err) {
+        say($('keyMsg'), err.message, false);
+    }
+});
+
+$('removeKeyBtn').addEventListener('click', async () => {
+    if (!confirm('YouTube API key hata dein?')) return;
+    try {
+        await api('/api/admin/youtube-key', 'DELETE');
+        say($('keyMsg'), 'Key hata di gayi.', true);
+        await loadPanel();
+    } catch (err) {
+        say($('keyMsg'), err.message, false);
+    }
+});
+
+$('credForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        await api('/api/admin/change-credentials', 'POST', {
+            current_password: $('curPass').value,
+            new_email: $('newEmail').value.trim(),
+            new_password: $('newPass').value,
+        });
+        say($('credMsg'), 'Credentials badal gaye. Naye credentials se login karein.', true);
+        e.target.reset();
+        setTimeout(() => showView('login'), 1500);
+    } catch (err) {
+        say($('credMsg'), err.message, false);
+    }
+});
+
+init();
+</script>
+</body>
+          </html>
