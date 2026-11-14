@@ -36,7 +36,11 @@ WORK_DIR.mkdir(parents=True, exist_ok=True)
 
 SESSION_SECRET = os.getenv("SESSION_SECRET", "")
 if len(SESSION_SECRET) < 32:
-    raise RuntimeError("SESSION_SECRET environment variable set karein (kam se kam 32 characters).")
+    # Fallback: random secret banata hai. Restart par ye badlega, isliye admin
+    # ko dobara login karna padega. Stable rakhne ke liye Render Environment
+    # mein SESSION_SECRET set karein.
+    SESSION_SECRET = secrets.token_urlsafe(48)
+    print("WARNING: SESSION_SECRET set nahi tha, temporary secret use ho raha hai.")
 
 ENV_ADMIN_EMAIL = os.getenv("ADMIN_EMAIL", "").strip().lower()
 ENV_ADMIN_HASH = os.getenv("ADMIN_PASSWORD_HASH", "")
@@ -275,8 +279,7 @@ def admin_get_settings():
 
 @app.put("/api/admin/settings", dependencies=[Depends(require_admin)])
 def admin_update_settings(body: SiteSettingsIn):
-    data = body.model_dump()
-    update_settings(data)
+    update_settings(body.model_dump())
     return {"ok": True}
 
 
@@ -297,7 +300,6 @@ async def admin_test_youtube_key():
     key = get_youtube_key()
     if not key:
         return {"ok": False, "message": "Key set nahi hai."}
-    # YouTube ki ek public video ki info maangkar key check karte hain
     async with httpx.AsyncClient(timeout=15) as client:
         r = await client.get(f"{YT_API}/videos", params={"part": "id", "id": "dQw4w9WgXcQ", "key": key})
     if r.status_code == 200:
