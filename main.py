@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Body, HTTPException
+from fastapi import FastAPI, Body
 from fastapi.responses import StreamingResponse
 from fastapi.middleware.cors import CORSMiddleware
 from youtube_transcript_api import YouTubeTranscriptApi
@@ -7,7 +7,6 @@ import yt_dlp
 import re
 import httpx
 import urllib.parse
-import os
 
 app = FastAPI()
 
@@ -106,19 +105,18 @@ def extract_youtube_data(q: str):
                                 "raw_url": raw_url
                             })
                     elif f.get("acodec") != "none" and f.get("vcodec") == "none":
-                        abr = f.get("abr") or 192
+                        abr = f.get("abr") or 128
                         audio_links.append({
-                            "resolution": f"Audio MP3 ({abr}kbps High Quality)",
+                            "resolution": f"128kbps",
                             "ext": "mp3",
                             "raw_url": raw_url
                         })
             
             if not download_links:
-                download_links.append({"resolution": "HD 720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
-                download_links.append({"resolution": "Full HD 1080p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
+                download_links.append({"resolution": "360p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
+                download_links.append({"resolution": "720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
             if not audio_links:
-                audio_links.append({"resolution": "Audio MP3 (320kbps Studio Quality)", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
-                audio_links.append({"resolution": "Audio MP3 (128kbps Standard)", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
+                audio_links.append({"resolution": "128kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
 
             response_data["downloads"] = download_links[:4]
             response_data["audio_downloads"] = audio_links[:2]
@@ -127,12 +125,11 @@ def extract_youtube_data(q: str):
         response_data["title"] = "YouTube Video"
         response_data["uploader"] = "YouTube Creator"
         response_data["downloads"] = [
-            {"resolution": "HD 720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"},
-            {"resolution": "Full HD 1080p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
+            {"resolution": "360p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"},
+            {"resolution": "720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
         ]
         response_data["audio_downloads"] = [
-            {"resolution": "Audio MP3 (320kbps Studio Quality)", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"},
-            {"resolution": "Audio MP3 (128kbps Standard)", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
+            {"resolution": "128kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
         ]
         response_data["thumbnail"] = f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
 
@@ -140,7 +137,6 @@ def extract_youtube_data(q: str):
 
 @app.get("/api/transcript")
 def get_transcript(video_id: str):
-    # 1. Official YouTube Transcript API
     try:
         transcript_list = YouTubeTranscriptApi.list_transcripts(video_id)
         transcript = None
@@ -162,7 +158,6 @@ def get_transcript(video_id: str):
     except Exception:
         pass
     
-    # 2. Advanced Audio Metadata & Description / Subtitle fallback parser
     try:
         ydl_opts = {'quiet': True, 'skip_download': True}
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -170,22 +165,18 @@ def get_transcript(video_id: str):
             title = info.get('title', 'Media Stream')
             uploader = info.get('uploader', 'Creator')
             description = info.get('description', '')
-            
-            # Construct meaningful timestamped analysis from metadata & description
             lines = [l.strip() for l in description.split('\n') if len(l.strip()) > 5][:8]
             transcript_items = [{"start": 0.0, "text": f"Video Title: {title} | Channel: {uploader}"}]
-            
             time_counter = 5.0
             for line in lines:
                 transcript_items.append({"start": time_counter, "text": line})
                 time_counter += 6.5
-                
             if len(transcript_items) > 1:
                 return {"success": True, "language": "auto-extracted", "transcript": transcript_items}
-    except Exception as err:
-        print("Fallback extraction error:", err)
+    except Exception:
+        pass
 
-    return {"success": False, "error": "Could not extract captions or speech transcript for this video."}
+    return {"success": False, "error": "No transcript available for this video."}
 
 @app.get("/api/download-proxy")
 async def download_proxy(url: str, filename: str = "media.mp4"):
