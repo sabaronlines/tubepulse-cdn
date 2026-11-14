@@ -107,7 +107,7 @@ def extract_youtube_data(q: str):
                     elif f.get("acodec") != "none" and f.get("vcodec") == "none":
                         abr = f.get("abr") or 128
                         audio_links.append({
-                            "resolution": f"128kbps",
+                            "resolution": f"{abr}kbps" if abr else "128kbps",
                             "ext": "mp3",
                             "raw_url": raw_url
                         })
