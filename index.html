@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <!-- Loading & Progress State with Timer -->
+            <!-- Loading State -->
             <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-200 rounded-3xl p-6 mb-8 shadow-md">
                 <div class="inline-block animate-spin rounded-full h-10 w-10 border-3 border-primary border-t-transparent mb-3"></div>
                 <p id="loadingStatusText" class="text-xs font-semibold text-gray-700 mb-2">Connecting to secure CDN node...</p>
@@ -127,21 +127,23 @@
 
             <!-- Results Flow -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
-                <!-- Video Thumbnail & Real Metadata Card (Title & Channel Name) -->
-                <div class="bg-cardbg border border-gray-200 rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row gap-5 items-center shadow-md">
-                    <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-56 h-32 object-cover rounded-2xl border border-gray-200 shadow bg-gray-100">
-                    <div class="flex-1 w-full text-left">
-                        <div class="flex items-center gap-2 mb-2">
+                <!-- Video Thumbnail & Real Metadata Card (Uncut 16:9 Thumbnail Display) -->
+                <div class="bg-cardbg border border-gray-200 rounded-3xl p-4 sm:p-6 flex flex-col gap-4 items-center shadow-md">
+                    <div class="w-full max-w-lg aspect-video bg-gray-900 rounded-2xl overflow-hidden border border-gray-200 shadow-inner flex items-center justify-center">
+                        <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full h-full object-contain">
+                    </div>
+                    <div class="w-full text-left px-2">
+                        <div class="flex items-center gap-2 mb-1.5">
                             <span id="vidLangBadge" class="bg-primary/10 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">Ready to Convert</span>
                         </div>
-                        <h3 id="vidTitle" class="text-base sm:text-lg font-bold text-gray-900 line-clamp-2">Video Title</h3>
-                        <p id="vidUploader" class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1 text-primary"></i> Channel Name</p>
+                        <h3 id="vidTitle" class="text-base sm:text-lg font-bold text-gray-900 leading-snug">Video Title</h3>
+                        <p id="vidUploader" class="text-xs text-gray-600 font-medium mt-1"><i class="fa-solid fa-user-check text-primary mr-1"></i> Channel Name</p>
                     </div>
                 </div>
 
-                <!-- GET VIDEO DETAILS Section with Y2Mate-style Convert MP3 / Convert MP4 buttons -->
+                <!-- GET VIDEO DETAILS Section with Y2Mate-style Convert MP3 / Convert MP4 Buttons -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
-                    <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-file-arrow-down mr-1"></i> GET VIDEO DETAILS</h3>
+                    <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-4 uppercase tracking-wider"><i class="fa-solid fa-file-arrow-down mr-1"></i> GET VIDEO DETAILS</h3>
                     <div id="downloadsList" class="space-y-3"></div>
                 </div>
 
@@ -215,7 +217,7 @@
         </main>
     </div>
 
-    <!-- Y2Mate-style Preparing / Ready Modal Popup -->
+    <!-- Y2Mate-style Convert Workflow Modal (Preparing & Ready) -->
     <div id="convertModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-center relative shadow-2xl space-y-4">
             <div id="modalPreparingState">
@@ -260,14 +262,13 @@
         </div>
     </footer>
 
-    <!-- AI Generated Professional Legal Modals & Support Card -->
+    <!-- Legal Modals -->
     <div id="disclaimerModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> Professional Disclaimer</h3>
             <div class="space-y-3 leading-relaxed">
                 <p>TubePulse AI operates strictly as an independent web utility and media extraction platform designed for educational, research, personal review, and accessibility enhancements.</p>
                 <p><strong>Copyright Compliance:</strong> We do not host, store, or pirate any copyrighted audio or video files on our infrastructure. All media streams, metadata, and transcripts are dynamically retrieved from public YouTube URLs using public APIs and open-source parsing libraries.</p>
-                <p><strong>Limitation of Liability:</strong> Users assume full responsibility for complying with YouTube's Terms of Service, community guidelines, and regional copyright laws before downloading or redistributing any media content processed through this platform.</p>
             </div>
             <button onclick="toggleModal('disclaimerModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
@@ -279,7 +280,6 @@
             <div class="space-y-3 leading-relaxed">
                 <p>Your privacy is of paramount importance to TubePulse AI. We maintain a strict zero-log policy regarding user search queries, video URLs, and extracted file streams.</p>
                 <p><strong>Data Collection:</strong> We do not collect, store, or sell personal user identifiers, browsing habits, or IP addresses. All processing occurs securely in real-time.</p>
-                <p><strong>Third-Party Advertisements:</strong> Third-party ad networks integrated into this platform may utilize cookies or web beacons to display contextually relevant advertisements based on user interaction across the web.</p>
             </div>
             <button onclick="toggleModal('privacyModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
@@ -291,8 +291,6 @@
             <div class="space-y-3 leading-relaxed">
                 <p>By accessing and utilizing TubePulse AI, you agree to abide by the following terms:</p>
                 <p><strong>1. Acceptable Use:</strong> You agree not to use this platform for mass automated web scraping, commercial exploitation, copyright infringement, or malicious distributed activities.</p>
-                <p><strong>2. Service Availability:</strong> The platform is provided on an "as-is" and "as-available" basis. We reserve the right to modify, suspend, or terminate features or backend streaming nodes at any time without prior notice.</p>
-                <p><strong>3. Indemnification:</strong> You agree to indemnify and hold harmless TubePulse AI operators from any claims arising out of your improper use of the service.</p>
             </div>
             <button onclick="toggleModal('termsModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
@@ -581,7 +579,7 @@
             renderVideoGrid();
         }
 
-        // Y2Mate-style Convert workflow with Preparing Modal
+        // Y2Mate-style Convert Workflow Modal
         function triggerConvertModal(url, filename, fileType) {
             const modal = document.getElementById('convertModal');
             const prepState = document.getElementById('modalPreparingState');
@@ -633,7 +631,7 @@
                     currentThumbnailUrl = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
                     
                     document.getElementById('vidTitle').innerText = currentVideoTitle;
-                    document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'YouTube Creator'}`;
+                    document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user-check text-primary mr-1"></i> ${data.uploader || 'YouTube Creator'}`;
                     document.getElementById('vidThumbnail').src = currentThumbnailUrl;
                     document.getElementById('vidLangBadge').innerText = `Ready to Convert`.toUpperCase();
 
@@ -651,7 +649,7 @@
                             const div = document.createElement('div');
                             div.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-primary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm cursor-pointer";
                             div.onclick = () => triggerConvertModal(proxyUrl, fileName, `MP4 Video • ${d.resolution}`);
-                            div.innerHTML = `<span><i class="fa-solid fa-video text-primary mr-2"></i> MP4 Video: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="bg-primary text-white text-[11px] font-bold px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-rotate"></i> Convert MP4</span>`;
+                            div.innerHTML = `<span><i class="fa-solid fa-video text-primary mr-2"></i> MP4 Video: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="bg-primary text-white text-[11px] font-extrabold px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-rotate"></i> Convert MP4</span>`;
                             dl.appendChild(div);
                         });
                     }
@@ -664,7 +662,7 @@
                             const div = document.createElement('div');
                             div.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-green-500 p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm cursor-pointer";
                             div.onclick = () => triggerConvertModal(proxyUrl, fileName, `MP3 Audio • ${d.resolution}`);
-                            div.innerHTML = `<span><i class="fa-solid fa-music text-green-600 mr-2"></i> MP3 Audio: ${d.resolution}</span> <span class="bg-green-600 text-white text-[11px] font-bold px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-rotate"></i> Convert MP3</span>`;
+                            div.innerHTML = `<span><i class="fa-solid fa-music text-green-600 mr-2"></i> MP3 Audio: ${d.resolution}</span> <span class="bg-green-600 text-white text-[11px] font-extrabold px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-rotate"></i> Convert MP3</span>`;
                             dl.appendChild(div);
                         });
                     }
@@ -675,7 +673,7 @@
                     const thumbDiv = document.createElement('div');
                     thumbDiv.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-secondary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm cursor-pointer";
                     thumbDiv.onclick = () => triggerConvertModal(thumbProxy, thumbFileName, "HD Thumbnail • Max Resolution");
-                    thumbDiv.innerHTML = `<span><i class="fa-solid fa-image text-secondary mr-2"></i> Max Resolution HD Thumbnail</span> <span class="bg-secondary text-white text-[11px] font-bold px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-download"></i> Download</span>`;
+                    thumbDiv.innerHTML = `<span><i class="fa-solid fa-image text-secondary mr-2"></i> Max Resolution HD Thumbnail</span> <span class="bg-secondary text-white text-[11px] font-extrabold px-4 py-2 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-download"></i> Download</span>`;
                     dl.appendChild(thumbDiv);
 
                     document.getElementById('resultBox').classList.remove('hidden');
