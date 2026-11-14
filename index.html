@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="site-title-tag">TubePulse AI - YouTube Transcript & Media Downloader</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -18,7 +18,7 @@
                         customtext: '#1a1a24'
                     },
                     fontFamily: {
-                        sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', 'Noto Sans Bengali', 'sans-serif']
+                        sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', 'Noto Sans Bengali', 'Noto Sans Telugu', 'sans-serif']
                     }
                 }
             }
@@ -31,41 +31,23 @@
             --theme-secondary: #ff65a3;
             --theme-glow: rgba(255, 42, 133, 0.25);
         }
-
-        body {
-            background-color: #fcfcfd;
-            color: #1a1a24;
-        }
-
-        .neon-glow {
-            box-shadow: 0 10px 30px rgba(255, 42, 133, 0.15);
-        }
-
+        body { background-color: #fcfcfd; color: #1a1a24; }
+        .neon-glow { box-shadow: 0 10px 30px rgba(255, 42, 133, 0.15); }
         @keyframes floatParticle {
             0% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
             50% { transform: translateY(-40px) translateX(20px) scale(1.1); opacity: 0.6; }
             100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
         }
         .floating-blob {
-            position: absolute;
-            width: 350px;
-            height: 350px;
+            position: absolute; width: 350px; height: 350px;
             background: linear-gradient(135deg, rgba(255, 42, 133, 0.12), rgba(255, 101, 163, 0.15));
-            filter: blur(80px);
-            border-radius: 50%;
-            z-index: -1;
+            filter: blur(80px); border-radius: 50%; z-index: -1;
             animation: floatParticle 9s ease-in-out infinite;
         }
-
-        @keyframes waveMotion {
-            0% { transform: translateX(0); }
-            50% { transform: translateX(-25%); }
-            100% { transform: translateX(0); }
-        }
+        @keyframes waveMotion { 0% { transform: translateX(0); } 50% { transform: translateX(-25%); } 100% { transform: translateX(0); } }
         .wave-animation {
             background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 C150,90 350,-40 500,40 C650,120 900,10 1200,50 L1200,120 L0,120 Z" fill="%231a1a24"/></svg>') repeat-x;
-            background-size: 1200px 50px;
-            animation: waveMotion 12s linear infinite;
+            background-size: 1200px 50px; animation: waveMotion 12s linear infinite;
         }
     </style>
     <script>
@@ -75,10 +57,7 @@
 </head>
 <body class="min-h-screen font-sans flex flex-col justify-between relative overflow-x-hidden">
 
-    <!-- Scroll Progress Bar -->
     <div id="scrollProgress" class="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-primary to-secondary z-50 transition-all duration-100" style="width: 0%;"></div>
-
-    <!-- Background Floating Blobs -->
     <div class="floating-blob top-10 left-5"></div>
     <div class="floating-blob bottom-20 right-5" style="animation-delay: 4s;"></div>
 
@@ -93,33 +72,32 @@
                     <h1 id="brand-title" class="font-bold text-lg tracking-wide text-gray-900">TubePulse <span class="text-primary">AI</span></h1>
                 </div>
             </div>
-
-            <!-- Language Switcher Selector -->
+            <!-- Language Switcher (Default English) -->
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-globe text-primary text-xs"></i>
                 <select id="uiLangSelect" onchange="changeUILanguage(this.value)" class="bg-gray-50 text-xs font-semibold text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 focus:outline-none focus:border-primary shadow-sm">
-                    <option value="en">English</option>
+                    <option value="en">English (Default)</option>
                     <option value="hi">हिंदी (Hindi)</option>
                     <option value="or">ଓଡ଼ିଆ (Odia)</option>
                     <option value="bn">বাংলা (Bengali)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
                 </select>
             </div>
         </header>
 
-        <!-- Main Container -->
         <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
             
-            <!-- Hero Search Card with Original Layout Restored -->
+            <!-- Hero Search Card -->
             <div class="bg-cardbg border border-gray-200 p-6 sm:p-10 rounded-3xl shadow-xl neon-glow mb-10 text-center">
                 <h2 id="txtHeroTitle" class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 text-gray-900">YouTube Transcript & Downloader</h2>
-                <p id="txtHeroDesc" class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.</p>
+                <p id="txtHeroDesc" class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste YouTube URL or search song titles to extract lyrics & media streams instantly.</p>
 
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
                             <i class="fa-solid fa-link"></i>
                         </span>
-                        <input type="text" id="searchInput" onkeydown="if(event.key === 'Enter') startSearch()" placeholder="https://youtube.com/watch?v=... या गाने का नाम" class="w-full bg-gray-50 border border-gray-300 rounded-2xl pl-11 pr-4 py-4 text-sm text-gray-900 focus:outline-none focus:border-primary focus:bg-white transition shadow-inner">
+                        <input type="text" id="searchInput" onkeydown="if(event.key === 'Enter') startSearch()" placeholder="https://youtube.com/watch?v=... or song name" class="w-full bg-gray-50 border border-gray-300 rounded-2xl pl-11 pr-4 py-4 text-sm text-gray-900 focus:outline-none focus:border-primary focus:bg-white transition shadow-inner">
                     </div>
                     <button onclick="startSearch()" id="extractBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-bold px-8 py-4 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm shrink-0">
                         <i class="fa-solid fa-magnifying-glass"></i>
@@ -128,14 +106,14 @@
                 </div>
             </div>
 
-            <!-- Professional Loading & Progress Bar State -->
+            <!-- Loading & Progress State with Timer -->
             <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-200 rounded-3xl p-6 mb-8 shadow-md">
                 <div class="inline-block animate-spin rounded-full h-10 w-10 border-3 border-primary border-t-transparent mb-3"></div>
                 <p id="loadingStatusText" class="text-xs font-semibold text-gray-700 mb-2">Connecting to secure CDN node...</p>
                 <div class="w-full bg-gray-100 rounded-full h-2.5 max-w-xs mx-auto overflow-hidden border border-gray-200 mb-2">
                     <div id="progressBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-500" style="width: 25%;"></div>
                 </div>
-                <p id="timerText" class="text-[11px] text-gray-500">Please wait while we fetch and convert streams...</p>
+                <p id="timerText" class="text-[11px] text-gray-500">Preparing secure file... Please wait.</p>
             </div>
 
             <!-- Multi-Result Selection Grid Container -->
@@ -147,9 +125,9 @@
                 </div>
             </div>
 
-            <!-- Single-Page Results Flow -->
+            <!-- Results Flow -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
-                <!-- 1. Video Thumbnail & Meta Card -->
+                <!-- Video Thumbnail & Real Metadata Card (Title & Channel Name) -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row gap-5 items-center shadow-md">
                     <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-56 h-32 object-cover rounded-2xl border border-gray-200 shadow bg-gray-100">
                     <div class="flex-1 w-full text-left">
@@ -157,17 +135,17 @@
                             <span id="vidLangBadge" class="bg-primary/10 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">Ready to Download</span>
                         </div>
                         <h3 id="vidTitle" class="text-base sm:text-lg font-bold text-gray-900 line-clamp-2">Video Title</h3>
-                        <p id="vidUploader" class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1 text-primary"></i> Creator</p>
+                        <p id="vidUploader" class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1 text-primary"></i> Channel Name</p>
                     </div>
                 </div>
 
-                <!-- 2. Media Download Links Section -->
+                <!-- GET VIDEO DETAILS Section -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
-                    <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
+                    <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-file-arrow-down mr-1"></i> GET VIDEO DETAILS</h3>
                     <div id="downloadsList" class="space-y-2.5"></div>
                 </div>
 
-                <!-- 3. Prominent "Get Transcript" Button in the Middle -->
+                <!-- Prominent Get Transcript Button -->
                 <div class="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 p-6 rounded-3xl text-center shadow-md">
                     <h3 class="text-sm font-extrabold text-gray-900 mb-2">Want Timestamped Lyrics & Transcript?</h3>
                     <p class="text-xs text-gray-600 mb-4">Click below to fetch official captions or auto-detect speech from audio streams.</p>
@@ -177,7 +155,7 @@
                     </button>
                 </div>
 
-                <!-- 4. Transcript & Lyrics Container -->
+                <!-- Transcript Section Box -->
                 <div id="transcriptSectionBox" class="hidden bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md space-y-3">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 mb-4 pb-3 gap-3">
                         <h3 id="txtTranscriptHeading" class="text-xs font-extrabold text-gray-800 uppercase tracking-wider"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Auto-Detected Transcript & Lyrics</h3>
@@ -188,6 +166,7 @@
                                 <option value="hi">Hindi (हिंदी)</option>
                                 <option value="or">Odia (ଓଡ଼ିଆ)</option>
                                 <option value="bn">Bengali (বাংলা)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
                             </select>
                         </div>
                     </div>
@@ -205,7 +184,15 @@
                 </div>
             </div>
 
-            <!-- Highlighted HOW TO USE Section (Placed at the Bottom) -->
+            <!-- AD SLOT INTEGRATION (Placed Right Above HOW TO USE) -->
+            <div class="bg-white border border-dashed border-gray-300 rounded-3xl p-4 mb-6 text-center shadow-sm">
+                <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1 font-bold">Advertisement / Sponsored Slot</p>
+                <div class="w-full py-4 bg-gray-50 rounded-2xl text-xs text-gray-500">
+                    <i class="fa-solid fa-rectangle-ad mr-1 text-primary"></i> Ad Banner Slot (Managed via Admin Panel)
+                </div>
+            </div>
+
+            <!-- How To Use Section at Bottom -->
             <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-6 shadow-sm">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
@@ -215,20 +202,19 @@
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-700">
                     <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 1:</strong> <span id="txtStep1">Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.</span>
+                        <strong class="text-primary block mb-1">Step 1:</strong> <span id="txtStep1">Paste YouTube video link or type song title in the search box.</span>
                     </div>
                     <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to view matching results, select your preferred video, and extract streams.</span>
+                        <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to view matching results and select your preferred video.</span>
                     </div>
                     <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Download MP4 video, MP3 audio, or click 'Get Transcript' for synchronized lyrics in 1 click!</span>
+                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Get MP3, HD Video, or click 'Get Transcript' for synchronized lyrics instantly!</span>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Animated Footer with Wave -->
     <footer class="bg-[#1a1a24] text-gray-300 pt-8 pb-6 px-4 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-4 wave-animation opacity-30"></div>
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-xs relative z-10">
@@ -298,14 +284,14 @@
         const translations = {
             en: {
                 heroTitle: "YouTube Transcript & Downloader",
-                heroDesc: "Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.",
+                heroDesc: "Paste YouTube URL or search song titles to extract lyrics & media streams instantly.",
                 searchPlaceholder: "https://youtube.com/watch?v=... or song name",
                 searchBtn: "Search",
                 howToUseTitle: "HOW TO USE",
-                step1: "Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.",
-                step2: "Click 'Search' to view matching results, select your preferred video, and extract streams.",
-                step3: "Download MP4 video, MP3 audio, or click 'Get Transcript' for synchronized lyrics in 1 click!",
-                downloadHeading: "Media Download Links",
+                step1: "Paste YouTube video link or type song title in the search box.",
+                step2: "Click 'Search' to view matching results and select your preferred video.",
+                step3: "Get MP3, HD Video, or click 'Get Transcript' for synchronized lyrics instantly!",
+                downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "Get Transcript & Lyrics",
                 transcriptHeading: "Auto-Detected Transcript & Lyrics",
                 timestampLabel: "Timestamped text / lyrics",
@@ -314,14 +300,14 @@
             },
             hi: {
                 heroTitle: "यूट्यूब ट्रांसक्रिप्ट और डाउनलोडर",
-                heroDesc: "यूट्यूब यूआरएल पेस्ट करें या गाने का नाम खोजें (ओडिया, हिंदी, अंग्रेजी, बंगाली) और तुरंत लिरिक्स और मीडिया डाउनलोड करें।",
+                heroDesc: "यूट्यूब यूआरएल पेस्ट करें या गाने का नाम खोजें और तुरंत लिरिक्स और मीडिया डाउनलोड करें।",
                 searchPlaceholder: "https://youtube.com/watch?v=... या गाने का नाम",
                 searchBtn: "Search",
                 howToUseTitle: "कैसे उपयोग करें (HOW TO USE)",
                 step1: "सर्च बॉक्स में यूट्यूब वीडियो लिंक पेस्ट करें या गाने का नाम टाइप करें।",
                 step2: "मिलते-जुलते वीडियो परिणाम देखने के लिए 'Search' पर क्लिक करें और अपना पसंदीदा वीडियो चुनें।",
-                step3: "MP4 वीडियो, MP3 ऑडियो डाउनलोड करें या सिंक्रनाइज़्ड लिरिक्स के लिए 'Get Transcript' पर क्लिक करें!",
-                downloadHeading: "मीडिया डाउनलोड लिंक",
+                step3: "MP3, HD वीडियो डाउनलोड करें या सिंक्रनाइज़्ड लिरिक्स के लिए 'Get Transcript' पर क्लिक करें!",
+                downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ट्रांसक्रिप्ट और लिरिक्स प्राप्त करें",
                 transcriptHeading: "ऑटो-डिटेक्टेड ट्रांसक्रिप्ट और लिरिक्स",
                 timestampLabel: "टाइमस्टैम्पेड टेक्स्ट / लिरिक्स",
@@ -330,14 +316,14 @@
             },
             or: {
                 heroTitle: "ୟୁଟ୍ୟୁବ୍ ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଡାଉନଲୋଡର୍",
-                heroDesc: "ୟୁଟ୍ୟୁବ୍ ଲିଙ୍କ୍ ଦିଅନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଖୋଜନ୍ତୁ (ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ) ଏବଂ ତବ୍‌କ୍ଷଣାତ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ।",
+                heroDesc: "ୟୁଟ୍ୟୁବ୍ ଲିଙ୍କ୍ ଦିଅନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଖୋଜନ୍ତୁ ଏବଂ ତବ୍‌କ୍ଷଣାତ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ।",
                 searchPlaceholder: "https://youtube.com/watch?v=... କିମ୍ବା ଗୀତର ନାମ",
                 searchBtn: "Search",
                 howToUseTitle: "କିପରି ବ୍ୟବହାର କରିବେ (HOW TO USE)",
                 step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ ୟୁଟ୍ୟୁବ୍ ଭିଡିଓ ଲିଙ୍କ୍ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଲେଖନ୍ତୁ।",
                 step2: "ରେଜଲ୍ଟ ଦେଖିବା ପାଇଁ 'Search' କ୍ଲିକ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ପସନ୍ଦର ଭିଡିଓ ବାଛନ୍ତୁ।",
-                step3: "MP4 ଭିଡିଓ, MP3 ଅଡିଓ ଡାଉନଲୋଡ୍ କରନ୍ତୁ କିମ୍ବା ଲିରିକ୍ସ ପାଇଁ 'Get Transcript' କ୍ଲିକ୍ କରନ୍ତୁ!",
-                downloadHeading: "ମିଡିଆ ଡାଉନଲୋଡ୍ ଲିଙ୍କ୍",
+                step3: "MP3, HD ଭିଡିଓ ଡାଉନଲୋଡ୍ କରନ୍ତୁ କିମ୍ବା ଲିରିକ୍ସ ପାଇଁ 'Get Transcript' କ୍ଲିକ୍ କରନ୍ତୁ!",
+                downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ ପ୍ରାପ୍ତ କରନ୍ତୁ",
                 transcriptHeading: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ",
                 timestampLabel: "ସମୟ ସହିତ ଟେକ୍ସଟ୍ / ଲିରିକ୍ସ",
@@ -346,19 +332,35 @@
             },
             bn: {
                 heroTitle: "ইউটিউব ট্রান্সক্রিপ্ট এবং ডাউনলোডার",
-                heroDesc: "ইউটিউব ইউআরএল পেস্ট করুন বা গানের নাম খুঁজুন (বাংলা, হিন্দি, ইংরেজি) এবং তাৎক্ষণিকভাবে লিরিকস ও মিডিয়া ডাউনলোড করুন।",
+                heroDesc: "ইউটিউব ইউআরএল পেস্ট করুন বা গানের নাম খুঁজুন এবং তাৎক্ষণিকভাবে লিরিকস ও মিডিয়া ডাউনলোড করুন।",
                 searchPlaceholder: "https://youtube.com/watch?v=... বা গানের নাম",
                 searchBtn: "Search",
                 howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
                 step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
                 step2: "ফলাফল দেখতে 'Search' এ ক্লিক করুন এবং আপনার পছন্দের ভিডিওটি নির্বাচন করুন।",
-                step3: "MP4 ভিডিও, MP3 অডিও ডাউনলোড করুন অথবা লিরিকসের জন্য 'Get Transcript' এ ক্লিক করুন!",
-                downloadHeading: "মিডিয়া ডাউনলোড লিঙ্ক",
+                step3: "MP3, HD ভিডিও ডাউনলোড করুন অথবা লিরিকসের জন্য 'Get Transcript' এ ক্লিক করুন!",
+                downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ট্রান্সক্রিপ্ট এবং লিরিকস পান",
                 transcriptHeading: "স্বয়ংক্রিয় ট্রান্সক্রিপ্ট এবং লিরিকস",
                 timestampLabel: "সময়ভিত্তিক টেক্সট / লিরিকস",
                 copyBtn: "কপি করুন",
                 saveTxtBtn: "TXT সেভ করুন"
+            },
+            te: {
+                heroTitle: "యూట్యూబ్ ట్రాన్స్‌క్రిప్ట్ & డౌన్‌లోడర్",
+                heroDesc: "యూట్యూబ్ లింక్ లేదా పాట పేరును ఇన్‌పుట్ చేసి తక్షణమే లిరిక్స్ మరియు మీడియాను పొందండి.",
+                searchPlaceholder: "https://youtube.com/watch?v=... లేదా పాట పేరు",
+                searchBtn: "Search",
+                howToUseTitle: "ఎలా ఉపయోగించాలి (HOW TO USE)",
+                step1: "సెర్చ్ బాక్స్‌లో యూట్యూబ్ వీడియో లింక్ లేదా పాట పేరును టైప్ చేయండి.",
+                step2: "ఫలితాలను చూడటానికి 'Search' పై క్లిక్ చేసి మీకు నచ్చిన వీడియోను ఎంచుకోండి.",
+                step3: "MP3, HD వీడియో లేదా సింక్రోనైజ్డ్ లిరిక్స్ కోసం 'Get Transcript' పై క్లిక్ చేయండి!",
+                downloadHeading: "GET VIDEO DETAILS",
+                getTranscriptBtn: "ట్రాన్స్‌క్రిప్ట్ & లిరిక్స్ పొందండి",
+                transcriptHeading: "ఆటో-డిటెక్టెడ్ ట్రాన్స్‌క్రిప్ట్ & లిరిక్స్",
+                timestampLabel: "సమయంతో కూడిన టెక్స్ట్ / లిరిక్స్",
+                copyBtn: "కాపీ",
+                saveTxtBtn: "TXT సేవ్"
             }
         };
 
@@ -373,7 +375,7 @@
             document.getElementById('txtStep1').innerText = t.step1;
             document.getElementById('txtStep2').innerText = t.step2;
             document.getElementById('txtStep3').innerText = t.step3;
-            document.getElementById('txtDownloadHeading').innerHTML = `<i class="fa-solid fa-download mr-1"></i> ${t.downloadHeading}`;
+            document.getElementById('txtDownloadHeading').innerHTML = `<i class="fa-solid fa-file-arrow-down mr-1"></i> ${t.downloadHeading}`;
             document.getElementById('txtGetTranscriptBtn').innerText = t.getTranscriptBtn;
             document.getElementById('txtTranscriptHeading').innerHTML = `<i class="fa-solid fa-file-lines text-primary mr-1"></i> ${t.transcriptHeading}`;
             document.getElementById('txtTimestampLabel').innerText = t.timestampLabel;
@@ -397,6 +399,7 @@
             const wa = localStorage.getItem('admin_whatsapp');
             if(wa) { document.getElementById('communityWhatsApp').href = `https://wa.me/${wa}`; }
 
+            // Default language set to English ('en')
             const savedLang = localStorage.getItem('site_ui_lang') || 'en';
             document.getElementById('uiLangSelect').value = savedLang;
             changeUILanguage(savedLang);
@@ -425,7 +428,7 @@
 
         async function startSearch() {
             const query = document.getElementById('searchInput').value.trim();
-            if(!query) { alert('कृपया YouTube URL या गाने का नाम दर्ज करें!'); return; }
+            if(!query) { alert('Please enter a YouTube URL or song name!'); return; }
 
             document.getElementById('resultBox').classList.add('hidden');
             document.getElementById('selectionGridBox').classList.add('hidden');
@@ -437,6 +440,7 @@
 
             statusEl.innerText = "Connecting to secure CDN node...";
             progressEl.style.width = "30%";
+            timerEl.innerText = "Preparing search query...";
 
             const backend = getBackendUrl();
             try {
@@ -464,12 +468,12 @@
                             document.getElementById('selectionGridBox').classList.remove('hidden');
                         }
                     } else {
-                        alert('कोई वीडियो नहीं मिला। कृपया दूसरा कीवर्ड दें।');
+                        alert('No video found. Please try another keyword.');
                     }
                 }, 600);
             } catch (err) {
                 document.getElementById('loadingBox').classList.add('hidden');
-                alert('कनेक्शन एरर: ' + err.message);
+                alert('Connection Error: ' + err.message);
             }
         }
 
@@ -505,13 +509,49 @@
             renderVideoGrid();
         }
 
+        // Preparing Timer Workflow for Downloads
+        function triggerPreparingFile(url, filename, fileType) {
+            document.getElementById('loadingBox').classList.remove('hidden');
+            const statusEl = document.getElementById('loadingStatusText');
+            const progressEl = document.getElementById('progressBar');
+            const timerEl = document.getElementById('timerText');
+
+            statusEl.innerText = `Preparing ${fileType} file (Converting & Optimizing)...`;
+            progressEl.style.width = "40%";
+            timerEl.innerText = "Estimated time remaining: 3s";
+
+            setTimeout(() => {
+                progressEl.style.width = "80%";
+                timerEl.innerText = "Estimated time remaining: 1s";
+            }, 600);
+
+            setTimeout(() => {
+                progressEl.style.width = "100%";
+                statusEl.innerText = "File ready! Starting secure download...";
+                timerEl.innerHTML = `<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Success!</span>`;
+                
+                // Trigger download
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = "_blank";
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                setTimeout(() => {
+                    document.getElementById('loadingBox').classList.add('hidden');
+                }, 1000);
+            }, 1200);
+        }
+
         async function selectVideoToExtract(videoId) {
             currentSelectedVideoId = videoId;
             document.getElementById('selectionGridBox').classList.add('hidden');
             document.getElementById('loadingBox').classList.remove('hidden');
-            document.getElementById('loadingStatusText').innerText = "Preparing secure download streams...";
+            document.getElementById('loadingStatusText').innerText = "Preparing secure download streams & metadata...";
             document.getElementById('progressBar').style.width = "50%";
-            document.getElementById('timerText').innerHTML = "Extracting HD formats...";
+            document.getElementById('timerText').innerHTML = "Extracting HD formats & resolutions (360p - 1080p)...";
 
             const backend = getBackendUrl();
             try {
@@ -520,9 +560,10 @@
                 
                 document.getElementById('loadingBox').classList.add('hidden');
                 if(data.video_id) {
-                    currentVideoTitle = data.title || "video";
+                    currentVideoTitle = data.title || "YouTube Video";
+                    // Display actual Title and Channel Name correctly
                     document.getElementById('vidTitle').innerText = currentVideoTitle;
-                    document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'Creator'}`;
+                    document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'YouTube Creator'}`;
                     document.getElementById('vidThumbnail').src = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
                     document.getElementById('vidLangBadge').innerText = `Ready to Download`.toUpperCase();
 
@@ -532,70 +573,93 @@
                     const dl = document.getElementById('downloadsList');
                     dl.innerHTML = '';
                     
+                    // Render MP4 Video Links with Workflow Timer
                     if(data.downloads && data.downloads.length > 0) {
                         data.downloads.forEach(d => {
                             const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${d.resolution}.${d.ext}`;
                             const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
                             
-                            const a = document.createElement('a');
-                            a.href = proxyUrl;
-                            a.target = "_blank";
-                            a.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-primary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
-                            a.innerHTML = `<span><i class="fa-solid fa-video text-primary mr-2"></i> MP4 Video: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="text-primary font-extrabold"><i class="fa-solid fa-download"></i> Download</span>`;
-                            dl.appendChild(a);
+                            const div = document.createElement('div');
+                            div.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-primary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm cursor-pointer";
+                            div.onclick = () => triggerPreparingFile(proxyUrl, fileName, `MP4 Video (${d.resolution})`);
+                            div.innerHTML = `<span><i class="fa-solid fa-video text-primary mr-2"></i> Get Video: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="text-primary font-extrabold"><i class="fa-solid fa-download"></i> Get Video</span>`;
+                            dl.appendChild(div);
                         });
                     }
 
+                    // Render MP3 Audio Links (128kbps - 320kbps) with Workflow Timer
                     if(data.audio_downloads && data.audio_downloads.length > 0) {
                         data.audio_downloads.forEach(d => {
-                            const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_audio.${d.ext}`;
+                            const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_audio.mp3`;
                             const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
 
-                            const a = document.createElement('a');
-                            a.href = proxyUrl;
-                            a.target = "_blank";
-                            a.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-green-500 p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
-                            a.innerHTML = `<span><i class="fa-solid fa-music text-green-600 mr-2"></i> MP3 Audio Extraction (${d.ext.toUpperCase()})</span> <span class="text-green-600 font-extrabold"><i class="fa-solid fa-download"></i> Download Audio</span>`;
-                            dl.appendChild(a);
+                            const div = document.createElement('div');
+                            div.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-green-500 p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm cursor-pointer";
+                            div.onclick = () => triggerPreparingFile(proxyUrl, fileName, `MP3 Audio (${d.resolution})`);
+                            div.innerHTML = `<span><i class="fa-solid fa-music text-green-600 mr-2"></i> Get MP3: ${d.resolution}</span> <span class="text-green-600 font-extrabold"><i class="fa-solid fa-download"></i> Get MP3</span>`;
+                            dl.appendChild(div);
                         });
                     }
 
-                    const thumbA = document.createElement('a');
-                    thumbA.href = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-                    thumbA.target = "_blank";
-                    thumbA.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-secondary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
-                    thumbA.innerHTML = `<span><i class="fa-solid fa-image text-secondary mr-2"></i> Max Resolution Thumbnail</span> <span class="text-secondary font-extrabold"><i class="fa-solid fa-download"></i> Download Image</span>`;
-                    dl.appendChild(thumbA);
+                    // Thumbnail Download (HD Max Resolution)
+                    const thumbUrl = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                    const thumbFileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_thumbnail.jpg`;
+                    const thumbProxy = `${backend}/api/download-proxy?url=${encodeURIComponent(thumbUrl)}&filename=${encodeURIComponent(thumbFileName)}`;
+                    
+                    const thumbDiv = document.createElement('div');
+                    thumbDiv.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-secondary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm cursor-pointer";
+                    thumbDiv.onclick = () => triggerPreparingFile(thumbProxy, thumbFileName, "HD Thumbnail");
+                    thumbDiv.innerHTML = `<span><i class="fa-solid fa-image text-secondary mr-2"></i> Max Resolution HD Thumbnail</span> <span class="text-secondary font-extrabold"><i class="fa-solid fa-download"></i> Download</span>`;
+                    dl.appendChild(thumbDiv);
 
                     document.getElementById('resultBox').classList.remove('hidden');
                 } else {
-                    alert('डाटा फेच करने में समस्या आई। कृपया पुनः प्रयास करें।');
+                    alert('Error fetching video data. Please try again.');
                 }
             } catch (err) {
                 document.getElementById('loadingBox').classList.add('hidden');
-                alert('कनेक्शन एरर: ' + err.message);
+                alert('Connection Error: ' + err.message);
             }
         }
 
+        // Progressive Workflow for Transcript & Lyrics
         async function fetchTranscriptData() {
             if(!currentSelectedVideoId) return;
             document.getElementById('loadingBox').classList.remove('hidden');
-            document.getElementById('loadingStatusText').innerText = "Extracting transcript & auto-detecting lyrics from audio...";
+            
+            const statusEl = document.getElementById('loadingStatusText');
+            const progressEl = document.getElementById('progressBar');
+            const timerEl = document.getElementById('timerText');
+
+            statusEl.innerText = "Step 1/3: Extracting audio track & inspecting streams...";
+            progressEl.style.width = "33%";
+            timerEl.innerText = "Processing speech-to-text conversion...";
 
             const backend = getBackendUrl();
             try {
+                await new Promise(r => setTimeout(r, 800));
+                statusEl.innerText = "Step 2/3: Analyzing vocals & rhythm signatures...";
+                progressEl.style.width = "66%";
+
                 const res = await fetch(`${backend}/api/transcript?video_id=` + currentSelectedVideoId);
                 const data = await res.json();
                 
-                document.getElementById('loadingBox').classList.add('hidden');
-                if(data.success && data.transcript) {
-                    rawTranscriptData = data.transcript;
-                    renderTranscriptUI(rawTranscriptData);
-                    document.getElementById('transcriptSectionBox').classList.remove('hidden');
-                    document.getElementById('transcriptSectionBox').scrollIntoView({ behavior: 'smooth' });
-                } else {
-                    alert('Transcript not available for this video.');
-                }
+                await new Promise(r => setTimeout(r, 800));
+                progressEl.style.width = "100%";
+                statusEl.innerText = "Step 3/3: Generating synchronized timestamped lyrics... Complete!";
+                timerEl.innerHTML = `<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Ready!</span>`;
+
+                setTimeout(() => {
+                    document.getElementById('loadingBox').classList.add('hidden');
+                    if(data.success && data.transcript) {
+                        rawTranscriptData = data.transcript;
+                        renderTranscriptUI(rawTranscriptData);
+                        document.getElementById('transcriptSectionBox').classList.remove('hidden');
+                        document.getElementById('transcriptSectionBox').scrollIntoView({ behavior: 'smooth' });
+                    } else {
+                        alert('Transcript not available for this video.');
+                    }
+                }, 600);
             } catch(e) {
                 document.getElementById('loadingBox').classList.add('hidden');
                 alert('Transcript Error: ' + e.message);
@@ -617,7 +681,7 @@
                     tc.appendChild(div);
                 });
             } else {
-                tc.innerHTML = `<p class="text-gray-400 italic">इस वीडियो के लिए ट्रांसक्रिप्ट उपलब्ध नहीं है।</p>`;
+                tc.innerHTML = `<p class="text-gray-400 italic">No transcript available for this video.</p>`;
             }
         }
 
@@ -627,7 +691,7 @@
             const backend = getBackendUrl();
             const textLines = rawTranscriptData.map(i => i.text);
             
-            document.getElementById('loadingBox').classList.add('hidden');
+            document.getElementById('loadingBox').classList.remove('hidden');
             document.getElementById('loadingStatusText').innerText = "Translating text...";
 
             try {
@@ -654,7 +718,7 @@
         function copyTranscript() {
             const lines = Array.from(document.querySelectorAll('#transcriptOutput div')).map(d => d.innerText).join('\n');
             navigator.clipboard.writeText(lines);
-            alert('ट्रांसक्रिप्ट क्लिपबोर्ड पर कॉपी हो गया!');
+            alert('Transcript copied to clipboard!');
         }
 
         function downloadTxt() {
