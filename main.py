@@ -7,6 +7,8 @@ import yt_dlp
 import re
 import httpx
 import urllib.parse
+import os
+import speech_recognition as sr
 
 app = FastAPI()
 
@@ -39,14 +41,15 @@ def search_youtube(q: str):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             try:
                 info = ydl.extract_info(f"https://www.youtube.com/watch?v={vid}", download=False)
+                channel_name = info.get('uploader') or info.get('channel') or info.get('uploader_id') or 'YouTube Creator'
                 return {"results": [{
                     "video_id": vid,
                     "title": info.get('title', 'YouTube Video'),
-                    "uploader": info.get('uploader', 'YouTube Creator'),
+                    "uploader": channel_name,
                     "thumbnail": f"https://img.youtube.com/vi/{vid}/maxresdefault.jpg"
                 }]}
             except:
-                return {"results": [{"video_id": vid, "title": "YouTube Video", "uploader": "Creator", "thumbnail": f"https://img.youtube.com/vi/{vid}/hqdefault.jpg"}]}
+                return {"results": [{"video_id": vid, "title": "YouTube Video", "uploader": "YouTube Creator", "thumbnail": f"https://img.youtube.com/vi/{vid}/hqdefault.jpg"}]}
     
     ydl_opts = {'quiet': True, 'extract_flat': True}
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -57,10 +60,11 @@ def search_youtube(q: str):
             for entry in entries:
                 v_id = entry.get('id')
                 if v_id:
+                    ch_name = entry.get('uploader') or entry.get('channel') or 'YouTube Creator'
                     results.append({
                         "video_id": v_id,
                         "title": entry.get('title', 'Unknown Title'),
-                        "uploader": entry.get('uploader') or entry.get('channel', 'Creator'),
+                        "uploader": ch_name,
                         "thumbnail": f"https://img.youtube.com/vi/{v_id}/hqdefault.jpg"
                     })
             return {"results": results}
@@ -77,7 +81,8 @@ def extract_youtube_data(q: str):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(f"https://www.youtube.com/watch?v={video_id}", download=False)
             title = info.get("title", "YouTube Video")
-            uploader = info.get("uploader", "YouTube Creator")
+            uploader = info.get("uploader") or info.get("channel") or info.get("uploader_id") or "YouTube Creator"
+            
             response_data["title"] = title
             response_data["uploader"] = uploader
             response_data["duration"] = info.get("duration_string")
@@ -92,7 +97,6 @@ def extract_youtube_data(q: str):
                 if f.get("url"):
                     raw_url = f.get("url")
                     ext = f.get("ext", "mp4")
-                    # Video resolution formatting (360p, 480p, 720p, 1080p HD)
                     if ext in ["mp4", "webm", "m4a"] and f.get("resolution") and f.get("vcodec") != "none":
                         res = f.get("resolution")
                         if res not in seen_res:
@@ -102,7 +106,6 @@ def extract_youtube_data(q: str):
                                 "ext": ext,
                                 "raw_url": raw_url
                             })
-                    # Audio formatting (128kbps to 320kbps support)
                     elif f.get("acodec") != "none" and f.get("vcodec") == "none":
                         abr = f.get("abr") or 128
                         audio_links.append({
@@ -159,13 +162,7 @@ def get_transcript(video_id: str):
     except Exception:
         pass
     
-    fallback_data = [
-        {"start": 0.0, "text": "[Music Intro & Vocal Analysis Initiated]"},
-        {"start": 4.5, "text": "Detecting audio frequency, rhythm, and song structure..."},
-        {"start": 10.2, "text": "Extracting lyrics and speech patterns from media stream..."},
-        {"start": 18.0, "text": "Synchronized timestamp generation completed successfully via AI pipeline."}
-    ]
-    return {"success": True, "language": "auto", "transcript": fallback_data}
+    return {"success": False, "error": "No transcript available for this video."}
 
 @app.get("/api/download-proxy")
 async def download_proxy(url: str, filename: str = "media.mp4"):
