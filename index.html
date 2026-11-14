@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title-tag">TubePulse AI - CDN & Translator</title>
+    <title id="site-title-tag">TubePulse AI - Professional Media Extractor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -11,8 +11,8 @@
             theme: {
                 extend: {
                     colors: {
-                        primary: 'var(--color-primary)',
-                        secondary: 'var(--color-secondary)',
+                        primary: '#ff2a85',
+                        secondary: '#9d4edd',
                         darkbg: '#0a0a0f',
                         cardbg: '#13131a'
                     }
@@ -22,20 +22,8 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --color-primary: #ff2a85;
-            --color-secondary: #9d4edd;
-        }
-        body.theme-cyberpunk {
-            --color-primary: #00ff66;
-            --color-secondary: #00b4d8;
-        }
-        body.theme-electric {
-            --color-primary: #3a86ff;
-            --color-secondary: #8338ec;
-        }
         .neon-glow {
-            box-shadow: 0 0 25px rgba(255, 42, 133, 0.3);
+            box-shadow: 0 0 25px rgba(255, 42, 133, 0.25);
         }
     </style>
     <div id="dynamic-head-scripts"></div>
@@ -43,96 +31,87 @@
 <body class="bg-darkbg text-white min-h-screen font-sans selection:bg-primary selection:text-white flex flex-col justify-between">
 
     <div>
-        <!-- Header -->
-        <header class="border-b border-gray-800 bg-cardbg/80 backdrop-blur sticky top-0 z-50 px-4 py-3 flex justify-between items-center">
+        <!-- Professional Header -->
+        <header class="border-b border-gray-800/80 bg-cardbg/90 backdrop-blur sticky top-0 z-50 px-4 sm:px-8 py-3.5 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-xl neon-glow">
+                <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-base neon-glow">
                     <i class="fa-solid fa-play"></i>
                 </div>
                 <div>
-                    <h1 id="brand-title" class="font-bold text-lg tracking-wide">TubePulse <span class="text-primary">AI</span></h1>
-                    <p class="text-xs text-gray-400">Multi-Language CDN Node</p>
+                    <h1 id="brand-title" class="font-bold text-base tracking-wide">TubePulse <span class="text-primary">AI</span></h1>
                 </div>
             </div>
 
             <div class="flex items-center space-x-2">
-                <button onclick="toggleModal('guideModal')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-lg text-xs font-semibold border border-gray-700 transition">
+                <button onclick="toggleModal('guideModal')" class="bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-700/60 transition">
                     <i class="fa-solid fa-circle-question mr-1 text-primary"></i> Guide
                 </button>
-                <select id="theme-switcher" onchange="changeTheme(this.value)" class="bg-gray-800 text-xs text-gray-200 px-2 py-2 rounded-lg border border-gray-700 focus:outline-none">
-                    <option value="pink">🔥 Pink Neon</option>
-                    <option value="cyberpunk">🟢 Cyberpunk</option>
-                    <option value="electric">⚡ Electric</option>
-                </select>
-                <button onclick="toggleModal('adminModal')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-2 rounded-lg text-xs font-semibold border border-gray-700 transition">
+                <button onclick="toggleModal('adminModal')" class="bg-gray-800/80 hover:bg-gray-700 text-gray-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-700/60 transition">
                     <i class="fa-solid fa-gear mr-1"></i> Admin
                 </button>
             </div>
         </header>
 
         <!-- Main Container -->
-        <main class="max-w-4xl mx-auto px-4 py-8">
+        <main class="max-w-3xl mx-auto px-4 py-8">
 
-            <div id="ad-slot-header" class="my-4 text-center"></div>
+            <div id="ad-slot-header" class="my-3 text-center"></div>
 
-            <!-- Search / URL Input Box -->
-            <div class="bg-cardbg border border-gray-800 p-6 rounded-2xl shadow-xl neon-glow mb-8">
-                <label class="block text-sm font-medium text-gray-300 mb-2">YouTube URL या Song/Video Title सर्च करें:</label>
+            <!-- Hero Search Card -->
+            <div class="bg-cardbg border border-gray-800/80 p-6 sm:p-8 rounded-2xl shadow-2xl neon-glow mb-8">
+                <div class="text-center mb-6">
+                    <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight mb-1">YouTube Transcript & Downloader</h2>
+                    <p class="text-xs text-gray-400">paste URL or search song titles to extract lyrics, transcripts & media streams instantly.</p>
+                </div>
+
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
                         <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
-                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <i class="fa-solid fa-link"></i>
                         </span>
-                        <input type="text" id="searchInput" placeholder="https://youtube.com/watch?v=... या गाने का नाम" class="w-full bg-gray-900 border border-gray-700 rounded-xl pl-11 pr-4 py-3 text-sm text-white focus:outline-none focus:border-primary transition">
+                        <input type="text" id="searchInput" placeholder="https://youtube.com/watch?v=... या गाने का नाम" class="w-full bg-gray-900 border border-gray-700/80 rounded-xl pl-11 pr-4 py-3.5 text-sm text-white focus:outline-none focus:border-primary transition">
                     </div>
-                    <button onclick="extractDataWithTimer()" id="extractBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2">
+                    <button onclick="extractData()" id="extractBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-semibold px-6 py-3.5 rounded-xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm">
                         <i class="fa-solid fa-bolt"></i>
-                        <span>Extract & Translate</span>
+                        <span>Extract</span>
                     </button>
-                </div>
-                <div class="mt-3 flex items-center justify-between text-xs text-gray-500">
-                    <span>Backend API: <input type="text" id="backendUrl" value="https://tubepulse-backend.onrender.com" class="bg-gray-900 text-gray-300 px-2 py-1 rounded border border-gray-800 ml-1 w-48"></span>
-                    <span class="text-green-400"><i class="fa-solid fa-circle text-[8px] mr-1"></i> Live Node</span>
                 </div>
             </div>
 
-            <!-- Professional Timer Loading State -->
-            <div id="loadingBox" class="hidden text-center py-12 bg-cardbg border border-gray-800 rounded-2xl p-6">
-                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent mb-4"></div>
-                <h3 id="timerStatusText" class="text-sm font-bold text-white">Connecting to secure CDN node...</h3>
-                <div class="w-full bg-gray-900 rounded-full h-2.5 max-w-md mx-auto mt-4 overflow-hidden border border-gray-800">
-                    <div id="progressBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
-                </div>
-                <p id="timerCountdown" class="text-xs text-gray-400 mt-2">Estimated time remaining: <span id="secCount">12</span>s</p>
+            <!-- Professional Clean Loading State -->
+            <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-800/80 rounded-2xl p-6">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-3 border-primary border-t-transparent mb-3"></div>
+                <p id="loadingStatusText" class="text-xs font-medium text-gray-300">Processing media streams & subtitles...</p>
             </div>
 
             <!-- Results Section -->
             <div id="resultBox" class="hidden space-y-6">
-                <div class="bg-cardbg border border-gray-800 rounded-2xl p-5 flex flex-col md:flex-row gap-5 items-center">
-                    <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full md:w-56 h-32 object-cover rounded-xl border border-gray-700">
+                <!-- Video Meta Card -->
+                <div class="bg-cardbg border border-gray-800/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center">
+                    <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-48 h-28 object-cover rounded-xl border border-gray-700/60">
                     <div class="flex-1 w-full">
-                        <div class="flex items-center gap-2">
-                            <span id="vidLangBadge" class="bg-primary/20 text-primary text-[10px] font-bold px-2.5 py-1 rounded-full uppercase">Detected: EN</span>
-                            <span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-0.5 rounded">Multi-Lang Ready</span>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span id="vidLangBadge" class="bg-primary/20 text-primary text-[10px] font-bold px-2 py-0.5 rounded uppercase">Detected: EN</span>
+                            <span class="bg-green-500/20 text-green-400 text-[10px] font-bold px-2 py-0.5 rounded">Ready</span>
                         </div>
-                        <h2 id="vidTitle" class="text-lg font-bold text-white mt-2 line-clamp-2">Video Title</h2>
-                        <p id="vidUploader" class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-user mr-1"></i> Creator Name</p>
+                        <h3 id="vidTitle" class="text-base font-bold text-white line-clamp-2">Video Title</h3>
+                        <p id="vidUploader" class="text-xs text-gray-400 mt-1"><i class="fa-solid fa-user mr-1"></i> Creator</p>
                     </div>
                 </div>
 
-                <div id="ad-slot-middle" class="my-4 text-center"></div>
+                <div id="ad-slot-middle" class="my-3 text-center"></div>
 
-                <!-- Tabs -->
-                <div class="bg-cardbg border border-gray-800 rounded-2xl p-6">
+                <!-- Tabs & Content Box -->
+                <div class="bg-cardbg border border-gray-800/80 rounded-2xl p-5 sm:p-6">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-800 mb-4 pb-3 gap-3">
                         <div class="flex space-x-4">
-                            <button onclick="switchTab('transcript')" id="tabTranscriptBtn" class="text-sm font-bold text-primary border-b-2 border-primary pb-2">Transcript & Lyrics</button>
-                            <button onclick="switchTab('downloads')" id="tabDownloadBtn" class="text-sm font-semibold text-gray-400 pb-2 hover:text-white">CDN Downloads</button>
+                            <button onclick="switchTab('transcript')" id="tabTranscriptBtn" class="text-xs sm:text-sm font-bold text-primary border-b-2 border-primary pb-2">Transcript & Lyrics</button>
+                            <button onclick="switchTab('downloads')" id="tabDownloadBtn" class="text-xs sm:text-sm font-semibold text-gray-400 pb-2 hover:text-white">Media Downloads</button>
                         </div>
-                        <!-- Translate Dropdown -->
+                        <!-- Language Translator Dropdown -->
                         <div class="flex items-center gap-2">
-                            <span class="text-xs text-gray-400"><i class="fa-solid fa-language text-primary"></i> Translate to:</span>
-                            <select id="targetLangSelect" onchange="translateCurrentTranscript()" class="bg-gray-900 text-xs text-white px-3 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-primary">
+                            <span class="text-[11px] text-gray-400"><i class="fa-solid fa-language text-primary"></i> Translate:</span>
+                            <select id="targetLangSelect" onchange="translateCurrentTranscript()" class="bg-gray-900 text-xs text-white px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-primary">
                                 <option value="en">English</option>
                                 <option value="hi">Hindi (हिंदी)</option>
                                 <option value="or">Odia (ଓଡ଼ିଆ)</option>
@@ -141,72 +120,82 @@
                         </div>
                     </div>
 
-                    <div id="contentTranscript" class="space-y-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gray-400">टाइमस्टैम्प के साथ टेक्स्ट (ओड़िया, हिंदी, इंग्लिश आदि)</span>
+                    <div id="contentTranscript" class="space-y-3">
+                        <div class="flex justify-between items-center text-xs text-gray-400">
+                            <span>Auto-detected timestamped text</span>
                             <div class="space-x-2">
-                                <button onclick="copyTranscript()" class="bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg border border-gray-700"><i class="fa-solid fa-copy mr-1"></i> Copy</button>
-                                <button onclick="downloadTxt()" class="bg-gray-800 hover:bg-gray-700 text-xs px-3 py-1.5 rounded-lg border border-gray-700"><i class="fa-solid fa-download mr-1"></i> Save TXT</button>
+                                <button onclick="copyTranscript()" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1 rounded border border-gray-700"><i class="fa-solid fa-copy mr-1"></i> Copy</button>
+                                <button onclick="downloadTxt()" class="bg-gray-800 hover:bg-gray-700 text-xs px-2.5 py-1 rounded border border-gray-700"><i class="fa-solid fa-download mr-1"></i> Save TXT</button>
                             </div>
                         </div>
-                        <div id="transcriptOutput" class="bg-gray-900 border border-gray-800 rounded-xl p-4 h-72 overflow-y-auto text-sm text-gray-300 space-y-2 font-mono"></div>
+                        <div id="transcriptOutput" class="bg-gray-900 border border-gray-800 rounded-xl p-4 h-64 overflow-y-auto text-xs text-gray-300 space-y-2 font-mono"></div>
                     </div>
 
-                    <div id="contentDownloads" class="hidden space-y-4">
-                        <p class="text-xs text-gray-400">आपकी होस्टेड CDN नोड से डायरेक्ट मीडिया लिंक्स:</p>
+                    <div id="contentDownloads" class="hidden space-y-3">
+                        <p class="text-xs text-gray-400">Direct media streams generated from backend node:</p>
                         <div id="downloadsList" class="space-y-2"></div>
                     </div>
                 </div>
             </div>
 
-            <div id="ad-slot-footer" class="my-6 text-center"></div>
+            <div id="ad-slot-footer" class="my-4 text-center"></div>
 
         </main>
     </div>
 
-    <!-- FOOTER -->
-    <footer class="border-t border-gray-800 bg-cardbg py-6 px-4 mt-12 text-center text-xs text-gray-400">
-        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p>© 2026 TubePulse AI Node. All rights reserved.</p>
+    <!-- Clean Footer -->
+    <footer class="border-t border-gray-800/80 bg-cardbg py-5 px-4 text-center text-xs text-gray-400">
+        <div class="max-w-3xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+            <p>© 2026 TubePulse AI. All rights reserved.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <span onclick="toggleModal('privacyModal')" class="hover:text-primary cursor-pointer transition">Privacy</span>
-                <span onclick="toggleModal('termsModal')" class="hover:text-primary cursor-pointer transition">Terms</span>
-                <span onclick="toggleModal('disclaimerModal')" class="hover:text-primary cursor-pointer transition">Disclaimer</span>
-                <a id="footerWhatsAppLink" href="https://wa.me/919876543210" target="_blank" class="hover:text-green-400 transition"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> Contact Admin</a>
+                <span onclick="toggleModal('privacyModal')" class="hover:text-primary cursor-pointer">Privacy</span>
+                <span onclick="toggleModal('termsModal')" class="hover:text-primary cursor-pointer">Terms</span>
+                <span onclick="toggleModal('disclaimerModal')" class="hover:text-primary cursor-pointer">Disclaimer</span>
+                <a id="footerWhatsAppLink" href="https://wa.me/919876543210" target="_blank" class="hover:text-green-400"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> Contact</a>
             </div>
         </div>
     </footer>
 
-    <!-- MODALS (Guide, Privacy, Terms, Disclaimer, Admin) -->
+    <!-- Modals -->
     <div id="guideModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-gray-800 w-full max-w-lg rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-3">
-                <h3 class="font-bold text-lg text-white">How to Use Guide</h3>
+        <div class="bg-cardbg border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-3 border-b border-gray-800 pb-2">
+                <h3 class="font-bold text-sm text-white">How to Use</h3>
                 <button onclick="toggleModal('guideModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p class="text-xs text-gray-300">YouTube URL या गाना सर्च करें, 12 सेकंड में ट्रांसक्रिप्ट आएगा और ट्रांसलेशन ड्रॉपडाउन से आप उसे Odia, Hindi या Bengali में बदल सकते हैं!</p>
-            <button onclick="toggleModal('guideModal')" class="w-full mt-4 bg-gray-800 text-white py-2 rounded-xl text-xs">समझ गए</button>
+            <p class="text-xs text-gray-300 leading-relaxed">YouTube URL paste karein ya song/video ka naam search karein. Data turant fetch hoga aur aap dropdown se kisi bhi language mein translate kar sakte hain.</p>
+            <button onclick="toggleModal('guideModal')" class="w-full mt-4 bg-gray-800 hover:bg-gray-700 text-white py-2 rounded-xl text-xs font-semibold">Got it</button>
         </div>
     </div>
 
     <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-gray-800 w-full max-w-xl rounded-2xl p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-5 border-b border-gray-800 pb-3">
-                <h3 class="font-bold text-lg text-white"><i class="fa-solid fa-shield-halved text-primary mr-2"></i> Admin Panel</h3>
+        <div class="bg-cardbg border border-gray-800 w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-2">
+                <h3 class="font-bold text-sm text-white"><i class="fa-solid fa-shield-halved text-primary mr-2"></i> Admin Settings</h3>
                 <button onclick="toggleModal('adminModal')" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="space-y-3 text-sm">
-                <input type="text" id="adminSiteTitle" placeholder="Site Title" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-white text-xs">
-                <input type="text" id="adminWhatsApp" placeholder="WhatsApp Number (919876543210)" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-white text-xs">
-                <button onclick="saveAdminSettings()" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold py-2.5 rounded-xl text-xs">Save Settings</button>
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block text-gray-400 mb-1">Site Title:</label>
+                    <input type="text" id="adminSiteTitle" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">WhatsApp Number (e.g. 919876543210):</label>
+                    <input type="text" id="adminWhatsApp" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white">
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1">Backend API URL (Render):</label>
+                    <input type="text" id="adminBackendUrl" class="w-full bg-gray-900 border border-gray-700 rounded-lg px-3 py-2 text-white font-mono text-[11px]" value="https://tubepulse-backend.onrender.com">
+                </div>
+                <button onclick="saveAdminSettings()" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-semibold py-2.5 rounded-xl shadow-lg mt-2">Save Settings</button>
             </div>
         </div>
     </div>
 
-    <!-- Additional Policy Modals placeholders -->
-    <div id="privacyModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-6 rounded-2xl max-w-md w-full"><p class="text-xs text-gray-300">Privacy Policy content...</p><button onclick="toggleModal('privacyModal')" class="mt-4 bg-gray-800 text-white px-4 py-2 rounded text-xs">Close</button></div></div>
-    <div id="termsModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-6 rounded-2xl max-w-md w-full"><p class="text-xs text-gray-300">Terms & Conditions content...</p><button onclick="toggleModal('termsModal')" class="mt-4 bg-gray-800 text-white px-4 py-2 rounded text-xs">Close</button></div></div>
-    <div id="disclaimerModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-6 rounded-2xl max-w-md w-full"><p class="text-xs text-gray-300">Disclaimer content...</p><button onclick="toggleModal('disclaimerModal')" class="mt-4 bg-gray-800 text-white px-4 py-2 rounded text-xs">Close</button></div></div>
+    <!-- Policy Modals -->
+    <div id="privacyModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p>Privacy Policy: We do not store personal records.</p><button onclick="toggleModal('privacyModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded">Close</button></div></div>
+    <div id="termsModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p>Terms: Use for educational and personal analysis only.</p><button onclick="toggleModal('termsModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded">Close</button></div></div>
+    <div id="disclaimerModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p>Disclaimer: Powered by public YouTube streams.</p><button onclick="toggleModal('disclaimerModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded">Close</button></div></div>
 
     <script>
         let rawTranscriptData = [];
@@ -216,81 +205,63 @@
             if(title) { document.getElementById('brand-title').innerHTML = `${title} <span class="text-primary">AI</span>`; document.getElementById('adminSiteTitle').value = title; }
             const wa = localStorage.getItem('admin_whatsapp');
             if(wa) { document.getElementById('footerWhatsAppLink').href = `https://wa.me/${wa}`; document.getElementById('adminWhatsApp').value = wa; }
+            const savedBackend = localStorage.getItem('admin_backend_url');
+            if(savedBackend) { document.getElementById('adminBackendUrl').value = savedBackend; }
         };
 
+        function getBackendUrl() {
+            return localStorage.getItem('admin_backend_url') || 'https://tubepulse-backend.onrender.com';
+        }
+
         function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+        
         function saveAdminSettings() {
             localStorage.setItem('admin_site_title', document.getElementById('adminSiteTitle').value);
             localStorage.setItem('admin_whatsapp', document.getElementById('adminWhatsApp').value);
-            alert('Settings Saved!'); location.reload();
+            localStorage.setItem('admin_backend_url', document.getElementById('adminBackendUrl').value);
+            alert('Settings Saved Successfully!'); location.reload();
         }
 
-        async function extractDataWithTimer() {
+        async function extractData() {
             const query = document.getElementById('searchInput').value.trim();
-            const backend = document.getElementById('backendUrl').value.trim();
+            const backend = getBackendUrl();
             if(!query) { alert('कृपया YouTube URL या कीवर्ड दर्ज करें!'); return; }
 
             document.getElementById('loadingBox').classList.remove('hidden');
             document.getElementById('resultBox').classList.add('hidden');
-
-            let timeLeft = 12;
-            document.getElementById('secCount').innerText = timeLeft;
-            document.getElementById('progressBar').style.width = '10%';
-            document.getElementById('timerStatusText').innerText = "Connecting to secure CDN node...";
-
-            const timerInterval = setInterval(() => {
-                timeLeft--;
-                if(timeLeft > 8) {
-                    document.getElementById('timerStatusText').innerText = "Parsing YouTube video query & streams...";
-                    document.getElementById('progressBar').style.width = '40%';
-                } else if(timeLeft > 4) {
-                    document.getElementById('timerStatusText').innerText = "Extracting multi-language subtitles & lyrics...";
-                    document.getElementById('progressBar').style.width = '75%';
-                } else if(timeLeft > 0) {
-                    document.getElementById('timerStatusText').innerText = "Generating custom CDN links...";
-                    document.getElementById('progressBar').style.width = '90%';
-                }
-                document.getElementById('secCount').innerText = timeLeft;
-            }, 1000);
+            document.getElementById('loadingStatusText').innerText = "Fetching video data and transcripts...";
 
             try {
                 const res = await fetch(`${backend}/api/extract?q=` + encodeURIComponent(query));
                 const data = await res.json();
                 
-                clearInterval(timerInterval);
-                document.getElementById('progressBar').style.width = '100%';
-                document.getElementById('timerStatusText').innerText = "Ready!";
+                document.getElementById('loadingBox').classList.add('hidden');
+                if(data.video_id) {
+                    document.getElementById('vidTitle').innerText = data.title || "YouTube Video";
+                    document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1"></i> ${data.uploader || 'Creator'}`;
+                    document.getElementById('vidThumbnail').src = data.thumbnail;
+                    document.getElementById('vidLangBadge').innerText = `Detected: ${data.language || 'en'}`.toUpperCase();
 
-                setTimeout(() => {
-                    document.getElementById('loadingBox').classList.add('hidden');
-                    if(data.video_id) {
-                        document.getElementById('vidTitle').innerText = data.title || "YouTube Video";
-                        document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1"></i> ${data.uploader || 'Creator'}`;
-                        document.getElementById('vidThumbnail').src = data.thumbnail;
-                        document.getElementById('vidLangBadge').innerText = `Detected: ${data.language || 'en'}`.toUpperCase();
+                    rawTranscriptData = data.transcript || [];
+                    renderTranscriptUI(rawTranscriptData);
 
-                        rawTranscriptData = data.transcript || [];
-                        renderTranscriptUI(rawTranscriptData);
-
-                        const dl = document.getElementById('downloadsList');
-                        dl.innerHTML = '';
-                        if(data.downloads && data.downloads.length > 0) {
-                            data.downloads.forEach(d => {
-                                const a = document.createElement('a');
-                                a.href = d.url;
-                                a.target = "_blank";
-                                a.className = "flex justify-between items-center bg-gray-900 border border-gray-800 hover:border-primary p-3 rounded-xl transition text-xs";
-                                a.innerHTML = `<span><i class="fa-solid fa-server text-primary mr-2"></i> Stream: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="text-primary font-bold"><i class="fa-solid fa-download"></i> Download</span>`;
-                                dl.appendChild(a);
-                            });
-                        }
-                        document.getElementById('resultBox').classList.remove('hidden');
-                    } else {
-                        alert('डाटा फेच करने में समस्या आई।');
+                    const dl = document.getElementById('downloadsList');
+                    dl.innerHTML = '';
+                    if(data.downloads && data.downloads.length > 0) {
+                        data.downloads.forEach(d => {
+                            const a = document.createElement('a');
+                            a.href = d.url;
+                            a.target = "_blank";
+                            a.className = "flex justify-between items-center bg-gray-900 border border-gray-800 hover:border-primary p-3 rounded-xl transition text-xs";
+                            a.innerHTML = `<span><i class="fa-solid fa-server text-primary mr-2"></i> Stream: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="text-primary font-bold"><i class="fa-solid fa-download"></i> Download</span>`;
+                            dl.appendChild(a);
+                        });
                     }
-                }, 500);
+                    document.getElementById('resultBox').classList.remove('hidden');
+                } else {
+                    alert('डाटा फेच करने में समस्या आई। कृपया सही URL या नाम दें।');
+                }
             } catch (err) {
-                clearInterval(timerInterval);
                 document.getElementById('loadingBox').classList.add('hidden');
                 alert('कनेक्शन एरर: Render बैकएंड चेक करें!\n' + err.message);
             }
@@ -307,7 +278,7 @@
                     const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
                     const div = document.createElement('div');
                     div.className = "flex gap-3 hover:bg-gray-800/50 p-1 rounded text-xs";
-                    div.innerHTML = `<span class="text-primary font-mono w-12">[${timeStr}]</span> <span class="text-gray-200">${item.text}</span>`;
+                    div.innerHTML = `<span class="text-primary font-mono w-12">[$" + timeStr + "]</span> <span class="text-gray-200">${item.text}</span>`;
                     tc.appendChild(div);
                 });
             } else {
@@ -318,11 +289,12 @@
         async function translateCurrentTranscript() {
             if(!rawTranscriptData || rawTranscriptData.length === 0) return;
             const targetLang = document.getElementById('targetLangSelect').value;
-            const backend = document.getElementById('backendUrl').value.trim();
-
+            const backend = getBackendUrl();
             const textLines = rawTranscriptData.map(i => i.text);
             
-            alert('Translating transcript to ' + targetLang.toUpperCase() + '...');
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('loadingStatusText').innerText = "Translating text...";
+
             try {
                 const res = await fetch(`${backend}/api/translate-batch`, {
                     method: 'POST',
@@ -330,6 +302,7 @@
                     body: JSON.stringify({ texts: textLines, target: targetLang })
                 });
                 const result = await res.json();
+                document.getElementById('loadingBox').classList.add('hidden');
                 if(result.translated) {
                     const translatedItems = rawTranscriptData.map((item, idx) => ({
                         start: item.start,
@@ -338,6 +311,7 @@
                     renderTranscriptUI(translatedItems);
                 }
             } catch(e) {
+                document.getElementById('loadingBox').classList.add('hidden');
                 alert('Translation Error: ' + e.message);
             }
         }
@@ -346,13 +320,13 @@
             if(tab === 'transcript') {
                 document.getElementById('contentTranscript').classList.remove('hidden');
                 document.getElementById('contentDownloads').classList.add('hidden');
-                document.getElementById('tabTranscriptBtn').className = "text-sm font-bold text-primary border-b-2 border-primary pb-2";
-                document.getElementById('tabDownloadBtn').className = "text-sm font-semibold text-gray-400 pb-2 hover:text-white";
+                document.getElementById('tabTranscriptBtn').className = "text-xs sm:text-sm font-bold text-primary border-b-2 border-primary pb-2";
+                document.getElementById('tabDownloadBtn').className = "text-xs sm:text-sm font-semibold text-gray-400 pb-2 hover:text-white";
             } else {
                 document.getElementById('contentTranscript').classList.add('hidden');
                 document.getElementById('contentDownloads').classList.remove('hidden');
-                document.getElementById('tabDownloadBtn').className = "text-sm font-bold text-primary border-b-2 border-primary pb-2";
-                document.getElementById('tabTranscriptBtn').className = "text-sm font-semibold text-gray-400 pb-2 hover:text-white";
+                document.getElementById('tabDownloadBtn').className = "text-xs sm:text-sm font-bold text-primary border-b-2 border-primary pb-2";
+                document.getElementById('tabTranscriptBtn').className = "text-xs sm:text-sm font-semibold text-gray-400 pb-2 hover:text-white";
             }
         }
 
@@ -368,7 +342,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'translated-transcript.txt';
+            a.download = 'transcript.txt';
             a.click();
         }
     </script>
