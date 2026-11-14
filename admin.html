@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Admin Panel - TubePulse AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff2a85',
+                        secondary: '#9d4edd',
+                        darkbg: '#0a0a0f',
+                        cardbg: '#13131a'
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-darkbg text-white min-h-screen font-sans p-6">
+
+    <div class="max-w-xl mx-auto bg-cardbg border border-gray-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
+            <h1 class="text-lg font-bold flex items-center">
+                <i class="fa-solid fa-shield-halved text-primary mr-2"></i> Secret Admin Dashboard
+            </h1>
+            <a href="index.html" class="text-xs bg-gray-800 hover:bg-gray-700 px-3 py-1.5 rounded-lg border border-gray-700">Go to Site <i class="fa-solid fa-arrow-right ml-1"></i></a>
+        </div>
+
+        <div class="space-y-4 text-xs">
+            <div>
+                <label class="block text-gray-400 mb-1 font-semibold">Site Title / Brand Name:</label>
+                <input type="text" id="adminSiteTitle" placeholder="TubePulse AI" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-400 mb-1 font-semibold">Website Theme Style:</label>
+                    <select id="adminThemeSelect" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-3 text-white text-xs">
+                        <option value="pink-neon">Pink Neon (y2mate Default)</option>
+                        <option value="cyber-purple">Cyber Purple Neon</option>
+                        <option value="emerald-green">Emerald Green Tech</option>
+                        <option value="sunset-orange">Sunset Orange Glow</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-400 mb-1 font-semibold">Logo Animation Style:</label>
+                    <select id="adminLogoAnim" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-3 py-3 text-white text-xs">
+                        <option value="pulse-neon">Neon Pulse Glow</option>
+                        <option value="blink-soft">Soft Blinking</option>
+                        <option value="gradient-shift">Gradient Flow</option>
+                        <option value="floating-bounce">Floating Bounce</option>
+                    </select>
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-gray-400 mb-1 font-semibold">Admin WhatsApp Number (e.g., 919876543210):</label>
+                <input type="text" id="adminWhatsApp" placeholder="919876543210" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm">
+            </div>
+
+            <div>
+                <label class="block text-gray-400 mb-1 font-semibold">Backend API URL (Render):</label>
+                <input type="text" id="adminBackendUrl" placeholder="https://tubepulse-backend.onrender.com" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white text-sm font-mono">
+            </div>
+
+            <div>
+                <label class="block text-gray-400 mb-1 font-semibold">Header & Verification Scripts (AdSense, Adsterra, Meta Tags):</label>
+                <textarea id="adminHeaderAds" rows="4" placeholder='<meta name="google-site-verification" ... />' class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-white text-xs font-mono"></textarea>
+            </div>
+
+            <button onclick="saveAdminSettings()" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3.5 rounded-xl shadow-lg text-sm mt-4 hover:opacity-95 transition">
+                Save & Apply Settings
+            </button>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+            document.getElementById('adminSiteTitle').value = localStorage.getItem('admin_site_title') || '';
+            document.getElementById('adminThemeSelect').value = localStorage.getItem('admin_theme') || 'pink-neon';
+            document.getElementById('adminLogoAnim').value = localStorage.getItem('admin_logo_anim') || 'pulse-neon';
+            document.getElementById('adminWhatsApp').value = localStorage.getItem('admin_whatsapp') || '';
+            document.getElementById('adminBackendUrl').value = localStorage.getItem('admin_backend_url') || 'https://tubepulse-backend.onrender.com';
+            document.getElementById('adminHeaderAds').value = localStorage.getItem('admin_header_ads') || '';
+        };
+
+        function saveAdminSettings() {
+            localStorage.setItem('admin_site_title', document.getElementById('adminSiteTitle').value);
+            localStorage.setItem('admin_theme', document.getElementById('adminThemeSelect').value);
+            localStorage.setItem('admin_logo_anim', document.getElementById('adminLogoAnim').value);
+            localStorage.setItem('admin_whatsapp', document.getElementById('adminWhatsApp').value);
+            localStorage.setItem('admin_backend_url', document.getElementById('adminBackendUrl').value);
+            localStorage.setItem('admin_header_ads', document.getElementById('adminHeaderAds').value);
+            alert('Settings Saved Successfully! Theme, verification tags, and animations applied.');
+        }
+    </script>
+</body>
+</html>
