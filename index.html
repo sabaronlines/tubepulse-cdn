@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="site-title-tag">TubePulse AI - YouTube Transcript & Media Downloader</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for Multi-Language Support (Odia, Hindi, Bengali, English) -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#ff2a85',
-                        secondary: '#ff65a3',
+                        primary: 'var(--theme-primary, #ff2a85)',
+                        secondary: 'var(--theme-secondary, #ff65a3)',
                         lightbg: '#fcfcfd',
                         cardbg: '#ffffff',
                         customtext: '#1a1a24'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', 'Noto Sans Bengali', 'sans-serif']
                     }
                 }
             }
@@ -80,7 +85,7 @@
     <div class="floating-blob bottom-20 right-5" style="animation-delay: 4s;"></div>
 
     <div>
-        <!-- Responsive Header -->
+        <!-- Responsive Header with Language Selector -->
         <header class="border-b border-gray-200 bg-cardbg/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-12 py-4 flex justify-between items-center shadow-sm">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
                 <div id="logoIconBox" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-lg neon-glow">
@@ -90,6 +95,17 @@
                     <h1 id="brand-title" class="font-bold text-lg tracking-wide text-gray-900">TubePulse <span class="text-primary">AI</span></h1>
                 </div>
             </div>
+
+            <!-- Language Switcher Selector -->
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-globe text-primary text-xs"></i>
+                <select id="uiLangSelect" onchange="changeUILanguage(this.value)" class="bg-gray-50 text-xs font-semibold text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 focus:outline-none focus:border-primary shadow-sm">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                </select>
+            </div>
         </header>
 
         <!-- Main Container -->
@@ -97,8 +113,8 @@
             
             <!-- Hero Search Card -->
             <div class="bg-cardbg border border-gray-200 p-6 sm:p-10 rounded-3xl shadow-xl neon-glow mb-10 text-center">
-                <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 text-gray-900">YouTube Transcript & Downloader</h2>
-                <p class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.</p>
+                <h2 id="txtHeroTitle" class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 text-gray-900">YouTube Transcript & Downloader</h2>
+                <p id="txtHeroDesc" class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.</p>
 
                 <div class="flex flex-col sm:flex-row gap-3">
                     <div class="relative flex-1">
@@ -109,8 +125,29 @@
                     </div>
                     <button onclick="startSearch()" id="extractBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-bold px-8 py-4 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm">
                         <i class="fa-solid fa-magnifying-glass"></i>
-                        <span>Search</span>
+                        <span id="txtSearchBtn">Search</span>
                     </button>
+                </div>
+            </div>
+
+            <!-- Highlighted HOW TO USE Section -->
+            <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-10 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <h3 id="txtHowToUseTitle" class="text-sm font-extrabold text-gray-900 tracking-wide uppercase">HOW TO USE</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-700">
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 1:</strong> <span id="txtStep1">Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.</span>
+                    </div>
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to instantly extract video metadata, thumbnail, and timestamped lyrics.</span>
+                    </div>
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!</span>
+                    </div>
                 </div>
             </div>
 
@@ -138,16 +175,16 @@
                     </div>
                 </div>
 
-                <!-- 2. Media Download Links Section (Proxy Streams) -->
+                <!-- 2. Media Download Links Section -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
-                    <h3 class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
+                    <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
                     <div id="downloadsList" class="space-y-2.5"></div>
                 </div>
 
                 <!-- 3. Transcript & Lyrics Section -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 mb-4 pb-3 gap-3">
-                        <h3 class="text-xs font-extrabold text-gray-800 uppercase tracking-wider"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Auto-Detected Transcript & Lyrics</h3>
+                        <h3 id="txtTranscriptHeading" class="text-xs font-extrabold text-gray-800 uppercase tracking-wider"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Auto-Detected Transcript & Lyrics</h3>
                         <div class="flex items-center gap-2">
                             <span class="text-[11px] text-gray-500 font-medium"><i class="fa-solid fa-language text-primary"></i> Translate:</span>
                             <select id="targetLangSelect" onchange="translateCurrentTranscript()" class="bg-gray-50 text-xs text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 focus:outline-none focus:border-primary font-medium">
@@ -161,33 +198,14 @@
 
                     <div class="space-y-3">
                         <div class="flex justify-between items-center text-xs text-gray-500">
-                            <span>Timestamped text / lyrics</span>
+                            <span id="txtTimestampLabel">Timestamped text / lyrics</span>
                             <div class="space-x-2">
-                                <button onclick="copyTranscript()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-semibold transition border border-gray-200"><i class="fa-solid fa-copy mr-1 text-primary"></i> Copy</button>
-                                <button onclick="downloadTxt()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-semibold transition border border-gray-200"><i class="fa-solid fa-download mr-1 text-primary"></i> Save TXT</button>
+                                <button onclick="copyTranscript()" id="btnCopy" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-semibold transition border border-gray-200"><i class="fa-solid fa-copy mr-1 text-primary"></i> Copy</button>
+                                <button onclick="downloadTxt()" id="btnSaveTxt" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-semibold transition border border-gray-200"><i class="fa-solid fa-download mr-1 text-primary"></i> Save TXT</button>
                             </div>
                         </div>
                         <div id="transcriptOutput" class="bg-gray-50 border border-gray-200 rounded-2xl p-4 h-64 overflow-y-auto text-xs text-gray-800 space-y-2 font-mono shadow-inner"></div>
                     </div>
-                </div>
-            </div>
-
-            <!-- How It Works Section -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-                <div class="bg-cardbg border border-gray-200 p-6 rounded-3xl text-center shadow-md hover:shadow-lg transition">
-                    <div class="w-12 h-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-3 font-bold text-base">1</div>
-                    <h4 class="font-bold text-sm mb-1 text-gray-900">Search or Paste URL</h4>
-                    <p class="text-xs text-gray-500">Type song titles or paste YouTube links in any language.</p>
-                </div>
-                <div class="bg-cardbg border border-gray-200 p-6 rounded-3xl text-center shadow-md hover:shadow-lg transition">
-                    <div class="w-12 h-12 rounded-2xl bg-secondary/10 text-secondary flex items-center justify-center mx-auto mb-3 font-bold text-base">2</div>
-                    <h4 class="font-bold text-sm mb-1 text-gray-900">Auto-Detect & Translate</h4>
-                    <p class="text-xs text-gray-500">Instantly extracts original transcript/lyrics and translates.</p>
-                </div>
-                <div class="bg-cardbg border border-gray-200 p-6 rounded-3xl text-center shadow-md hover:shadow-lg transition">
-                    <div class="w-12 h-12 rounded-2xl bg-green-500/10 text-green-600 flex items-center justify-center mx-auto mb-3 font-bold text-base">3</div>
-                    <h4 class="font-bold text-sm mb-1 text-gray-900">Download & Export</h4>
-                    <p class="text-xs text-gray-500">Get MP4 video, MP3 audio, thumbnails, or TXT files instantly.</p>
                 </div>
             </div>
         </main>
@@ -214,7 +232,6 @@
             <div class="space-y-3 leading-relaxed">
                 <p>TubePulse AI operates strictly as an independent web utility and media extraction platform designed for educational, research, personal review, and accessibility enhancements.</p>
                 <p><strong>Copyright Compliance:</strong> We do not host, store, or pirate any copyrighted audio or video files on our infrastructure. All media streams, metadata, and transcripts are dynamically retrieved from public YouTube URLs using public APIs and open-source parsing libraries.</p>
-                <p><strong>Limitation of Liability:</strong> Users assume full responsibility for complying with YouTube's Terms of Service, community guidelines, and regional copyright laws before downloading or redistributing any media content processed through this platform.</p>
             </div>
             <button onclick="toggleModal('disclaimerModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
@@ -226,7 +243,6 @@
             <div class="space-y-3 leading-relaxed">
                 <p>Your privacy is of paramount importance to TubePulse AI. We maintain a strict zero-log policy regarding user search queries, video URLs, and extracted file streams.</p>
                 <p><strong>Data Collection:</strong> We do not collect, store, or sell personal user identifiers, browsing habits, or IP addresses. All processing occurs securely in real-time.</p>
-                <p><strong>Third-Party Advertisements:</strong> Third-party ad networks (such as Google AdSense or Adsterra) integrated into this platform may utilize cookies or web beacons to display contextually relevant advertisements based on user interaction across the web.</p>
             </div>
             <button onclick="toggleModal('privacyModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
@@ -238,8 +254,6 @@
             <div class="space-y-3 leading-relaxed">
                 <p>By accessing and utilizing TubePulse AI, you agree to abide by the following terms:</p>
                 <p><strong>1. Acceptable Use:</strong> You agree not to use this platform for mass automated web scraping, commercial exploitation, copyright infringement, or malicious distributed activities.</p>
-                <p><strong>2. Service Availability:</strong> The platform is provided on an "as-is" and "as-available" basis. We reserve the right to modify, suspend, or terminate features or backend streaming nodes at any time without prior notice.</p>
-                <p><strong>3. Indemnification:</strong> You agree to indemnify and hold harmless TubePulse AI operators from any claims arising out of your improper use of the service.</p>
             </div>
             <button onclick="toggleModal('termsModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
@@ -290,10 +304,91 @@
         </div>
     </div>
 
-    <!-- Script Engine -->
+    <!-- Script Engine with Multi-Language Dictionaries -->
     <script>
         let rawTranscriptData = [];
         let currentVideoTitle = "media";
+
+        const translations = {
+            en: {
+                heroTitle: "YouTube Transcript & Downloader",
+                heroDesc: "Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.",
+                searchPlaceholder: "https://youtube.com/watch?v=... or song name",
+                searchBtn: "Search",
+                howToUseTitle: "HOW TO USE",
+                step1: "Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.",
+                step2: "Click 'Search' to instantly extract video metadata, thumbnail, and timestamped lyrics.",
+                step3: "Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!",
+                downloadHeading: "Media Download Links",
+                transcriptHeading: "Auto-Detected Transcript & Lyrics",
+                timestampLabel: "Timestamped text / lyrics",
+                copyBtn: "Copy",
+                saveTxtBtn: "Save TXT"
+            },
+            hi: {
+                heroTitle: "यूट्यूब ट्रांसक्रिप्ट और डाउनलोडर",
+                heroDesc: "यूट्यूब यूआरएल पेस्ट करें या गाने का नाम खोजें (ओडिया, हिंदी, अंग्रेजी, बंगाली) और तुरंत लिरिक्स और मीडिया डाउनलोड करें।",
+                searchPlaceholder: "https://youtube.com/watch?v=... या गाने का नाम",
+                searchBtn: "खोजें (Search)",
+                howToUseTitle: "कैसे उपयोग करें (HOW TO USE)",
+                step1: "सर्च बॉक्स में यूट्यूब वीडियो लिंक पेस्ट करें या गाने का नाम टाइप करें।",
+                step2: "वीडियो डिटेल्स, थंबनेल और टाइमस्टैम्पेड लिरिक्स तुरंत देखने के लिए 'Search' पर क्लिक करें।",
+                step3: "MP4 वीडियो, MP3 ऑडियो डाउनलोड करें या 1 क्लिक में ट्रांसक्रिप्ट कॉपी करें!",
+                downloadHeading: "मीडिया डाउनलोड लिंक",
+                transcriptHeading: "ऑटो-डिटेक्टेड ट्रांसक्रिप्ट और लिरिक्स",
+                timestampLabel: "टाइमस्टैम्पेड टेक्स्ट / लिरिक्स",
+                copyBtn: "कॉपी करें",
+                saveTxtBtn: "TXT सेव करें"
+            },
+            or: {
+                heroTitle: "ୟୁଟ୍ୟୁବ୍ ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଡାଉନଲୋଡର୍",
+                heroDesc: "ୟୁଟ୍ୟୁବ୍ ଲିଙ୍କ୍ ଦିଅନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଖୋଜନ୍ତୁ (ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ) ଏବଂ ତବ୍‌କ୍ଷଣାତ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ।",
+                searchPlaceholder: "https://youtube.com/watch?v=... କିମ୍ବା ଗୀତର ନାମ",
+                searchBtn: "ଖୋଜନ୍ତୁ (Search)",
+                howToUseTitle: "କିପରି ବ୍ୟବହାର କରିବେ (HOW TO USE)",
+                step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ ୟୁଟ୍ୟୁବ୍ ଭିଡିଓ ଲିଙ୍କ୍ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଲେଖନ୍ତୁ।",
+                step2: "ଭିଡିଓ ଡେଟାଏଲ୍ସ ଏବଂ ଲିରିକ୍ସ ପାଇଁ 'Search' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ।",
+                step3: "MP4 ଭିଡିଓ, MP3 ଅଡିଓ ଡାଉନଲୋଡ୍ କରନ୍ତୁ କିମ୍ବା ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ କପି କରନ୍ତୁ!",
+                downloadHeading: "ମିଡିଆ ଡାଉନଲୋଡ୍ ଲିଙ୍କ୍",
+                transcriptHeading: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ",
+                timestampLabel: "ସମୟ ସହିତ ଟେକ୍ସଟ୍ / ଲିରିକ୍ସ",
+                copyBtn: "କପି କରନ୍ତୁ",
+                saveTxtBtn: "TXT ସେଭ୍ କରନ୍ତୁ"
+            },
+            bn: {
+                heroTitle: "ইউটিউব ট্রান্সক্রিপ্ট এবং ডাউনলোডার",
+                heroDesc: "ইউটিউব ইউআরএল পেস্ট করুন বা গানের নাম খুঁজুন (বাংলা, হিন্দি, ইংরেজি) এবং তাৎক্ষণিকভাবে লিরিকস ও মিডিয়া ডাউনলোড করুন।",
+                searchPlaceholder: "https://youtube.com/watch?v=... বা গানের নাম",
+                searchBtn: "অনুসন্ধান (Search)",
+                howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
+                step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
+                step2: "ভিডিও মেটাডাটা এবং লিরিকস দেখতে 'Search' এ ক্লিক করুন।",
+                step3: "MP4 ভিডিও, MP3 অডিও ডাউনলোড করুন বা এক ক্লিকে ট্রান্সক্রিপ্ট কপি করুন!",
+                downloadHeading: "মিডিয়া ডাউনলোড লিঙ্ক",
+                transcriptHeading: "স্বয়ংক্রিয় ট্রান্সক্রিপ্ট এবং লিরিকস",
+                timestampLabel: "সময়ভিত্তিক টেক্সট / লিরিকস",
+                copyBtn: "কপি করুন",
+                saveTxtBtn: "TXT সেভ করুন"
+            }
+        };
+
+        function changeUILanguage(lang) {
+            localStorage.setItem('site_ui_lang', lang);
+            const t = translations[lang] || translations.en;
+            document.getElementById('txtHeroTitle').innerText = t.heroTitle;
+            document.getElementById('txtHeroDesc').innerText = t.heroDesc;
+            document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('txtSearchBtn').innerText = t.searchBtn;
+            document.getElementById('txtHowToUseTitle').innerText = t.howToUseTitle;
+            document.getElementById('txtStep1').innerText = t.step1;
+            document.getElementById('txtStep2').innerText = t.step2;
+            document.getElementById('txtStep3').innerText = t.step3;
+            document.getElementById('txtDownloadHeading').innerHTML = `<i class="fa-solid fa-download mr-1"></i> ${t.downloadHeading}`;
+            document.getElementById('txtTranscriptHeading').innerHTML = `<i class="fa-solid fa-file-lines text-primary mr-1"></i> ${t.transcriptHeading}`;
+            document.getElementById('txtTimestampLabel').innerText = t.timestampLabel;
+            document.getElementById('btnCopy').innerHTML = `<i class="fa-solid fa-copy mr-1 text-primary"></i> ${t.copyBtn}`;
+            document.getElementById('btnSaveTxt').innerHTML = `<i class="fa-solid fa-download mr-1 text-primary"></i> ${t.saveTxtBtn}`;
+        }
 
         window.addEventListener('scroll', () => {
             const winScroll = document.documentElement.scrollTop;
@@ -312,6 +407,10 @@
             if(wa) { 
                 document.getElementById('communityWhatsApp').href = `https://wa.me/${wa}`; 
             }
+
+            const savedLang = localStorage.getItem('site_ui_lang') || 'en';
+            document.getElementById('uiLangSelect').value = savedLang;
+            changeUILanguage(savedLang);
 
             const currentTheme = localStorage.getItem('admin_theme') || 'pink-neon';
             document.body.className = `min-h-screen font-sans flex flex-col justify-between relative overflow-x-hidden theme-${currentTheme}`;
@@ -334,7 +433,6 @@
             const fileInput = document.getElementById('supFile');
             
             let fileInfo = fileInput.files.length > 0 ? ` (Attached: ${fileInput.files[0].name})` : '';
-            
             alert(`Thank you, ${name}! Your support request has been submitted successfully.\nWe will contact you at ${email} shortly.${fileInfo}`);
             toggleModal('contactModal');
             e.target.reset();
