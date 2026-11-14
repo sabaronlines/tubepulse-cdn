@@ -127,10 +127,10 @@
 
             <!-- Results Flow -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
-                <!-- Video Thumbnail & Real Metadata Card (Uncut Full Aspect Ratio Thumbnail) -->
+                <!-- Video Thumbnail & Real Metadata Card (Uncut Full Thumbnail) -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-8 flex flex-col items-center shadow-lg">
                     <div class="w-full max-w-lg mb-4 rounded-2xl overflow-hidden border border-gray-200 shadow bg-black flex items-center justify-center">
-                        <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full h-auto object-contain max-h-[320px]">
+                        <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full h-auto object-contain max-h-[340px]">
                     </div>
                     <div class="w-full text-center sm:text-left">
                         <div class="flex justify-center sm:justify-start items-center gap-2 mb-2">
@@ -147,14 +147,14 @@
                     <div id="downloadsList" class="space-y-3"></div>
                 </div>
 
-                <!-- Dedicated Conversion View Section (Appears when Convert is clicked) -->
+                <!-- Dedicated Conversion Page View (Y2Mate style separate section with "Go" button) -->
                 <div id="conversionSection" class="hidden bg-white border border-primary/30 rounded-3xl p-6 shadow-xl space-y-4">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                         <h4 id="conversionTitle" class="font-extrabold text-sm text-gray-900"><i class="fa-solid fa-rotate text-primary mr-1"></i> Select Format & Convert</h4>
                         <button onclick="closeConversionSection()" class="text-xs text-gray-400 hover:text-gray-700 font-bold"><i class="fa-solid fa-xmark text-base"></i> Close</button>
                     </div>
                     <div id="conversionContent" class="space-y-3">
-                        <!-- Dynamic Quality Selector options loaded here -->
+                        <!-- Quality selector rows with "Go" button injected here -->
                     </div>
                 </div>
 
@@ -221,11 +221,43 @@
                         <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to view matching results and select your preferred video.</span>
                     </div>
                     <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Click Convert MP3/MP4, select quality, and download instantly!</span>
+                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Click Convert MP3/MP4, click 'Go', and download instantly!</span>
                     </div>
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Y2Mate-style Preparing / Ready Modal Popup -->
+    <div id="convertModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-center relative shadow-2xl space-y-4">
+            <div id="modalPreparingState">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-3"></div>
+                <h3 class="font-extrabold text-base text-gray-900 mb-1">Your download is getting ready...</h3>
+                <p class="text-xs text-gray-500 mb-4">Preparing your file, please wait a few seconds.</p>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden border border-gray-200">
+                    <div id="modalProgressBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-700" style="width: 20%;"></div>
+                </div>
+            </div>
+
+            <div id="modalReadyState" class="hidden space-y-4">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-xl font-bold shadow-sm">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 class="font-extrabold text-base text-gray-900">Your download is ready!</h3>
+                <div class="bg-gray-50 p-3 rounded-2xl border border-gray-200 flex items-center gap-3 text-left">
+                    <img id="modalThumb" src="" alt="Thumb" class="w-16 h-12 object-cover rounded-xl border border-gray-200">
+                    <div class="overflow-hidden">
+                        <h4 id="modalFileTitle" class="font-bold text-xs text-gray-900 line-clamp-1">Video Title</h4>
+                        <p id="modalFileMeta" class="text-[11px] text-primary font-bold mt-0.5">MP3 • 128kbps</p>
+                    </div>
+                </div>
+                <a id="modalDownloadBtn" href="#" target="_blank" class="block w-full bg-gradient-to-r from-primary to-secondary text-white font-extrabold py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-xs">
+                    <i class="fa-solid fa-download mr-1"></i> Download Now
+                </a>
+                <button onclick="closeConvertModal()" class="text-xs text-gray-400 hover:text-gray-600 font-semibold pt-1">Cancel / Close</button>
+            </div>
+        </div>
     </div>
 
     <footer class="bg-[#1a1a24] text-gray-300 pt-8 pb-6 px-4 relative overflow-hidden">
@@ -343,7 +375,7 @@
                 howToUseTitle: "HOW TO USE",
                 step1: "Paste YouTube video link or type song title in the search box.",
                 step2: "Click 'Search' to view matching results and select your preferred video.",
-                step3: "Click Convert MP3/MP4, select quality, and download instantly!",
+                step3: "Click Convert MP3/MP4, select quality with 'Go', and download instantly!",
                 downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "Get Transcript & Lyrics",
                 transcriptHeading: "Auto-Detected Transcript & Lyrics",
@@ -359,7 +391,7 @@
                 howToUseTitle: "कैसे उपयोग करें (HOW TO USE)",
                 step1: "सर्च बॉक्स में यूट्यूब वीडियो लिंक पेस्ट करें या गाने का नाम टाइप करें।",
                 step2: "मिलते-जुलते वीडियो परिणाम देखने के लिए 'Search' पर क्लिक करें और अपना पसंदीदा वीडियो चुनें।",
-                step3: "Convert MP3/MP4 पर क्लिक करें, क्वालिटी चुनें और डाउनलोड करें!",
+                step3: "Convert MP3/MP4 पर क्लिक करें, 'Go' से क्वालिटी चुनें और डाउनलोड करें!",
                 downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ट्रांसक्रिप्ट और लिरिक्स प्राप्त करें",
                 transcriptHeading: "ऑटो-डिटेक्टेड ट्रांसक्रिप्ट और लिरिक्स",
@@ -375,7 +407,7 @@
                 howToUseTitle: "କିପରି ବ୍ୟବହାର କରିବେ (HOW TO USE)",
                 step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ ୟୁଟ୍ୟୁବ୍ ଭିଡିଓ ଲିଙ୍କ୍ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଲେଖନ୍ତୁ।",
                 step2: "ରେଜଲ୍ଟ ଦେଖିବା ପାଇଁ 'Search' କ୍ଲିକ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ପସନ୍ଦର ଭିଡିଓ ବାଛନ୍ତୁ।",
-                step3: "Convert MP3/MP4 କ୍ଲିକ୍ କରନ୍ତୁ, କ୍ୱାଲିଟି ବାଛନ୍ତୁ ଏବଂ ଡାଉନଲୋଡ୍ କରନ୍ତୁ!",
+                step3: "Convert MP3/MP4 କ୍ଲିକ୍ କରନ୍ତୁ, 'Go' ଦ୍ୱାରା କ୍ୱାଲିଟି ବାଛନ୍ତୁ ଏବଂ ଡାଉନଲୋଡ୍ କରନ୍ତୁ!",
                 downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ ପ୍ରାପ୍ତ କରନ୍ତୁ",
                 transcriptHeading: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ",
@@ -391,7 +423,7 @@
                 howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
                 step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
                 step2: "ফলাফল দেখতে 'Search' এ ক্লিক করুন এবং আপনার পছন্দের ভিডিওটি নির্বাচন করুন।",
-                step3: "Convert MP3/MP4 ক্লিক করুন, কোয়ালিটি সিলেক্ট করুন এবং ডাউনলোড করুন!",
+                step3: "Convert MP3/MP4 ক্লিক করুন, 'Go' দিয়ে কোয়ালিটি সিলেক্ট করুন এবং ডাউনলোড করুন!",
                 downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ট্রান্সক্রিপ্ট এবং লিরিকস পান",
                 transcriptHeading: "স্বয়ংক্রিয় ট্রান্সক্রিপ্ট এবং লিরিকস",
@@ -407,7 +439,7 @@
                 howToUseTitle: "ఎలా ఉపయోగించాలి (HOW TO USE)",
                 step1: "సెర్చ్ బాక్స్‌లో యూట్యూబ్ వీడియో లింక్ లేదా పాట పేరును టైప్ చేయండి.",
                 step2: "ఫలితాలను చూడటానికి 'Search' పై క్లిక్ చేసి మీకు నచ్చిన వీడియోను ఎంచుకోండి.",
-                step3: "Convert MP3/MP4 పై క్లిక్ చేసి, క్వాలిటీ ఎంచుకొని డౌన్‌లోడ్ చేసుకోండి!",
+                step3: "Convert MP3/MP4 పై క్లిక్ చేసి, 'Go' ద్వారా క్వాలిటీ ఎంచుకొని డౌన్‌లోడ్ చేసుకోండి!",
                 downloadHeading: "GET VIDEO DETAILS",
                 getTranscriptBtn: "ట్రాన్స్‌క్రిప్ట్ & లిరిక్స్ పొందండి",
                 transcriptHeading: "ఆటో-డిటెక్టెడ్ ట్రాన్స్‌క్రిప్ట్ & లిరిక్స్",
@@ -563,7 +595,7 @@
             renderVideoGrid();
         }
 
-        // Dedicated Conversion View workflow (Y2Mate style)
+        // Dedicated Conversion View with "Go" button workflow
         function openConversionView(type) {
             const section = document.getElementById('conversionSection');
             const content = document.getElementById('conversionContent');
@@ -575,28 +607,28 @@
             const backend = getBackendUrl();
 
             if(type === 'mp3') {
-                titleEl.innerHTML = `<i class="fa-solid fa-music text-green-600 mr-1"></i> Convert to MP3 (Audio Quality Selector)`;
+                titleEl.innerHTML = `<i class="fa-solid fa-music text-green-600 mr-1"></i> Convert to MP3 (Select Audio Bitrate)`;
                 if(extractedVideoData && extractedVideoData.audio_downloads) {
                     extractedVideoData.audio_downloads.forEach(d => {
-                        const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_audio.mp3`;
+                        const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_audio_${d.resolution}.mp3`;
                         const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
                         
                         const row = document.createElement('div');
                         row.className = "flex justify-between items-center bg-gray-50 p-3.5 rounded-2xl border border-gray-200 text-xs";
                         row.innerHTML = `
                             <div>
-                                <span class="font-bold text-gray-900">Audio Quality: ${d.resolution}</span>
-                                <p class="text-[10px] text-gray-500">MP3 • High Fidelity Audio</p>
+                                <span class="font-bold text-gray-900">Audio Bitrate: ${d.resolution}</span>
+                                <p class="text-[10px] text-gray-500">MP3 • High Quality Studio Stream</p>
                             </div>
-                            <a href="${proxyUrl}" target="_blank" download="${fileName}" class="bg-green-600 hover:bg-green-700 text-white font-extrabold px-5 py-2.5 rounded-xl shadow transition text-xs flex items-center gap-1">
-                                <i class="fa-solid fa-download"></i> Download Now
-                            </a>
+                            <button onclick="triggerConvertModal('${proxyUrl}', '${fileName}', 'MP3 Audio • ${d.resolution}')" class="bg-green-600 hover:bg-green-700 text-white font-extrabold px-6 py-2.5 rounded-xl shadow transition text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-arrow-right"></i> Go
+                            </button>
                         `;
                         content.appendChild(row);
                     });
                 }
             } else if(type === 'mp4') {
-                titleEl.innerHTML = `<i class="fa-solid fa-video text-primary mr-1"></i> Convert to MP4 (Video Quality Selector)`;
+                titleEl.innerHTML = `<i class="fa-solid fa-video text-primary mr-1"></i> Convert to MP4 (Select Video Quality)`;
                 if(extractedVideoData && extractedVideoData.downloads) {
                     extractedVideoData.downloads.forEach(d => {
                         const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${d.resolution}.${d.ext}`;
@@ -606,12 +638,12 @@
                         row.className = "flex justify-between items-center bg-gray-50 p-3.5 rounded-2xl border border-gray-200 text-xs";
                         row.innerHTML = `
                             <div>
-                                <span class="font-bold text-gray-900">Video Quality: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span>
+                                <span class="font-bold text-gray-900">Video Quality: ${d.resolution} (${d.ext.toUpperCase()})</span>
                                 <p class="text-[10px] text-gray-500">MP4 • High Definition Stream</p>
                             </div>
-                            <a href="${proxyUrl}" target="_blank" download="${fileName}" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-5 py-2.5 rounded-xl shadow transition text-xs flex items-center gap-1">
-                                <i class="fa-solid fa-download"></i> Download Now
-                            </a>
+                            <button onclick="triggerConvertModal('${proxyUrl}', '${fileName}', 'MP4 Video • ${d.resolution}')" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-6 py-2.5 rounded-xl shadow transition text-xs flex items-center gap-1.5">
+                                <i class="fa-solid fa-arrow-right"></i> Go
+                            </button>
                         `;
                         content.appendChild(row);
                     });
@@ -621,6 +653,38 @@
 
         function closeConversionSection() {
             document.getElementById('conversionSection').classList.add('hidden');
+        }
+
+        function triggerConvertModal(url, filename, fileType) {
+            const modal = document.getElementById('convertModal');
+            const prepState = document.getElementById('modalPreparingState');
+            const readyState = document.getElementById('modalReadyState');
+            const progressBar = document.getElementById('modalProgressBar');
+            
+            modal.classList.remove('hidden');
+            prepState.classList.remove('hidden');
+            readyState.classList.add('hidden');
+            progressBar.style.width = "25%";
+
+            setTimeout(() => {
+                progressBar.style.width = "70%";
+            }, 800);
+
+            setTimeout(() => {
+                progressBar.style.width = "100%";
+                prepState.classList.add('hidden');
+                readyState.classList.remove('hidden');
+                
+                document.getElementById('modalThumb').src = currentThumbnailUrl;
+                document.getElementById('modalFileTitle').innerText = currentVideoTitle;
+                document.getElementById('modalFileMeta').innerText = fileType;
+                document.getElementById('modalDownloadBtn').href = url;
+                document.getElementById('modalDownloadBtn').setAttribute('download', filename);
+            }, 1600);
+        }
+
+        function closeConvertModal() {
+            document.getElementById('convertModal').classList.add('hidden');
         }
 
         async function selectVideoToExtract(videoId) {
@@ -654,13 +718,13 @@
                     const dl = document.getElementById('downloadsList');
                     dl.innerHTML = '';
                     
-                    // Convert MP4 Button Row (Y2Mate style)
+                    // Convert MP4 Button Row
                     const mp4Div = document.createElement('div');
                     mp4Div.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-primary p-4 rounded-2xl transition text-xs text-gray-800 shadow-sm";
                     mp4Div.innerHTML = `
                         <div>
                             <span class="font-extrabold text-sm text-gray-900 block mb-0.5"><i class="fa-solid fa-video text-primary mr-1.5"></i> Video Quality Streams</span>
-                            <span class="text-gray-500 text-[11px]">Select from 360p, 720p, 1080p HD formats</span>
+                            <span class="text-gray-500 text-[11px]">Select from 360p, 480p, 720p, 1080p HD formats</span>
                         </div>
                         <button onclick="openConversionView('mp4')" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-6 py-3 rounded-xl shadow transition text-xs flex items-center gap-2">
                             <i class="fa-solid fa-rotate"></i> Convert MP4
@@ -668,13 +732,13 @@
                     `;
                     dl.appendChild(mp4Div);
 
-                    // Convert MP3 Button Row (Y2Mate style)
+                    // Convert MP3 Button Row
                     const mp3Div = document.createElement('div');
                     mp3Div.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-green-500 p-4 rounded-2xl transition text-xs text-gray-800 shadow-sm";
                     mp3Div.innerHTML = `
                         <div>
                             <span class="font-extrabold text-sm text-gray-900 block mb-0.5"><i class="fa-solid fa-music text-green-600 mr-1.5"></i> Audio MP3 Extraction</span>
-                            <span class="text-gray-500 text-[11px]">Select audio bitrate (128kbps - 320kbps)</span>
+                            <span class="text-gray-500 text-[11px]">Select audio bitrate (64kbps - 320kbps)</span>
                         </div>
                         <button onclick="openConversionView('mp3')" class="bg-green-600 hover:bg-green-700 text-white font-extrabold px-6 py-3 rounded-xl shadow transition text-xs flex items-center gap-2">
                             <i class="fa-solid fa-rotate"></i> Convert MP3
@@ -717,14 +781,14 @@
             const progressEl = document.getElementById('progressBar');
             const timerEl = document.getElementById('timerText');
 
-            statusEl.innerText = "Step 1/3: Extracting audio track & inspecting streams...";
+            statusEl.innerText = "Step 1/3: Extracting audio track & inspecting voice streams...";
             progressEl.style.width = "33%";
-            timerEl.innerText = "Processing speech-to-text conversion...";
+            timerEl.innerText = "Processing speech-to-text voice analysis...";
 
             const backend = getBackendUrl();
             try {
                 await new Promise(r => setTimeout(r, 800));
-                statusEl.innerText = "Step 2/3: Analyzing vocals & rhythm signatures...";
+                statusEl.innerText = "Step 2/3: Analyzing vocals, lyrics & rhythm signatures...";
                 progressEl.style.width = "66%";
 
                 const res = await fetch(`${backend}/api/transcript?video_id=` + currentSelectedVideoId);
