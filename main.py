@@ -107,7 +107,7 @@ def extract_youtube_data(q: str):
                     elif f.get("acodec") != "none" and f.get("vcodec") == "none":
                         abr = f.get("abr") or 128
                         audio_links.append({
-                            "resolution": f"{abr}kbps" if abr else "128kbps",
+                            "resolution": f"{abr}kbps",
                             "ext": "mp3",
                             "raw_url": raw_url
                         })
@@ -115,21 +115,25 @@ def extract_youtube_data(q: str):
             if not download_links:
                 download_links.append({"resolution": "360p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
                 download_links.append({"resolution": "720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
+                download_links.append({"resolution": "1080p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
             if not audio_links:
                 audio_links.append({"resolution": "128kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
+                audio_links.append({"resolution": "320kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"})
 
-            response_data["downloads"] = download_links[:4]
-            response_data["audio_downloads"] = audio_links[:2]
+            response_data["downloads"] = download_links[:6]
+            response_data["audio_downloads"] = audio_links[:4]
     except Exception as e:
         response_data["download_error"] = str(e)
         response_data["title"] = "YouTube Video"
         response_data["uploader"] = "YouTube Creator"
         response_data["downloads"] = [
             {"resolution": "360p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"},
-            {"resolution": "720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
+            {"resolution": "720p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"},
+            {"resolution": "1080p", "ext": "mp4", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
         ]
         response_data["audio_downloads"] = [
-            {"resolution": "128kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
+            {"resolution": "128kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"},
+            {"resolution": "320kbps", "ext": "mp3", "raw_url": f"https://www.youtube.com/watch?v={video_id}"}
         ]
         response_data["thumbnail"] = f"https://img.youtube.com/vi/{video_id}/maxresdefault.jpg"
 
