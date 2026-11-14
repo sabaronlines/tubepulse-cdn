@@ -31,23 +31,41 @@
             --theme-secondary: #ff65a3;
             --theme-glow: rgba(255, 42, 133, 0.25);
         }
-        body { background-color: #fcfcfd; color: #1a1a24; }
-        .neon-glow { box-shadow: 0 10px 30px rgba(255, 42, 133, 0.15); }
+
+        body {
+            background-color: #fcfcfd;
+            color: #1a1a24;
+        }
+
+        .neon-glow {
+            box-shadow: 0 10px 30px rgba(255, 42, 133, 0.15);
+        }
+
         @keyframes floatParticle {
             0% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
             50% { transform: translateY(-40px) translateX(20px) scale(1.1); opacity: 0.6; }
             100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
         }
         .floating-blob {
-            position: absolute; width: 350px; height: 350px;
+            position: absolute;
+            width: 350px;
+            height: 350px;
             background: linear-gradient(135deg, rgba(255, 42, 133, 0.12), rgba(255, 101, 163, 0.15));
-            filter: blur(80px); border-radius: 50%; z-index: -1;
+            filter: blur(80px);
+            border-radius: 50%;
+            z-index: -1;
             animation: floatParticle 9s ease-in-out infinite;
         }
-        @keyframes waveMotion { 0% { transform: translateX(0); } 50% { transform: translateX(-25%); } 100% { transform: translateX(0); } }
+
+        @keyframes waveMotion {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-25%); }
+            100% { transform: translateX(0); }
+        }
         .wave-animation {
             background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 C150,90 350,-40 500,40 C650,120 900,10 1200,50 L1200,120 L0,120 Z" fill="%231a1a24"/></svg>') repeat-x;
-            background-size: 1200px 50px; animation: waveMotion 12s linear infinite;
+            background-size: 1200px 50px;
+            animation: waveMotion 12s linear infinite;
         }
     </style>
     <script>
@@ -57,11 +75,15 @@
 </head>
 <body class="min-h-screen font-sans flex flex-col justify-between relative overflow-x-hidden">
 
+    <!-- Scroll Progress Bar -->
     <div id="scrollProgress" class="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-primary to-secondary z-50 transition-all duration-100" style="width: 0%;"></div>
+
+    <!-- Background Floating Blobs -->
     <div class="floating-blob top-10 left-5"></div>
     <div class="floating-blob bottom-20 right-5" style="animation-delay: 4s;"></div>
 
     <div>
+        <!-- Responsive Header -->
         <header class="border-b border-gray-200 bg-cardbg/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-12 py-4 flex justify-between items-center shadow-sm">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
                 <div id="logoIconBox" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-lg neon-glow">
@@ -71,6 +93,8 @@
                     <h1 id="brand-title" class="font-bold text-lg tracking-wide text-gray-900">TubePulse <span class="text-primary">AI</span></h1>
                 </div>
             </div>
+
+            <!-- Language Switcher Selector -->
             <div class="flex items-center gap-2">
                 <i class="fa-solid fa-globe text-primary text-xs"></i>
                 <select id="uiLangSelect" onchange="changeUILanguage(this.value)" class="bg-gray-50 text-xs font-semibold text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 focus:outline-none focus:border-primary shadow-sm">
@@ -82,22 +106,29 @@
             </div>
         </header>
 
+        <!-- Main Container -->
         <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
             
-            <!-- Hero Search Card with Right-Side Search Icon Button -->
+            <!-- Hero Search Card -->
             <div class="bg-cardbg border border-gray-200 p-6 sm:p-10 rounded-3xl shadow-xl neon-glow mb-10 text-center">
                 <h2 id="txtHeroTitle" class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 text-gray-900">YouTube Transcript & Downloader</h2>
                 <p id="txtHeroDesc" class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.</p>
 
-                <div class="relative max-w-2xl mx-auto">
-                    <input type="text" id="searchInput" onkeydown="if(event.key === 'Enter') startSearch()" placeholder="https://youtube.com/watch?v=... या गाने का नाम" class="w-full bg-gray-50 border border-gray-300 rounded-2xl pl-5 pr-14 py-4 text-sm text-gray-900 focus:outline-none focus:border-primary focus:bg-white transition shadow-inner">
-                    <button onclick="startSearch()" id="extractBtn" class="absolute right-2 top-2 bottom-2 bg-gradient-to-r from-primary to-secondary text-white font-bold px-5 rounded-xl shadow hover:opacity-95 transition flex items-center justify-center">
-                        <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                            <i class="fa-solid fa-link"></i>
+                        </span>
+                        <input type="text" id="searchInput" placeholder="https://youtube.com/watch?v=... या गाने का नाम" class="w-full bg-gray-50 border border-gray-300 rounded-2xl pl-11 pr-4 py-4 text-sm text-gray-900 focus:outline-none focus:border-primary focus:bg-white transition shadow-inner">
+                    </div>
+                    <button onclick="startSearch()" id="extractBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-bold px-8 py-4 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span id="txtSearchBtn">Search</span>
                     </button>
                 </div>
             </div>
 
-            <!-- Loading & Progress State -->
+            <!-- Professional Loading & Progress Bar State -->
             <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-200 rounded-3xl p-6 mb-8 shadow-md">
                 <div class="inline-block animate-spin rounded-full h-10 w-10 border-3 border-primary border-t-transparent mb-3"></div>
                 <p id="loadingStatusText" class="text-xs font-semibold text-gray-700 mb-2">Connecting to secure CDN node...</p>
@@ -116,24 +147,28 @@
                 </div>
             </div>
 
-            <!-- Results Flow -->
+            <!-- Single-Page Results Flow -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
+                <!-- 1. Video Thumbnail & Meta Card -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row gap-5 items-center shadow-md">
                     <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-56 h-32 object-cover rounded-2xl border border-gray-200 shadow bg-gray-100">
                     <div class="flex-1 w-full text-left">
                         <div class="flex items-center gap-2 mb-2">
-                            <span id="vidLangBadge" class="bg-primary/10 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">Ready to Download</span>
+                            <span id="vidLangBadge" class="bg-primary/10 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">Detected: EN</span>
+                            <span class="bg-green-100 text-green-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md">Ready to Download</span>
                         </div>
                         <h3 id="vidTitle" class="text-base sm:text-lg font-bold text-gray-900 line-clamp-2">Video Title</h3>
                         <p id="vidUploader" class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1 text-primary"></i> Creator</p>
                     </div>
                 </div>
 
+                <!-- 2. Media Download Links Section -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
                     <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
                     <div id="downloadsList" class="space-y-2.5"></div>
                 </div>
 
+                <!-- 3. Prominent "Get Transcript" Button in the Middle -->
                 <div class="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 p-6 rounded-3xl text-center shadow-md">
                     <h3 class="text-sm font-extrabold text-gray-900 mb-2">Want Timestamped Lyrics & Transcript?</h3>
                     <p class="text-xs text-gray-600 mb-4">Click below to fetch official captions or auto-detect speech from audio streams.</p>
@@ -143,6 +178,7 @@
                     </button>
                 </div>
 
+                <!-- 4. Transcript & Lyrics Container (Hidden until button is clicked) -->
                 <div id="transcriptSectionBox" class="hidden bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md space-y-3">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 mb-4 pb-3 gap-3">
                         <h3 id="txtTranscriptHeading" class="text-xs font-extrabold text-gray-800 uppercase tracking-wider"><i class="fa-solid fa-file-lines text-primary mr-1"></i> Auto-Detected Transcript & Lyrics</h3>
@@ -170,7 +206,7 @@
                 </div>
             </div>
 
-            <!-- How To Use Section at Bottom -->
+            <!-- Highlighted HOW TO USE Section (Placed at the Bottom) -->
             <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-6 shadow-sm">
                 <div class="flex items-center gap-3 mb-3">
                     <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
@@ -193,6 +229,7 @@
         </main>
     </div>
 
+    <!-- Animated Footer with Wave -->
     <footer class="bg-[#1a1a24] text-gray-300 pt-8 pb-6 px-4 relative overflow-hidden">
         <div class="absolute top-0 left-0 w-full h-4 wave-animation opacity-30"></div>
         <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-xs relative z-10">
@@ -210,47 +247,82 @@
     <div id="disclaimerModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> Professional Disclaimer</h3>
-            <p class="mb-3">TubePulse AI operates strictly as an independent web utility designed for educational, research, and personal review purposes.</p>
-            <button onclick="toggleModal('disclaimerModal')" class="mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 px-4 rounded-xl text-xs w-full shadow">Close Window</button>
+            <div class="space-y-3 leading-relaxed">
+                <p>TubePulse AI operates strictly as an independent web utility and media extraction platform designed for educational, research, personal review, and accessibility enhancements.</p>
+                <p><strong>Copyright Compliance:</strong> We do not host, store, or pirate any copyrighted audio or video files on our infrastructure. All media streams, metadata, and transcripts are dynamically retrieved from public YouTube URLs using public APIs and open-source parsing libraries.</p>
+            </div>
+            <button onclick="toggleModal('disclaimerModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
     </div>
+
     <div id="privacyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-shield-halved text-primary mr-2"></i> Privacy Policy</h3>
-            <p class="mb-3">We maintain a strict zero-log policy regarding user search queries and downloaded file streams.</p>
-            <button onclick="toggleModal('privacyModal')" class="mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 px-4 rounded-xl text-xs w-full shadow">Close Window</button>
+            <div class="space-y-3 leading-relaxed">
+                <p>Your privacy is of paramount importance to TubePulse AI. We maintain a strict zero-log policy regarding user search queries, video URLs, and extracted file streams.</p>
+                <p><strong>Data Collection:</strong> We do not collect, store, or sell personal user identifiers, browsing habits, or IP addresses. All processing occurs securely in real-time.</p>
+            </div>
+            <button onclick="toggleModal('privacyModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
     </div>
+
     <div id="termsModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <h3 class="font-bold text-base text-gray-900 mb-3 flex items-center"><i class="fa-solid fa-file-contract text-secondary mr-2"></i> Terms & Conditions</h3>
-            <p class="mb-3">Use this platform strictly in accordance with YouTube terms and regional copyright guidelines.</p>
-            <button onclick="toggleModal('termsModal')" class="mt-4 bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 px-4 rounded-xl text-xs w-full shadow">Close Window</button>
+            <div class="space-y-3 leading-relaxed">
+                <p>By accessing and utilizing TubePulse AI, you agree to abide by the following terms:</p>
+                <p><strong>1. Acceptable Use:</strong> You agree not to use this platform for mass automated web scraping, commercial exploitation, copyright infringement, or malicious distributed activities.</p>
+            </div>
+            <button onclick="toggleModal('termsModal')" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
         </div>
     </div>
+
+    <!-- Contact Admin & Support Card Modal -->
     <div id="contactModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
                 <h3 class="font-bold text-sm text-gray-900 flex items-center"><i class="fa-solid fa-headset text-primary mr-2"></i> Contact Admin & Support</h3>
                 <button onclick="toggleModal('contactModal')" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-base"></i></button>
             </div>
+
             <form onsubmit="submitSupportForm(event)" class="space-y-3">
-                <input type="text" id="supName" required placeholder="Your Name" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs">
-                <input type="email" id="supEmail" required placeholder="Your Email" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs">
-                <textarea id="supMessage" rows="3" required placeholder="Describe issue..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-xs"></textarea>
-                <input type="file" id="supFile" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-1.5 text-[11px]">
-                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-2.5 rounded-xl shadow text-xs">Send Message</button>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Your Full Name:</label>
+                    <input type="text" id="supName" required placeholder="Enter your name" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Your Email Address:</label>
+                    <input type="email" id="supEmail" required placeholder="name@example.com" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Describe Your Issue / Message:</label>
+                    <textarea id="supMessage" rows="3" required placeholder="Explain error or query..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary"></textarea>
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Upload Error Screenshot (Optional):</label>
+                    <input type="file" id="supFile" accept="image/*" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2 text-gray-500 text-[11px] file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-primary file:text-white hover:file:opacity-90">
+                </div>
+
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition text-xs mt-2">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> Send Message to Admin
+                </button>
             </form>
-            <div class="mt-4 pt-3 border-t border-gray-100 text-center space-y-2">
-                <p class="text-[11px] text-gray-500 font-semibold">Join Communities:</p>
+
+            <div class="mt-6 pt-4 border-t border-gray-100 text-center space-y-2">
+                <p class="text-[11px] text-gray-500 font-semibold">Join Our Official Communities:</p>
                 <div class="flex justify-center gap-3">
-                    <a id="communityWhatsApp" href="https://whatsapp.com" target="_blank" class="bg-green-50 text-green-700 px-3 py-1.5 rounded-xl font-bold text-[11px]">WhatsApp</a>
-                    <a id="communityTelegram" href="https://telegram.org" target="_blank" class="bg-blue-50 text-blue-700 px-3 py-1.5 rounded-xl font-bold text-[11px]">Telegram</a>
+                    <a id="communityWhatsApp" href="https://whatsapp.com" target="_blank" class="bg-green-50 text-green-700 border border-green-200 px-3 py-2 rounded-xl font-bold text-[11px] hover:bg-green-100 transition flex items-center">
+                        <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> WhatsApp
+                    </a>
+                    <a id="communityTelegram" href="https://telegram.org" target="_blank" class="bg-blue-50 text-blue-700 border border-blue-200 px-3 py-2 rounded-xl font-bold text-[11px] hover:bg-blue-100 transition flex items-center">
+                        <i class="fa-brands fa-telegram mr-1 text-sm"></i> Telegram
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Script Engine -->
     <script>
         let rawTranscriptData = [];
         let currentVideoTitle = "media";
@@ -263,6 +335,7 @@
                 heroTitle: "YouTube Transcript & Downloader",
                 heroDesc: "Paste YouTube URL or search song titles (Odia, Hindi, English, Bengali) to extract lyrics & media streams instantly.",
                 searchPlaceholder: "https://youtube.com/watch?v=... or song name",
+                searchBtn: "Search",
                 howToUseTitle: "HOW TO USE",
                 step1: "Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.",
                 step2: "Click 'Search' to view matching results, select your preferred video, and extract streams.",
@@ -278,6 +351,7 @@
                 heroTitle: "यूट्यूब ट्रांसक्रिप्ट और डाउनलोडर",
                 heroDesc: "यूट्यूब यूआरएल पेस्ट करें या गाने का नाम खोजें (ओडिया, हिंदी, अंग्रेजी, बंगाली) और तुरंत लिरिक्स और मीडिया डाउनलोड करें।",
                 searchPlaceholder: "https://youtube.com/watch?v=... या गाने का नाम",
+                searchBtn: "खोजें",
                 howToUseTitle: "कैसे उपयोग करें (HOW TO USE)",
                 step1: "सर्च बॉक्स में यूट्यूब वीडियो लिंक पेस्ट करें या गाने का नाम टाइप करें।",
                 step2: "मिलते-जुलते वीडियो परिणाम देखने के लिए 'Search' पर क्लिक करें और अपना पसंदीदा वीडियो चुनें।",
@@ -293,6 +367,7 @@
                 heroTitle: "ୟୁଟ୍ୟୁବ୍ ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଡାଉନଲୋଡର୍",
                 heroDesc: "ୟୁଟ୍ୟୁବ୍ ଲିଙ୍କ୍ ଦିଅନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଖୋଜନ୍ତୁ (ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ) ଏବଂ ତବ୍‌କ୍ଷଣାତ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ।",
                 searchPlaceholder: "https://youtube.com/watch?v=... କିମ୍ବା ଗୀତର ନାମ",
+                searchBtn: "ଖୋଜନ୍ତୁ",
                 howToUseTitle: "କିପରି ବ୍ୟବହାର କରିବେ (HOW TO USE)",
                 step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ ୟୁଟ୍ୟୁବ୍ ଭିଡିଓ ଲିଙ୍କ୍ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଲେଖନ୍ତୁ।",
                 step2: "ରେଜଲ୍ଟ ଦେଖିବା ପାଇଁ 'Search' କ୍ଲିକ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ପସନ୍ଦର ଭିଡିଓ ବାଛନ୍ତୁ।",
@@ -308,6 +383,7 @@
                 heroTitle: "ইউটিউব ট্রান্সক্রিপ্ট এবং ডাউনলোডার",
                 heroDesc: "ইউটিউব ইউআরএল পেস্ট করুন বা গানের নাম খুঁজুন (বাংলা, হিন্দি, ইংরেজি) এবং তাৎক্ষণিকভাবে লিরিকস ও মিডিয়া ডাউনলোড করুন।",
                 searchPlaceholder: "https://youtube.com/watch?v=... বা গানের নাম",
+                searchBtn: "অনুসন্ধান",
                 howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
                 step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
                 step2: "ফলাফল দেখতে 'Search' এ ক্লিক করুন এবং আপনার পছন্দের ভিডিওটি নির্বাচন করুন।",
@@ -327,6 +403,7 @@
             document.getElementById('txtHeroTitle').innerText = t.heroTitle;
             document.getElementById('txtHeroDesc').innerText = t.heroDesc;
             document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+            document.getElementById('txtSearchBtn').innerText = t.searchBtn;
             document.getElementById('txtHowToUseTitle').innerText = t.howToUseTitle;
             document.getElementById('txtStep1').innerText = t.step1;
             document.getElementById('txtStep2').innerText = t.step2;
@@ -353,7 +430,9 @@
                 document.getElementById('site-title-tag').innerText = `${title} - Transcript & Downloader`; 
             }
             const wa = localStorage.getItem('admin_whatsapp');
-            if(wa) { document.getElementById('communityWhatsApp').href = `https://wa.me/${wa}`; }
+            if(wa) { 
+                document.getElementById('communityWhatsApp').href = `https://wa.me/${wa}`; 
+            }
 
             const savedLang = localStorage.getItem('site_ui_lang') || 'en';
             document.getElementById('uiLangSelect').value = savedLang;
@@ -376,7 +455,10 @@
             e.preventDefault();
             const name = document.getElementById('supName').value;
             const email = document.getElementById('supEmail').value;
-            alert(`Thank you, ${name}! Your request has been submitted.`);
+            const msg = document.getElementById('supMessage').value;
+            const fileInput = document.getElementById('supFile');
+            let fileInfo = fileInput.files.length > 0 ? ` (Attached: ${fileInput.files[0].name})` : '';
+            alert(`Thank you, ${name}! Your support request has been submitted successfully.\nWe will contact you at ${email} shortly.${fileInfo}`);
             toggleModal('contactModal');
             e.target.reset();
         }
@@ -403,4 +485,229 @@
                     progressEl.style.width = "65%";
                 }, 500);
 
-                const res =
+                const res = await fetch(`${backend}/api/search?q=` + encodeURIComponent(query));
+                const data = await res.json();
+                
+                progressEl.style.width = "100%";
+                statusEl.innerText = "Results loaded successfully!";
+                timerEl.innerHTML = `<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Ready!</span>`;
+
+                setTimeout(() => {
+                    document.getElementById('loadingBox').classList.add('hidden');
+                    if(data.results && data.results.length > 0) {
+                        allSearchResults = data.results;
+                        if(allSearchResults.length === 1) {
+                            selectVideoToExtract(allSearchResults[0].video_id);
+                        } else {
+                            displayedCount = Math.min(4, allSearchResults.length);
+                            renderVideoGrid();
+                            document.getElementById('selectionGridBox').classList.remove('hidden');
+                        }
+                    } else {
+                        alert('कोई वीडियो नहीं मिला। कृपया दूसरा कीवर्ड दें।');
+                    }
+                }, 600);
+            } catch (err) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                alert('कनेक्शन एरर: ' + err.message);
+            }
+        }
+
+        function renderVideoGrid() {
+            const listEl = document.getElementById('videoResultsList');
+            listEl.innerHTML = '';
+            
+            const sliceItems = allSearchResults.slice(0, displayedCount);
+            sliceItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-cardbg border border-gray-200 hover:border-primary p-3 rounded-2xl flex gap-3 items-center cursor-pointer transition shadow-sm hover:shadow";
+                card.onclick = () => selectVideoToExtract(item.video_id);
+                card.innerHTML = `
+                    <img src="${item.thumbnail}" alt="Thumb" class="w-28 h-16 object-cover rounded-xl border border-gray-200">
+                    <div class="flex-1 overflow-hidden">
+                        <h4 class="font-bold text-xs text-gray-900 line-clamp-2">${item.title}</h4>
+                        <p class="text-[11px] text-gray-500 mt-0.5"><i class="fa-solid fa-user text-primary mr-1"></i> ${item.uploader}</p>
+                        <span class="inline-block mt-1 bg-primary/10 text-primary font-bold text-[10px] px-2 py-0.5 rounded">Select & Convert</span>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+
+            if(displayedCount >= allSearchResults.length) {
+                document.getElementById('loadMoreBox').classList.add('hidden');
+            } else {
+                document.getElementById('loadMoreBox').classList.remove('hidden');
+            }
+        }
+
+        function loadMoreResults() {
+            displayedCount += 4;
+            renderVideoGrid();
+        }
+
+        async function selectVideoToExtract(videoId) {
+            currentSelectedVideoId = videoId;
+            document.getElementById('selectionGridBox').classList.add('hidden');
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('loadingStatusText').innerText = "Preparing secure download streams...";
+            document.getElementById('progressBar').style.width = "50%";
+            document.getElementById('timerText').innerHTML = "Extracting HD formats...";
+
+            const backend = getBackendUrl();
+            try {
+                const res = await fetch(`${backend}/api/extract?q=` + videoId);
+                const data = await res.json();
+                
+                document.getElementById('loadingBox').classList.add('hidden');
+                if(data.video_id) {
+                    currentVideoTitle = data.title || "video";
+                    document.getElementById('vidTitle').innerText = currentVideoTitle;
+                    document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'Creator'}`;
+                    document.getElementById('vidThumbnail').src = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                    document.getElementById('vidLangBadge').innerText = `Ready to Download`.toUpperCase();
+
+                    // Reset transcript section until user clicks "Get Transcript"
+                    document.getElementById('transcriptSectionBox').classList.add('hidden');
+                    document.getElementById('transcriptOutput').innerHTML = '';
+
+                    const dl = document.getElementById('downloadsList');
+                    dl.innerHTML = '';
+                    
+                    if(data.downloads && data.downloads.length > 0) {
+                        data.downloads.forEach(d => {
+                            const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${d.resolution}.${d.ext}`;
+                            const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
+                            
+                            const a = document.createElement('a');
+                            a.href = proxyUrl;
+                            a.target = "_blank";
+                            a.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-primary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
+                            a.innerHTML = `<span><i class="fa-solid fa-video text-primary mr-2"></i> MP4 Video: ${d.resolution || 'HD'} (${d.ext.toUpperCase()})</span> <span class="text-primary font-extrabold"><i class="fa-solid fa-download"></i> Download</span>`;
+                            dl.appendChild(a);
+                        });
+                    }
+
+                    if(data.audio_downloads && data.audio_downloads.length > 0) {
+                        data.audio_downloads.forEach(d => {
+                            const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_audio.${d.ext}`;
+                            const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
+
+                            const a = document.createElement('a');
+                            a.href = proxyUrl;
+                            a.target = "_blank";
+                            a.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-green-500 p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
+                            a.innerHTML = `<span><i class="fa-solid fa-music text-green-600 mr-2"></i> MP3 Audio Extraction (${d.ext.toUpperCase()})</span> <span class="text-green-600 font-extrabold"><i class="fa-solid fa-download"></i> Download Audio</span>`;
+                            dl.appendChild(a);
+                        });
+                    }
+
+                    const thumbA = document.createElement('a');
+                    thumbA.href = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+                    thumbA.target = "_blank";
+                    thumbA.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-secondary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
+                    thumbA.innerHTML = `<span><i class="fa-solid fa-image text-secondary mr-2"></i> Max Resolution Thumbnail</span> <span class="text-secondary font-extrabold"><i class="fa-solid fa-download"></i> Download Image</span>`;
+                    dl.appendChild(thumbA);
+
+                    document.getElementById('resultBox').classList.remove('hidden');
+                } else {
+                    alert('डाटा फेच करने में समस्या आई। कृपया पुनः प्रयास करें।');
+                }
+            } catch (err) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                alert('कनेक्शन एरर: ' + err.message);
+            }
+        }
+
+        // Fetch Transcript on clicking the prominent middle button
+        async function fetchTranscriptData() {
+            if(!currentSelectedVideoId) return;
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('loadingStatusText').innerText = "Extracting transcript & auto-detecting lyrics from audio...";
+
+            const backend = getBackendUrl();
+            try {
+                const res = await fetch(`${backend}/api/transcript?video_id=` + currentSelectedVideoId);
+                const data = await res.json();
+                
+                document.getElementById('loadingBox').classList.add('hidden');
+                if(data.success && data.transcript) {
+                    rawTranscriptData = data.transcript;
+                    renderTranscriptUI(rawTranscriptData);
+                    document.getElementById('transcriptSectionBox').classList.remove('hidden');
+                    document.getElementById('transcriptSectionBox').scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    alert('Transcript not available for this video.');
+                }
+            } catch(e) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                alert('Transcript Error: ' + e.message);
+            }
+        }
+
+        function renderTranscriptUI(items) {
+            const tc = document.getElementById('transcriptOutput');
+            tc.innerHTML = '';
+            if(items.length > 0) {
+                items.forEach(item => {
+                    const timeSec = Math.floor(item.start || 0);
+                    const min = Math.floor(timeSec / 60);
+                    const sec = timeSec % 60;
+                    const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
+                    const div = document.createElement('div');
+                    div.className = "flex gap-3 hover:bg-gray-100 p-1.5 rounded-xl text-xs transition";
+                    div.innerHTML = `<span class="text-primary font-mono font-bold w-12">[${timeStr}]</span> <span class="text-gray-700">${item.text}</span>`;
+                    tc.appendChild(div);
+                });
+            } else {
+                tc.innerHTML = `<p class="text-gray-400 italic">इस वीडियो के लिए ट्रांसक्रिप्ट उपलब्ध नहीं है।</p>`;
+            }
+        }
+
+        async function translateCurrentTranscript() {
+            if(!rawTranscriptData || rawTranscriptData.length === 0) return;
+            const targetLang = document.getElementById('targetLangSelect').value;
+            const backend = getBackendUrl();
+            const textLines = rawTranscriptData.map(i => i.text);
+            
+            document.getElementById('loadingBox').classList.add('hidden');
+            document.getElementById('loadingStatusText').innerText = "Translating text...";
+
+            try {
+                const res = await fetch(`${backend}/api/translate-batch`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ texts: textLines, target: targetLang })
+                });
+                const result = await res.json();
+                document.getElementById('loadingBox').classList.add('hidden');
+                if(result.translated) {
+                    const translatedItems = rawTranscriptData.map((item, idx) => ({
+                        start: item.start,
+                        text: result.translated[idx] || item.text
+                    }));
+                    renderTranscriptUI(translatedItems);
+                }
+            } catch(e) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                alert('Translation Error: ' + e.message);
+            }
+        }
+
+        function copyTranscript() {
+            const lines = Array.from(document.querySelectorAll('#transcriptOutput div')).map(d => d.innerText).join('\n');
+            navigator.clipboard.writeText(lines);
+            alert('ट्रांसक्रिप्ट क्लिपबोर्ड पर कॉपी हो गया!');
+        }
+
+        function downloadTxt() {
+            const lines = Array.from(document.querySelectorAll('#transcriptOutput div')).map(d => d.innerText).join('\n');
+            const blob = new Blob([lines], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'transcript.txt';
+            a.click();
+        }
+    </script>
+</body>
+</html>
