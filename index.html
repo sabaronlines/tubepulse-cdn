@@ -61,8 +61,8 @@
             </div>
         </header>
 
-        <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
-            
+        <!-- PAGE 1: SEARCH VIEW -->
+        <main id="pageSearch" class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
             <div class="bg-cardbg border border-gray-200 p-6 sm:p-10 rounded-3xl shadow-xl neon-glow mb-10 text-center">
                 <h2 id="txtHeroTitle" class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 text-gray-900">YouTube Transcript & Downloader</h2>
                 <p id="txtHeroDesc" class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste YouTube URL or search song titles to extract lyrics & media streams instantly.</p>
@@ -93,7 +93,7 @@
                 <div id="videoResultsList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
             </div>
 
-            <!-- Result View -->
+            <!-- Result Details View -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-8 flex flex-col items-center shadow-lg">
                     <div class="w-full max-w-xl mb-4 rounded-2xl overflow-hidden border border-gray-200 shadow bg-black flex items-center justify-center">
@@ -110,15 +110,6 @@
                     <div id="downloadsList" class="space-y-3"></div>
                 </div>
 
-                <!-- Conversion View Section -->
-                <div id="conversionSection" class="hidden bg-white border border-primary/30 rounded-3xl p-6 shadow-xl space-y-4">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-3">
-                        <h4 id="conversionTitle" class="font-extrabold text-sm text-gray-900">Select Format & Convert</h4>
-                        <button onclick="closeConversionSection()" class="text-xs text-gray-400 hover:text-gray-700 font-bold"><i class="fa-solid fa-xmark text-base"></i> Close</button>
-                    </div>
-                    <div id="conversionContent" class="space-y-3"></div>
-                </div>
-
                 <!-- Transcript Section -->
                 <div class="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 p-6 rounded-3xl text-center shadow-md">
                     <button onclick="fetchTranscriptData()" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-xs flex items-center justify-center space-x-2 mx-auto">
@@ -131,27 +122,69 @@
                     <div id="transcriptOutput" class="bg-gray-50 border border-gray-200 rounded-2xl p-4 h-64 overflow-y-auto text-xs text-gray-800 space-y-2 font-mono shadow-inner"></div>
                 </div>
             </div>
+        </main>
 
-            <!-- Ad Slot -->
-            <div class="bg-white border border-dashed border-gray-300 rounded-3xl p-4 mb-6 text-center shadow-sm">
-                <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1 font-bold">Advertisement / Sponsored Slot</p>
-                <div class="w-full py-4 bg-gray-50 rounded-2xl text-xs text-gray-500">Ad Banner Slot</div>
+        <!-- PAGE 2: SEPARATE CONVERSION / GO VIEW -->
+        <main id="pageConvert" class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10 hidden">
+            <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl shadow-xl space-y-6">
+                <div class="flex justify-between items-center border-b border-gray-100 pb-4">
+                    <button onclick="backToMainResult()" class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 px-4 py-2 rounded-xl font-bold transition">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Back to Video
+                    </button>
+                    <h3 id="convertViewTitle" class="font-extrabold text-sm text-gray-900 uppercase">Select Quality & Convert</h3>
+                </div>
+
+                <div id="convertQualityRows" class="space-y-3">
+                    <!-- Dynamic quality rows with 'Go' button will render here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- PAGE 3: PREPARING & DOWNLOAD READY VIEW -->
+        <main id="pagePrepare" class="max-w-4xl mx-auto px-4 sm:px-6 py-12 relative z-10 hidden text-center">
+            <div class="bg-cardbg border border-gray-200 p-8 sm:p-12 rounded-3xl shadow-xl max-w-lg mx-auto space-y-6">
+                
+                <div id="prepLoadingState" class="space-y-4 py-6">
+                    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent"></div>
+                    <h3 class="font-extrabold text-base text-gray-900">Your download is getting ready...</h3>
+                    <p class="text-xs text-gray-500">Preparing secure stream, please wait a few seconds.</p>
+                    <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden border border-gray-200">
+                        <div id="prepProgressBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-700" style="width: 25%;"></div>
+                    </div>
+                </div>
+
+                <div id="prepReadyState" class="hidden space-y-5">
+                    <div class="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-2xl font-bold shadow-sm">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="font-extrabold text-lg text-gray-900">Your download is ready!</h3>
+                    
+                    <div class="bg-gray-50 p-4 rounded-2xl border border-gray-200 flex items-center gap-4 text-left">
+                        <img id="prepThumb" src="" alt="Thumb" class="w-20 h-14 object-cover rounded-xl border border-gray-200">
+                        <div class="overflow-hidden">
+                            <h4 id="prepFileTitle" class="font-bold text-xs text-gray-900 line-clamp-1">Video Title</h4>
+                            <p id="prepFileMeta" class="text-xs text-primary font-bold mt-1">MP3 • 128kbps</p>
+                        </div>
+                    </div>
+
+                    <a id="finalDownloadBtn" href="#" target="_blank" class="block w-full bg-gradient-to-r from-primary to-secondary text-white font-extrabold py-4 rounded-2xl shadow-lg hover:opacity-95 transition text-sm">
+                        <i class="fa-solid fa-download mr-2"></i> Download Now
+                    </a>
+
+                    <button onclick="backToMainResult()" class="text-xs text-gray-500 hover:text-gray-800 font-bold pt-2 block mx-auto">
+                        <i class="fa-solid fa-rotate-left mr-1"></i> Convert another file
+                    </button>
+                </div>
+
             </div>
         </main>
     </div>
 
-    <!-- Convert Modal -->
-    <div id="convertModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white border border-gray-200 p-6 rounded-3xl max-w-md w-full text-center relative shadow-2xl space-y-4">
-            <div id="modalPreparingState">
-                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent mb-3"></div>
-                <h3 class="font-extrabold text-base text-gray-900 mb-1">Your download is getting ready...</h3>
-            </div>
-            <div id="modalReadyState" class="hidden space-y-4">
-                <h3 class="font-extrabold text-base text-gray-900">Your download is ready!</h3>
-                <a id="modalDownloadBtn" href="#" target="_blank" class="block w-full bg-gradient-to-r from-primary to-secondary text-white font-extrabold py-3.5 rounded-2xl shadow transition text-xs">Download Now</a>
-                <button onclick="closeConvertModal()" class="text-xs text-gray-400 font-semibold">Close</button>
-            </div>
+    <!-- Ad Slot -->
+    <div class="max-w-4xl mx-auto px-4 w-full my-6">
+        <div class="bg-white border border-dashed border-gray-300 rounded-3xl p-4 text-center shadow-sm">
+            <p class="text-[10px] text-gray-400 uppercase tracking-widest mb-1 font-bold">Advertisement / Sponsored Slot</p>
+            <div class="w-full py-3 bg-gray-50 rounded-2xl text-xs text-gray-500">Ad Banner Slot</div>
         </div>
     </div>
 
@@ -172,6 +205,19 @@
 
         function getBackendUrl() {
             return localStorage.getItem('admin_backend_url') || 'https://tubepulse-backend.onrender.com';
+        }
+
+        function switchPage(pageId) {
+            document.getElementById('pageSearch').classList.add('hidden');
+            document.getElementById('pageConvert').classList.add('hidden');
+            document.getElementById('pagePrepare').classList.add('hidden');
+            document.getElementById(pageId).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function backToMainResult() {
+            switchPage('pageSearch');
+            document.getElementById('resultBox').classList.remove('hidden');
         }
 
         async function startSearch() {
@@ -210,7 +256,7 @@
             listEl.innerHTML = '';
             allSearchResults.forEach(item => {
                 const card = document.createElement('div');
-                card.className = "bg-cardbg border border-gray-200 hover:border-primary p-3 rounded-2xl flex gap-3 items-center cursor-pointer transition shadow-sm";
+                card.className = "bg-cardbg border border-gray-200 hover:border-primary p-3.5 rounded-2xl flex gap-3 items-center cursor-pointer transition shadow-sm";
                 card.onclick = () => selectVideoToExtract(item.video_id);
                 card.innerHTML = `
                     <img src="${item.thumbnail}" alt="Thumb" class="w-28 h-16 object-cover rounded-xl border border-gray-200">
@@ -223,55 +269,77 @@
             });
         }
 
-        function openConversionView(type) {
-            const section = document.getElementById('conversionSection');
-            const content = document.getElementById('conversionContent');
-            const titleEl = document.getElementById('conversionTitle');
-            section.classList.remove('hidden');
-            section.scrollIntoView({ behavior: 'smooth' });
-            content.innerHTML = '';
+        // Open Separate Conversion Page with Quality & Go Button
+        function openConversionPage(type) {
+            switchPage('pageConvert');
+            const rowsContainer = document.getElementById('convertQualityRows');
+            rowsContainer.innerHTML = '';
             const backend = getBackendUrl();
 
             if(type === 'mp3') {
-                titleEl.innerHTML = `<i class="fa-solid fa-music text-green-600 mr-1"></i> Convert to MP3 (Select Audio Bitrate)`;
+                document.getElementById('convertViewTitle').innerText = "Convert to MP3 (Select Audio Bitrate)";
                 extractedVideoData.audio_downloads.forEach(d => {
                     const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${d.resolution}.mp3`;
                     const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
+                    
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center bg-gray-50 p-3.5 rounded-2xl border border-gray-200 text-xs";
-                    row.innerHTML = `<span>Audio Quality: ${d.resolution}</span> <button onclick="triggerConvertModal('${proxyUrl}', '${fileName}', 'MP3 • ${d.resolution}')" class="bg-green-600 text-white font-extrabold px-6 py-2.5 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-arrow-right"></i> Go</button>`;
-                    content.appendChild(row);
+                    row.className = "flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-200 text-xs";
+                    row.innerHTML = `
+                        <div>
+                            <span class="font-bold text-gray-900 text-sm">Audio Quality: ${d.resolution}</span>
+                            <p class="text-[11px] text-gray-500">MP3 • High Fidelity Audio Stream</p>
+                        </div>
+                        <button onclick="startPreparingProcess('${proxyUrl}', '${fileName}', 'MP3 Audio • ${d.resolution}')" class="bg-green-600 hover:bg-green-700 text-white font-extrabold px-6 py-3 rounded-xl shadow transition text-xs flex items-center gap-2">
+                            <span>Go</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
+                    rowsContainer.appendChild(row);
                 });
             } else if(type === 'mp4') {
-                titleEl.innerHTML = `<i class="fa-solid fa-video text-primary mr-1"></i> Convert to MP4 (Select Video Quality)`;
+                document.getElementById('convertViewTitle').innerText = "Convert to MP4 (Select Video Resolution)";
                 extractedVideoData.downloads.forEach(d => {
                     const fileName = `${currentVideoTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${d.resolution}.${d.ext}`;
                     const proxyUrl = `${backend}/api/download-proxy?url=${encodeURIComponent(d.raw_url)}&filename=${encodeURIComponent(fileName)}`;
+                    
                     const row = document.createElement('div');
-                    row.className = "flex justify-between items-center bg-gray-50 p-3.5 rounded-2xl border border-gray-200 text-xs";
-                    row.innerHTML = `<span>Video Quality: ${d.resolution}</span> <button onclick="triggerConvertModal('${proxyUrl}', '${fileName}', 'MP4 • ${d.resolution}')" class="bg-primary text-white font-extrabold px-6 py-2.5 rounded-xl shadow flex items-center gap-1.5"><i class="fa-solid fa-arrow-right"></i> Go</button>`;
-                    content.appendChild(row);
+                    row.className = "flex justify-between items-center bg-gray-50 p-4 rounded-2xl border border-gray-200 text-xs";
+                    row.innerHTML = `
+                        <div>
+                            <span class="font-bold text-gray-900 text-sm">Video Resolution: ${d.resolution} (${d.ext.toUpperCase()})</span>
+                            <p class="text-[11px] text-gray-500">MP4 • High Definition Stream</p>
+                        </div>
+                        <button onclick="startPreparingProcess('${proxyUrl}', '${fileName}', 'MP4 Video • ${d.resolution}')" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-6 py-3 rounded-xl shadow transition text-xs flex items-center gap-2">
+                            <span>Go</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    `;
+                    rowsContainer.appendChild(row);
                 });
             }
         }
 
-        function closeConversionSection() { document.getElementById('conversionSection').classList.add('hidden'); }
-
-        function triggerConvertModal(url, filename, fileType) {
-            const modal = document.getElementById('convertModal');
-            modal.classList.remove('hidden');
-            document.getElementById('modalPreparingState').classList.remove('hidden');
-            document.getElementById('modalReadyState').classList.add('hidden');
+        // Trigger Separate Preparing Page & Ready Download Page
+        function startPreparingProcess(url, filename, fileType) {
+            switchPage('pagePrepare');
+            document.getElementById('prepLoadingState').classList.remove('hidden');
+            document.getElementById('prepReadyState').classList.add('hidden');
+            document.getElementById('prepProgressBar').style.width = "30%";
 
             setTimeout(() => {
-                document.getElementById('modalPreparingState').classList.add('hidden');
-                document.getElementById('modalReadyState').classList.remove('hidden');
-                document.getElementById('modalDownloadBtn').href = url;
-                document.getElementById('modalDownloadBtn').setAttribute('download', filename);
-            }, 1200);
-        }
+                document.getElementById('prepProgressBar').style.width = "75%";
+            }, 600);
 
-        function closeConvertModal() { document.getElementById('convertModal').classList.add('hidden'); }
+            setTimeout(() => {
+                document.getElementById('prepProgressBar').style.width = "100%";
+                document.getElementById('prepLoadingState').classList.add('hidden');
+                document.getElementById('prepReadyState').classList.remove('hidden');
+
+                document.getElementById('prepThumb').src = currentThumbnailUrl;
+                document.getElementById('prepFileTitle').innerText = currentVideoTitle;
+                document.getElementById('prepFileMeta').innerText = fileType;
+                document.getElementById('finalDownloadBtn').href = url;
+                document.getElementById('finalDownloadBtn').setAttribute('download', filename);
+            }, 1400);
+        }
 
         async function selectVideoToExtract(videoId) {
             currentSelectedVideoId = videoId;
@@ -291,20 +359,32 @@
                     currentThumbnailUrl = data.thumbnail || `https://i.ytimg.com/vi/{videoId}/maxresdefault.jpg`;
                     
                     document.getElementById('vidTitle').innerText = currentVideoTitle;
+                    document.getElementById('vidUploader0');
                     document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'YouTube Creator'}`;
                     document.getElementById('vidThumbnail').src = data.thumbnail;
 
                     const dl = document.getElementById('downloadsList');
                     dl.innerHTML = `
                         <div class="flex justify-between items-center bg-gray-50 border p-4 rounded-2xl text-xs">
-                            <span class="font-bold">Video Quality Streams (360p - 1080p)</span>
-                            <button onclick="openConversionView('mp4')" class="bg-primary text-white font-extrabold px-5 py-2.5 rounded-xl shadow">Convert MP4</button>
+                            <div>
+                                <span class="font-bold text-gray-900 block text-sm">Video Streams (360p - 1080p)</span>
+                                <span class="text-gray-500 text-[11px]">Choose HD formats</span>
+                            </div>
+                            <button onclick="openConversionPage('mp4')" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-6 py-3 rounded-xl shadow transition">
+                                <i class="fa-solid fa-rotate mr-1"></i> Convert MP4
+                            </button>
                         </div>
                         <div class="flex justify-between items-center bg-gray-50 border p-4 rounded-2xl text-xs">
-                            <span class="font-bold">Audio MP3 Extraction (64kbps - 320kbps)</span>
-                            <button onclick="openConversionView('mp3')" class="bg-green-600 text-white font-extrabold px-5 py-2.5 rounded-xl shadow">Convert MP3</button>
+                            <div>
+                                <span class="font-bold text-gray-900 block text-sm">Audio MP3 Extraction (64kbps - 320kbps)</span>
+                                <span class="text-gray-500 text-[11px]">Choose audio bitrate</span>
+                            </div>
+                            <button onclick="openConversionPage('mp3')" class="bg-green-600 hover:bg-green-700 text-white font-extrabold px-6 py-3 rounded-xl shadow transition">
+                                <i class="fa-solid fa-rotate mr-1"></i> Convert MP3
+                            </button>
                         </div>
                     `;
+                    switchPage('pageSearch');
                     document.getElementById('resultBox').classList.remove('hidden');
                 }
             } catch (err) {
