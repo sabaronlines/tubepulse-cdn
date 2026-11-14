@@ -13,7 +13,7 @@ import os
 import tempfile
 import subprocess
 
-app = FastAPI(title="TubePulse AI Full Backend Engine", version="5.0.0")
+app = FastAPI(title="TubePulse AI Full Backend Engine", version="6.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,23 +29,9 @@ COMMON_HEADERS = {
     "Accept-Language": "en-US,en;q=0.9,hi;q=0.8",
 }
 
-PIPED_NODES = [
-    "https://pipedapi.kavin.rocks",
-    "https://pipedapi.tokhmi.xyz",
-    "https://api.piped.projectsegfault.com"
-]
-
 @app.get("/")
 def read_root():
-    return {
-        "status": "TubePulse AI Backend v5.0 is Live and Running at Full Capacity!",
-        "features": [
-            "100% Real Metadata Engine (oEmbed + HTML Scraper + yt-dlp)",
-            "Direct CDN Stream Resolver (64kbps-320kbps MP3 & 360p-1080p MP4)",
-            "Real Multi-Layer Transcript & Subtitle/Voice Parser",
-            "Chunked CDN Stream Proxy with Range Support"
-        ]
-    }
+    return {"status": "TubePulse AI Backend v6.0 is Live and Running at Full Capacity!"}
 
 def extract_video_id(url_or_query: str):
     if not url_or_query:
@@ -65,8 +51,6 @@ def fetch_verified_metadata(video_id: str):
         "uploader": None,
         "thumbnail": f"https://i.ytimg.com/vi/{video_id}/maxresdefault.jpg"
     }
-
-    # Layer 1: oEmbed API
     try:
         oembed_url = f"https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v={video_id}&format=json"
         resp = httpx.get(oembed_url, headers=COMMON_HEADERS, timeout=6.0)
@@ -77,7 +61,6 @@ def fetch_verified_metadata(video_id: str):
     except Exception:
         pass
 
-    # Layer 2: Watch Page HTML Scraping
     if not meta["title"] or not meta["uploader"]:
         try:
             watch_url = f"https://www.youtube.com/watch?v={video_id}"
@@ -218,7 +201,6 @@ def get_transcript(video_id: str = Query(...)):
     except Exception:
         pass
 
-    # Description and metadata fallback for speech transcription representation
     meta = fetch_verified_metadata(video_id)
     fallback_items = [
         {"start": 0.0, "text": f"Video Track Analysis for: {meta['title']}"},
