@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>TubePulse AI - YouTube Transcript & Media Converter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: 'var(--theme-primary, #ff2a85)',
+                        secondary: 'var(--theme-secondary, #ff65a3)',
+                        lightbg: '#fcfcfd',
+                        cardbg: '#ffffff',
+                        customtext: '#1a1a24'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'Noto Sans Devanagari', 'Noto Sans Oriya', 'Noto Sans Bengali', 'Noto Sans Telugu', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Noto+Sans+Telugu:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --theme-primary: #ff2a85;
+            --theme-secondary: #ff65a3;
+        }
+        body { background-color: #fcfcfd; color: #1a1a24; }
+        .neon-glow { box-shadow: 0 10px 30px rgba(255, 42, 133, 0.15); }
+        @keyframes floatParticle {
+            0% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
+            50% { transform: translateY(-40px) translateX(20px) scale(1.1); opacity: 0.6; }
+            100% { transform: translateY(0px) translateX(0px) scale(1); opacity: 0.3; }
+        }
+        .floating-blob {
+            position: absolute; width: 350px; height: 350px;
+            background: linear-gradient(135deg, rgba(255, 42, 133, 0.12), rgba(255, 101, 163, 0.15));
+            filter: blur(80px); border-radius: 50%; z-index: -1;
+            animation: floatParticle 9s ease-in-out infinite;
+        }
+        @keyframes waveMotion { 0% { transform: translateX(0); } 50% { transform: translateX(-25%); } 100% { transform: translateX(0); } }
+        .wave-animation {
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 C150,90 350,-40 500,40 C650,120 900,10 1200,50 L1200,120 L0,120 Z" fill="%231a1a24"/></svg>') repeat-x;
+            background-size: 1200px 50px; animation: waveMotion 12s linear infinite;
+        }
+        .mic-listening { background: #ef4444 !important; color: #fff !important; animation: micPulse 1.2s ease-in-out infinite; }
+        @keyframes micPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+            50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans flex flex-col justify-between relative overflow-x-hidden">
+
+    <div id="scrollProgress" class="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-primary to-secondary z-50 transition-all duration-100" style="width: 0%;"></div>
+    <div class="floating-blob top-10 left-5"></div>
+    <div class="floating-blob bottom-20 right-5" style="animation-delay: 4s;"></div>
+
+    <div>
+        <!-- Header -->
+        <header class="border-b border-gray-200 bg-cardbg/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-12 py-4 flex justify-between items-center shadow-sm">
+            <div class="flex items-center space-x-3 cursor-pointer" id="brandHome">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-lg neon-glow">
+                    <i class="fa-solid fa-play"></i>
+                </div>
+                <div>
+                    <h1 id="brand-title" class="font-bold text-lg tracking-wide text-gray-900">TubePulse <span class="text-primary">AI</span></h1>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-globe text-primary text-xs"></i>
+                <select id="uiLangSelect" class="bg-gray-50 text-xs font-semibold text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 focus:outline-none focus:border-primary shadow-sm">
+                    <option value="en">English (Default)</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="or">ଓଡ଼ିଆ (Odia)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="te">తెలుగు (Telugu)</option>
+                </select>
+            </div>
+        </header>
+        <div id="headerAd" class="max-w-4xl mx-auto px-4 sm:px-6 empty:hidden"></div>
+
+        <main class="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 relative z-10">
+
+            <!-- Hero Search -->
+            <div class="bg-cardbg border border-gray-200 p-6 sm:p-10 rounded-3xl shadow-xl neon-glow mb-10 text-center">
+                <h2 data-i18n="heroTitle" class="text-2xl sm:text-4xl font-extrabold tracking-tight mb-3 text-gray-900">YouTube Transcript & Media Converter</h2>
+                <p data-i18n="heroDesc" class="text-xs sm:text-sm text-gray-600 mb-6 max-w-xl mx-auto">Paste a YouTube URL or search by title to read timestamped transcripts instantly.</p>
+
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-400">
+                            <i class="fa-solid fa-link"></i>
+                        </span>
+                        <input type="text" id="searchInput" maxlength="200" autocomplete="off" placeholder="YouTube Link OR Type Keyword"
+                            class="w-full bg-gray-50 border border-gray-300 rounded-2xl pl-11 pr-14 py-4 text-sm text-gray-900 focus:outline-none focus:border-primary focus:bg-white transition shadow-inner">
+                        <div class="absolute inset-y-0 right-2 flex items-center">
+                            <button type="button" id="micBtn" aria-label="Voice search"
+                                class="w-10 h-10 rounded-full bg-primary/10 text-primary hover:bg-primary/20 flex items-center justify-center transition">
+                                <i class="fa-solid fa-microphone"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="searchBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-bold px-8 py-4 rounded-2xl shadow-lg hover:opacity-95 transition flex items-center justify-center space-x-2 text-sm shrink-0">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span data-i18n="search">Search</span>
+                    </button>
+                </div>
+                <p id="voiceStatus" class="hidden text-xs font-semibold mt-3"></p>
+            </div>
+
+            <!-- Error -->
+            <div id="errorBox" class="hidden bg-red-50 border border-red-200 text-red-700 text-xs font-semibold rounded-2xl p-4 mb-8"></div>
+
+            <!-- Loading -->
+            <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-200 rounded-3xl p-6 mb-8 shadow-md">
+                <div class="inline-block animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent mb-3"></div>
+                <p id="loadingStatusText" class="text-xs font-semibold text-gray-700 mb-2"></p>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 max-w-xs mx-auto overflow-hidden border border-gray-200">
+                    <div id="progressBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-500" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Search results grid -->
+            <div id="selectionGridBox" class="hidden space-y-4 mb-10">
+                <h3 data-i18n="selectResult" class="text-xs font-extrabold text-gray-800 uppercase tracking-wider">Select a video:</h3>
+                <div id="videoResultsList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <div id="loadMoreBox" class="hidden text-center pt-2">
+                    <button id="loadMoreBtn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs px-6 py-2.5 rounded-xl border border-gray-300 transition shadow-sm">
+                        <span data-i18n="loadMore">Load More Results</span> <i class="fa-solid fa-chevron-down ml-1"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Selected video -->
+            <div id="resultBox" class="hidden space-y-6 mb-10">
+                <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-8 flex flex-col items-center shadow-lg">
+                    <div class="w-full max-w-xl mb-4 rounded-2xl overflow-hidden border border-gray-200 shadow bg-black flex items-center justify-center">
+                        <img id="vidThumbnail" src="" alt="" class="w-full h-auto object-contain max-h-[360px]">
+                    </div>
+                    <div class="w-full text-center sm:text-left">
+                        <span data-i18n="selected" class="inline-block bg-primary/10 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider mb-2">Selected</span>
+                        <h3 id="vidTitle" class="text-base sm:text-lg font-bold text-gray-900 leading-snug"></h3>
+                        <p id="vidUploader" class="text-xs text-gray-500 mt-1"></p>
+                        <a id="watchLink" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 mt-4 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs px-4 py-2.5 rounded-xl border border-gray-300 transition">
+                            <i class="fa-brands fa-youtube text-red-600"></i> <span data-i18n="watchOnYt">Watch on YouTube</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-gradient-to-r from-primary/10 to-secondary/10 border border-primary/30 p-6 rounded-3xl text-center shadow-md">
+                    <h3 data-i18n="wantTranscript" class="text-sm font-extrabold text-gray-900 mb-2">Want timestamped text?</h3>
+                    <p data-i18n="wantTranscriptDesc" class="text-xs text-gray-600 mb-4">Fetch the captions YouTube has published for this video.</p>
+                    <button id="getTranscriptBtn" class="bg-gradient-to-r from-primary to-secondary text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-xs flex items-center justify-center space-x-2 mx-auto">
+                        <i class="fa-solid fa-closed-captioning"></i>
+                        <span data-i18n="getTranscript">Get Transcript</span>
+                    </button>
+                </div>
+
+                <!-- Transcript -->
+                <div id="transcriptSectionBox" class="hidden bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-100 mb-4 pb-3 gap-3">
+                        <h3 data-i18n="transcriptTitle" class="text-xs font-extrabold text-gray-800 uppercase tracking-wider">Transcript</h3>
+                        <div class="flex items-center gap-2">
+                            <span data-i18n="translate" class="text-[11px] text-gray-500 font-medium"><i class="fa-solid fa-language text-primary"></i> Translate:</span>
+                            <select id="translateSelect" disabled class="bg-gray-50 text-xs text-gray-800 px-3 py-1.5 rounded-xl border border-gray-300 focus:outline-none focus:border-primary font-medium">
+                                <option value="" data-i18n="original">Original</option>
+                                <option value="en">English</option>
+                                <option value="hi">Hindi (हिंदी)</option>
+                                <option value="or">Odia (ଓଡ଼ିଆ)</option>
+                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="te">Telugu (తెలుగు)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-xs text-gray-500">
+                        <span data-i18n="timestampLabel">Timestamped text</span>
+                        <div class="space-x-2">
+                            <button id="btnCopy" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-semibold transition border border-gray-200"><i class="fa-regular fa-copy mr-1 text-primary"></i><span data-i18n="copy">Copy</span></button>
+                            <button id="btnSaveTxt" class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded-xl font-semibold transition border border-gray-200"><i class="fa-solid fa-download mr-1 text-primary"></i><span data-i18n="saveTxt">Save TXT</span></button>
+                        </div>
+                    </div>
+                    <p id="transcriptStatus" class="text-[11px] text-green-600 font-semibold min-h-[1rem]"></p>
+                    <div id="transcriptOutput" class="bg-gray-50 border border-gray-200 rounded-2xl p-4 h-64 overflow-y-auto text-xs text-gray-800 space-y-2 font-mono shadow-inner"></div>
+                </div>
+            </div>
+
+            <!-- Media Converter (user's own uploaded files) -->
+            <section id="converterBox" class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-8 shadow-md mb-10">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-secondary text-white flex items-center justify-center shrink-0">
+                        <i class="fa-solid fa-arrows-rotate"></i>
+                    </div>
+                    <div>
+                        <h3 data-i18n="converterTitle" class="font-extrabold text-sm text-gray-900">Media Converter</h3>
+                        <p data-i18n="converterNote" class="text-[11px] text-gray-500">Upload your own video or audio file (max 150 MB). Convert to MP3 or MP4.</p>
+                    </div>
+                </div>
+
+                <label class="block border-2 border-dashed border-gray-300 hover:border-primary rounded-2xl p-6 text-center cursor-pointer transition">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-primary mb-2"></i>
+                    <p id="fileLabel" data-i18n="chooseFile" class="text-xs text-gray-600">Click to choose a file (MP4, MOV, MKV, WebM, MP3, M4A, WAV)</p>
+                    <input type="file" id="fileInput" class="hidden" accept=".mp4,.mov,.mkv,.webm,.avi,.mp3,.m4a,.wav,.ogg,.aac,.flac">
+                </label>
+
+                <div id="fileActions" class="hidden mt-4 space-y-3">
+                    <p id="fileInfo" class="text-xs text-gray-700 font-semibold"></p>
+                    <div class="flex gap-2">
+                        <button id="pickMp4" class="flex-1 bg-gradient-to-r from-primary to-secondary text-white font-extrabold py-3 rounded-xl shadow text-xs transition">
+                            <i class="fa-solid fa-video mr-1"></i> Convert MP4
+                        </button>
+                        <button id="pickMp3" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-extrabold py-3 rounded-xl shadow text-xs transition">
+                            <i class="fa-solid fa-music mr-1"></i> Convert MP3
+                        </button>
+                    </div>
+                    <div id="qualityList" class="hidden space-y-2"></div>
+                </div>
+            </section>
+
+            <!-- Ad slot (above How To Use) -->
+            <div class="bg-white border border-dashed border-gray-300 rounded-3xl p-4 mb-6 text-center shadow-sm">
+                <p data-i18n="sponsored" class="text-[10px] text-gray-400 uppercase tracking-widest mb-1 font-bold">Advertisement / Sponsored</p>
+                <div class="w-full py-4 bg-gray-50 rounded-2xl text-xs text-gray-500">
+                    <i class="fa-solid fa-rectangle-ad mr-1 text-primary"></i> <span data-i18n="adSlot">Ad banner slot</span>
+                </div>
+            </div>
+
+            <!-- How to use -->
+            <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <h3 data-i18n="howTitle" class="text-sm font-extrabold text-gray-900 tracking-wide uppercase">How to Use</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-700">
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 1:</strong> <span data-i18n="step1">Paste a YouTube link or type a video title in the search box.</span>
+                    </div>
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 2:</strong> <span data-i18n="step2">Click Search and select the video you want.</span>
+                    </div>
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 3:</strong> <span data-i18n="step3">Get the transcript, translate it, then copy or save it as TXT.</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="bg-[#1a1a24] text-gray-300 pt-8 pb-6 px-4 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-4 wave-animation opacity-30"></div>
+        <div class="max-w-4xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4 text-xs relative z-10">
+            <p>© 2026 TubePulse AI. All rights reserved.</p>
+            <div class="flex flex-wrap justify-center gap-5 font-medium">
+                <button data-modal="disclaimerModal" class="hover:text-primary transition">Disclaimer</button>
+                <button data-modal="contactModal" class="hover:text-primary transition font-bold text-white"><i class="fa-solid fa-headset text-primary mr-1"></i> Contact Admin</button>
+                <button data-modal="privacyModal" class="hover:text-primary transition">Privacy Policy</button>
+                <button data-modal="termsModal" class="hover:text-primary transition">Terms &amp; Conditions</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Convert progress modal -->
+    <div id="convertModal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-center relative shadow-2xl">
+            <button data-close="convertModal" class="absolute top-4 right-4 text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-base"></i></button>
+
+            <div id="cvPreparing">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-3"></div>
+                <h3 class="font-extrabold text-base text-gray-900 mb-1">Your download is getting ready...</h3>
+                <p class="text-xs text-gray-500 mb-4">Preparing your file, please wait.</p>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden border border-gray-200">
+                    <div id="cvBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-700" style="width: 0%;"></div>
+                </div>
+                <p id="cvPct" class="text-[11px] text-gray-500 mt-2">0%</p>
+            </div>
+
+            <div id="cvReady" class="hidden space-y-4">
+                <div class="w-12 h-12 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto text-xl shadow-sm">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <h3 class="font-extrabold text-base text-gray-900">Your download is ready!</h3>
+                <p id="cvName" class="text-xs text-primary font-bold"></p>
+                <a id="cvDownload" href="#" download class="block w-full bg-gradient-to-r from-primary to-secondary text-white font-extrabold py-3.5 rounded-2xl shadow-lg hover:opacity-95 transition text-xs">
+                    <i class="fa-solid fa-download mr-1"></i> Download Now
+                </a>
+            </div>
+
+            <div id="cvError" class="hidden space-y-4">
+                <p id="cvErrorText" class="text-xs text-red-600 font-semibold"></p>
+                <button data-close="convertModal" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs px-6 py-2.5 rounded-xl border border-gray-300">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Legal modals -->
+    <div id="disclaimerModal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <h3 class="font-bold text-base text-gray-900 mb-3"><i class="fa-solid fa-triangle-exclamation text-yellow-500 mr-2"></i> Disclaimer</h3>
+            <div class="space-y-3 leading-relaxed">
+                <p>TubePulse AI is an independent tool and is not affiliated with YouTube or Google.</p>
+                <p><strong>Playback:</strong> Videos play through YouTube's official embedded player and links open on YouTube.</p>
+                <p><strong>Transcripts:</strong> Transcripts come only from captions that YouTube already publishes for each video. Translations are machine-generated and may contain errors.</p>
+                <p><strong>Media Converter:</strong> The converter works only on files that you upload yourself. It does not download content from YouTube or any other website. You must have the right to convert and use any file you upload.</p>
+                <p><strong>Your responsibility:</strong> Users must follow YouTube's Terms of Service and respect the rights of content owners.</p>
+            </div>
+            <button data-close="disclaimerModal" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
+        </div>
+    </div>
+
+    <div id="privacyModal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <h3 class="font-bold text-base text-gray-900 mb-3"><i class="fa-solid fa-shield-halved text-primary mr-2"></i> Privacy Policy</h3>
+            <div class="space-y-3 leading-relaxed">
+                <p>No account is needed to use TubePulse AI. Your language choice is stored only in your browser.</p>
+                <p><strong>Requests:</strong> Search terms and video IDs are sent to our server, which forwards them to YouTube's services to fulfill the request.</p>
+                <p><strong>Uploaded files:</strong> Files you upload for conversion are processed on our server and deleted automatically after about 20 minutes.</p>
+                <p><strong>Voice search:</strong> If you use the mic, your browser's speech service converts your voice to text. The audio is handled by your browser, not stored by TubePulse AI.</p>
+                <p><strong>Advertising:</strong> Third-party ad networks, if enabled, may use cookies to show ads. Check each network's policy.</p>
+            </div>
+            <button data-close="privacyModal" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
+        </div>
+    </div>
+
+    <div id="termsModal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-lg w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <h3 class="font-bold text-base text-gray-900 mb-3"><i class="fa-solid fa-file-contract text-secondary mr-2"></i> Terms &amp; Conditions</h3>
+            <div class="space-y-3 leading-relaxed">
+                <p><strong>1. Acceptable use:</strong> Do not upload files you do not have the right to convert. Do not use this service for mass scraping, commercial resale of content, or any activity that breaks YouTube's Terms of Service.</p>
+                <p><strong>2. Availability:</strong> The service is provided as is. Features may change or stop at any time.</p>
+                <p><strong>3. Liability:</strong> You are responsible for how you use any text or file you obtain through this service.</p>
+            </div>
+            <button data-close="termsModal" class="mt-6 bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 px-4 rounded-2xl text-xs w-full hover:opacity-90 transition shadow-lg">Close Window</button>
+        </div>
+    </div>
+
+    <!-- Contact -->
+    <div id="contactModal" class="modal fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="bg-cardbg border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-xs text-gray-700 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div class="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
+                <h3 class="font-bold text-sm text-gray-900"><i class="fa-solid fa-headset text-primary mr-2"></i> Contact Admin &amp; Support</h3>
+                <button data-close="contactModal" class="text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark text-base"></i></button>
+            </div>
+            <form id="supportForm" class="space-y-3">
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Your Full Name:</label>
+                    <input type="text" id="supName" required maxlength="100" placeholder="Enter your name" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Your Email Address:</label>
+                    <input type="email" id="supEmail" required maxlength="200" placeholder="name@example.com" class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary">
+                </div>
+                <div>
+                    <label class="block text-gray-600 mb-1 font-semibold">Describe Your Issue / Message:</label>
+                    <textarea id="supMessage" rows="3" required maxlength="2000" placeholder="Explain the error or your question..." class="w-full bg-gray-50 border border-gray-300 rounded-xl px-3 py-2.5 text-gray-900 text-xs focus:outline-none focus:border-primary"></textarea>
+                </div>
+                <p class="text-[11px] text-gray-500">This opens your email app with your message. Attach any screenshot there.</p>
+                <button type="submit" class="w-full bg-gradient-to-r from-primary to-secondary text-white font-bold py-3 rounded-xl shadow-lg hover:opacity-95 transition text-xs mt-2">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> Send Message to Admin
+                </button>
+            </form>
+            <div class="mt-6 pt-4 border-t border-gray-100 text-center space-y-2">
+                <p class="text-[11px] text-gray-500 font-semibold">Join Our Official Communities:</p>
+                <div class="flex justify-center gap-3">
+                    <a id="communityWhatsApp" href="#" target="_blank" rel="noopener noreferrer" class="hidden bg-green-50 text-green-700 border border-green-200 px-3 py-2 rounded-xl font-bold text-[11px] hover:bg-green-100 transition items-center">
+                        <i class="fa-brands fa-whatsapp mr-1 text-sm"></i> WhatsApp
+                    </a>
+                    <a id="communityTelegram" href="#" target="_blank" rel="noopener noreferrer" class="hidden bg-blue-50 text-blue-700 border border-blue-200 px-3 py-2 rounded-xl font-bold text-[11px] hover:bg-blue-100 transition items-center">
+                        <i class="fa-brands fa-telegram mr-1 text-sm"></i> Telegram
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ---------- UI translations ---------- */
+        const T = {
+            en: { heroTitle: "YouTube Transcript & Media Converter", heroDesc: "Paste a YouTube URL or search by title to read timestamped transcripts instantly.", search: "Search", selectResult: "Select a video:", loadMore: "Load More Results", selected: "Selected", watchOnYt: "Watch on YouTube", wantTranscript: "Want timestamped text?", wantTranscriptDesc: "Fetch the captions YouTube has published for this video.", getTranscript: "Get Transcript", transcriptTitle: "Transcript", translate: "Translate:", original: "Original", timestampLabel: "Timestamped text", copy: "Copy", saveTxt: "Save TXT", copied: "Copied to clipboard!", sponsored: "Advertisement / Sponsored", adSlot: "Ad banner slot", howTitle: "How to Use", step1: "Paste a YouTube link or type a video title in the search box.", step2: "Click Search and select the video you want.", step3: "Get the transcript, translate it, then copy or save it as TXT.", searching: "Searching...", fetchingCaptions: "Fetching captions...", translating: "Translating...", noResults: "No videos found. Try another search.", searchFailed: "Search failed. Please try again.", noCaptions: "No captions are available for this video.", translateFailed: "Translation failed. Please try again.", emptyQuery: "Enter a link or keywords.", lines: "lines", converterTitle: "Media Converter", converterNote: "Upload your own video or audio file (max 150 MB). Convert to MP3 or MP4.", chooseFile: "Click to choose a file (MP4, MOV, MKV, WebM, MP3, M4A, WAV)", uploading: "Uploading file...", fileTooBig: "File is larger than 150 MB.", uploadFailed: "Upload failed. Please try again.", convertFailed: "Conversion failed. Please try again." },
+            hi: { heroTitle: "YouTube ट्रांसक्रिप्ट और मीडिया कन्वर्टर", heroDesc: "YouTube URL पेस्ट करें या शीर्षक से खोजें और तुरंत टाइमस्टैम्प वाला ट्रांसक्रिप्ट पढ़ें।", search: "खोजें", selectResult: "कोई वीडियो चुनें:", loadMore: "और परिणाम देखें", selected: "चुना गया", watchOnYt: "YouTube पर देखें", wantTranscript: "टाइमस्टैम्प वाला टेक्स्ट चाहिए?", wantTranscriptDesc: "इस वीडियो के लिए YouTube पर प्रकाशित कैप्शन लाएँ।", getTranscript: "ट्रांसक्रिप्ट प्राप्त करें", transcriptTitle: "ट्रांसक्रिप्ट", translate: "अनुवाद करें:", original: "मूल", timestampLabel: "टाइमस्टैम्प वाला टेक्स्ट", copy: "कॉपी करें", saveTxt: "TXT सेव करें", copied: "कॉपी हो गया!", sponsored: "विज्ञापन / प्रायोजित", adSlot: "विज्ञापन बैनर", howTitle: "उपयोग कैसे करें", step1: "सर्च बॉक्स में YouTube लिंक पेस्ट करें या वीडियो का शीर्षक लिखें।", step2: "'Search' पर क्लिक करें और अपना वीडियो चुनें।", step3: "ट्रांसक्रिप्ट लें, अनुवाद करें, फिर कॉपी करें या TXT सेव करें।", searching: "खोज रहे हैं...", fetchingCaptions: "कैप्शन ला रहे हैं...", translating: "अनुवाद हो रहा है...", noResults: "कोई वीडियो नहीं मिला। कोई और शब्द आज़माएँ।", searchFailed: "खोज विफल रही। फिर से कोशिश करें।", noCaptions: "इस वीडियो के लिए कैप्शन उपलब्ध नहीं हैं।", translateFailed: "अनुवाद विफल रहा। फिर से कोशिश करें।", emptyQuery: "लिंक या कीवर्ड लिखें।", lines: "पंक्तियाँ" },
+            or: { heroTitle: "YouTube ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ମିଡିଆ କନଭର୍ଟର", heroDesc: "YouTube URL ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଶୀର୍ଷକରେ ଖୋଜନ୍ତୁ ଏବଂ ସମୟ ସହ ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ପଢ଼ନ୍ତୁ।", search: "ଖୋଜନ୍ତୁ", selectResult: "ଏକ ଭିଡିଓ ବାଛନ୍ତୁ:", loadMore: "ଅଧିକ ଫଳାଫଳ", selected: "ବାଛାଯାଇଛି", watchOnYt: "YouTube ରେ ଦେଖନ୍ତୁ", wantTranscript: "ସମୟ ସହିତ ଟେକ୍ସଟ ଚାହୁଁଛନ୍ତି?", wantTranscriptDesc: "ଏହି ଭିଡିଓ ପାଇଁ YouTube ପ୍ରକାଶିତ କ୍ୟାପ୍ସନ ଆଣନ୍ତୁ।", getTranscript: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ପାଆନ୍ତୁ", transcriptTitle: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ", translate: "ଅନୁବାଦ:", original: "ମୂଳ", timestampLabel: "ସମୟ ସହିତ ଟେକ୍ସଟ", copy: "କପି କରନ୍ତୁ", saveTxt: "TXT ସେଭ୍ କରନ୍ତୁ", copied: "କପି ହେଲା!", sponsored: "ପ୍ରାୟୋଜିତ", adSlot: "ବିଜ୍ଞାପନ ବ୍ୟାନର", howTitle: "କିପରି ବ୍ୟବହାର କରିବେ", step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ YouTube ଲିଙ୍କ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଭିଡିଓ ଶୀର୍ଷକ ଲେଖନ୍ତୁ।", step2: "'Search' କ୍ଲିକ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ଭିଡିଓ ବାଛନ୍ତୁ।", step3: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ପାଆନ୍ତୁ, ଅନୁବାଦ କରନ୍ତୁ, ତା'ପରେ କପି କିମ୍ବା TXT ସେଭ୍ କରନ୍ତୁ।", searching: "ଖୋଜାଯାଉଛି...", fetchingCaptions: "କ୍ୟାପ୍ସନ ଆଣାଯାଉଛି...", translating: "ଅନୁବାଦ ହେଉଛି...", noResults: "କୌଣସି ଭିଡିଓ ମିଳିଲା ନାହିଁ।", searchFailed: "ଖୋଜ ବିଫଳ ହେଲା। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।", noCaptions: "ଏହି ଭିଡିଓ ପାଇଁ କ୍ୟାପ୍ସନ ଉପଲବ୍ଧ ନାହିଁ।", translateFailed: "ଅନୁବାଦ ବିଫଳ ହେଲା। ପୁଣି ଚେଷ୍ଟା କରନ୍ତୁ।", emptyQuery: "ଲିଙ୍କ କିମ୍ବା କୀୱାର୍ଡ ଲେଖନ୍ତୁ।", lines: "ଧାଡ଼ି" },
+            bn: { heroTitle: "YouTube ট্রান্সক্রিপ্ট ও মিডিয়া কনভার্টার", heroDesc: "YouTube URL পেস্ট করুন বা শিরোনামে খুঁজুন এবং সময়সহ ট্রান্সক্রিপ্ট পড়ুন।", search: "খুঁজুন", selectResult: "একটি ভিডিও বেছে নিন:", loadMore: "আরও ফলাফল", selected: "নির্বাচিত", watchOnYt: "YouTube-এ দেখুন", wantTranscript: "সময়সহ টেক্সট চান?", wantTranscriptDesc: "এই ভিডিওর জন্য YouTube-এর প্রকাশিত ক্যাপশন আনুন।", getTranscript: "ট্রান্সক্রিপ্ট নিন", transcriptTitle: "ট্রান্সক্রিপ্ট", translate: "অনুবাদ:", original: "মূল", timestampLabel: "সময়সহ টেক্সট", copy: "কপি করুন", saveTxt: "TXT সেভ করুন", copied: "কপি হয়েছে!", sponsored: "বিজ্ঞাপন / স্পনসর্ড", adSlot: "বিজ্ঞাপন ব্যানার", howTitle: "কীভাবে ব্যবহার করবেন", step1: "সার্চ বক্সে YouTube লিংক পেস্ট করুন বা ভিডিওর শিরোনাম লিখুন।", step2: "'Search' ক্লিক করুন এবং আপনার ভিডিও বেছে নিন।", step3: "ট্রান্সক্রিপ্ট নিন, অনুবাদ করুন, তারপর কপি করুন বা TXT সেভ করুন।", searching: "খোঁজা হচ্ছে...", fetchingCaptions: "ক্যাপশন আনা হচ্ছে...", translating: "অনুবাদ হচ্ছে...", noResults: "কোনো ভিডিও পাওয়া যায়নি।", searchFailed: "অনুসন্ধান ব্যর্থ হয়েছে। আবার চেষ্টা করুন।", noCaptions: "এই ভিডিওর জন্য ক্যাপশন নেই।", translateFailed: "অনুবাদ ব্যর্থ হয়েছে। আবার চেষ্টা করুন।", emptyQuery: "লিংক বা কীওয়ার্ড লিখুন।", lines: "লাইন" },
+            te: { heroTitle: "YouTube ట్రాన్స్‌క్రిప్ట్ & మీడియా కన్వర్టర్", heroDesc: "YouTube URL అతికించండి లేదా శీర్షికతో వెతికి సమయంతో కూడిన ట్రాన్స్‌క్రిప్ట్ చదవండి.", search: "వెతకండి", selectResult: "ఒక వీడియోను ఎంచుకోండి:", loadMore: "మరిన్ని ఫలితాలు", selected: "ఎంచుకున్నది", watchOnYt: "YouTubeలో చూడండి", wantTranscript: "సమయంతో కూడిన టెక్స్ట్ కావాలా?", wantTranscriptDesc: "ఈ వీడియోకు YouTube ప్రచురించిన క్యాప్షన్లను తీసుకురండి.", getTranscript: "ట్రాన్స్‌క్రిప్ట్ పొందండి", transcriptTitle: "ట్రాన్స్‌క్రిప్ట్", translate: "అనువదించు:", original: "అసలు", timestampLabel: "సమయంతో కూడిన టెక్స్ట్", copy: "కాపీ", saveTxt: "TXT సేవ్", copied: "కాపీ అయింది!", sponsored: "స్పాన్సర్ చేయబడింది", adSlot: "ప్రకటన బ్యానర్", howTitle: "ఎలా ఉపయోగించాలి", step1: "సెర్చ్ బాక్స్‌లో YouTube లింక్ అతికించండి లేదా వీడియో శీర్షిక టైప్ చేయండి.", step2: "'Search' నొక్కి మీకు నచ్చిన వీడియోను ఎంచుకోండి.", step3: "ట్రాన్స్‌క్రిప్ట్ తీసుకోండి, అనువదించండి, తర్వాత కాపీ చేయండి లేదా TXT సేవ్ చేయండి.", searching: "వెతుకుతోంది...", fetchingCaptions: "క్యాప్షన్లు తెస్తోంది...", translating: "అనువదిస్తోంది...", noResults: "వీడియోలు కనబడలేదు. వేరే పదం ప్రయత్నించండి.", searchFailed: "వెతకడం విఫలమైంది. మళ్లీ ప్రయత్నించండి.", noCaptions: "ఈ వీడియోకు క్యాప్షన్లు అందుబాటులో లేవు.", translateFailed: "అనువాదం విఫలమైంది. మళ్లీ ప్రయత్నించండి.", emptyQuery: "లింక్ లేదా కీవర్డ్‌లు నమోదు చేయండి.", lines: "పంక్తులు" }
+        };
+
+        const PLACEHOLDER = {
+            en: "YouTube Link OR Type Keyword",
+            hi: "YouTube लिंक या कीवर्ड टाइप करें",
+            or: "YouTube ଲିଙ୍କ୍ କିମ୍ବା କୀୱାର୍ଡ ଟାଇପ୍ କରନ୍ତୁ",
+            bn: "YouTube লিংক বা কীওয়ার্ড টাইপ করুন",
+            te: "YouTube లింక్ లేదా కీవర్డ్ టైప్ చేయండి"
+        };
+
+        const VOICE_LANG = { en: 'en-IN', hi: 'hi-IN', or: 'or-IN', bn: 'bn-IN', te: 'te-IN' };
+
+        const VOICE_MSG = {
+            en: { listening: "Listening... Speak the video title or paste a link.", noSpeech: "No speech heard. Tap the mic and try again.", denied: "Mic permission is blocked. Allow it in your browser settings.", unsupported: "Voice search is not supported in this browser. Please use Chrome or Edge.", error: "Voice search failed. Please try again." },
+            hi: { listening: "सुन रहा हूँ... वीडियो का नाम बोलें या लिंक पेस्ट करें।", noSpeech: "कुछ सुनाई नहीं दिया। फिर से माइक दबाएँ।", denied: "माइक की अनुमति नहीं है। ब्राउज़र सेटिंग्स में अनुमति दें।", unsupported: "इस ब्राउज़र में वॉइस सर्च समर्थित नहीं है। Chrome या Edge उपयोग करें।", error: "वॉइस सर्च में त्रुटि हुई। फिर से कोशिश करें।" }
+        };
+
+        const MAX_UPLOAD = 150 * 1024 * 1024;
+        const MP3_OPTS = [64, 128, 192, 320];
+        const MP4_OPTS = [360, 480, 720, 1080];
+
+        let lang = localStorage.getItem('site_ui_lang') || 'en';
+        const tr = (key) => (T[lang] && T[lang][key]) || T.en[key] || key;
+        const vmsg = (key) => (VOICE_MSG[lang] && VOICE_MSG[lang][key]) || VOICE_MSG.en[key];
+
+        function applyLang(code) {
+            lang = T[code] ? code : 'en';
+            localStorage.setItem('site_ui_lang', lang);
+            document.documentElement.lang = lang;
+            $('uiLangSelect').value = lang;
+            document.querySelectorAll('[data-i18n]').forEach(n => n.textContent = tr(n.dataset.i18n));
+            $('searchInput').placeholder = PLACEHOLDER[lang] || PLACEHOLDER.en;
+        }
+
+        /* ---------- Helpers ---------- */
+        const $ = (id) => document.getElementById(id);
+
+        function el(tag, cls = '', text = '') {
+            const e = document.createElement(tag);
+            if (cls) e.className = cls;
+            if (text) e.textContent = text;
+            return e;
+        }
+
+        async function api(path, options) {
+            const r = await fetch(path, options);
+            let data = null;
+            try { data = await r.json(); } catch (_) { /* non-JSON response */ }
+            if (!r.ok) throw new Error((data && data.detail) || `HTTP ${r.status}`);
+            return data;
+        }
+
+        function showError(msg) {
+            const box = $('errorBox');
+            box.textContent = msg;
+            box.classList.remove('hidden');
+        }
+        function clearError() { $('errorBox').classList.add('hidden'); }
+
+        function setLoading(on, status = '', pct = 0) {
+            $('loadingBox').classList.toggle('hidden', !on);
+            if (on) {
+                $('loadingStatusText').textContent = status;
+                $('progressBar').style.width = pct + '%';
+            }
+        }
+
+        // Run <script> tags from admin-provided HTML (ad code)
+        function injectHtml(container, html) {
+            container.innerHTML = '';
+            const range = document.createRange();
+            range.selectNodeContents(container);
+            container.appendChild(range.createContextualFragment(html));
+        }
+
+        /* ---------- Settings from server ---------- */
+        async function loadSettings() {
+            try {
+                const s = await api('/api/settings');
+                document.title = `${s.site_title} - Transcript & Media Converter`;
+                const brand = $('brand-title');
+                brand.textContent = s.site_title + ' ';
+                brand.appendChild(el('span', 'text-primary', 'AI'));
+                if (/^#[0-9a-fA-F]{6}$/.test(s.accent_color)) {
+                    document.documentElement.style.setProperty('--theme-primary', s.accent_color);
+                }
+                if (s.header_ad_script) injectHtml($('headerAd'), s.header_ad_script);
+                setLink($('communityWhatsApp'), s.whatsapp_url);
+                setLink($('communityTelegram'), s.telegram_url);
+            } catch (_) { /* keep defaults */ }
+        }
+
+        function setLink(a, url) {
+            if (url) {
+                a.href = url;
+                a.classList.remove('hidden');
+                a.classList.add('inline-flex');
+            } else {
+                a.classList.add('hidden');
+            }
+        }
+
+        /* ---------- Search ---------- */
+        let allResults = [];
+        let displayedCount = 4;
+
+        async function startSearch() {
+            const q = $('searchInput').value.trim();
+            clearError();
+            if (!q) return showError(tr('emptyQuery'));
+
+            $('resultBox').classList.add('hidden');
+            $('selectionGridBox').classList.add('hidden');
+            setLoading(true, tr('searching'), 50);
+
+            try {
+                const data = await api(`/api/search?q=${encodeURIComponent(q)}`);
+                setLoading(false);
+                const results = data.results || [];
+                if (!results.length) return showError(tr('noResults'));
+                if (results.length === 1) return selectVideo(results[0]);
+
+                allResults = results;
+                displayedCount = Math.min(4, allResults.length);
+                renderVideoGrid();
+                $('selectionGridBox').classList.remove('hidden');
+            } catch (e) {
+                setLoading(false);
+                showError(`${tr('searchFailed')} (${e.message})`);
+            }
+        }
+
+        function renderVideoGrid() {
+            const list = $('videoResultsList');
+            list.innerHTML = '';
+            allResults.slice(0, displayedCount).forEach(item => {
+                const card = el('button', 'bg-cardbg border border-gray-200 hover:border-primary p-3 rounded-2xl flex gap-3 items-center text-left transition shadow-sm');
+                card.type = 'button';
+                const img = el('img', 'w-28 h-16 object-cover rounded-xl border border-gray-200 shrink-0');
+                img.src = item.thumbnail;
+                img.alt = '';
+                img.loading = 'lazy';
+                const body = el('div', 'flex-1 min-w-0');
+                body.append(
+                    el('h4', 'font-bold text-xs text-gray-900 line-clamp-2', item.title),
+                    el('p', 'text-[11px] text-gray-500 mt-0.5 truncate', item.uploader)
+                );
+                card.append(img, body);
+                card.addEventListener('click', () => selectVideo(item));
+                list.appendChild(card);
+            });
+            $('loadMoreBox').classList.toggle('hidden', displayedCount >= allResults.length);
+        }
+
+        /* ---------- Selected video ---------- */
+        let currentVideo = null;
+        let rawLines = [];
+        let translatedTexts = null;
+
+        function selectVideo(item) {
+            currentVideo = item;
+            rawLines = [];
+            translatedTexts = null;
+            clearError();
+
+            $('selectionGridBox').classList.add('hidden');
+            $('vidThumbnail').src = item.thumbnail;
+            $('vidTitle').textContent = item.title;
+            $('vidUploader').textContent = item.uploader;
+            $('watchLink').href = `https://www.youtube.com/watch?v=${encodeURIComponent(item.video_id)}`;
+
+            $('transcriptSectionBox').classList.add('hidden');
+            $('transcriptOutput').innerHTML = '';
+            $('transcriptStatus').textContent = '';
+            $('translateSelect').value = '';
+            $('translateSelect').disabled = true;
+
+            $('resultBox').classList.remove('hidden');
+            $('resultBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        /* ---------- Transcript ---------- */
+        async function fetchTranscript() {
+            if (!currentVideo) return;
+            clearError();
+            setLoading(true, tr('fetchingCaptions'), 50);
+            try {
+                const data = await api(`/api/transcript?video_id=${encodeURIComponent(currentVideo.video_id)}`);
+                setLoading(false);
+                rawLines = data.lines || [];
+                translatedTexts = null;
+                $('translateSelect').value = '';
+                if (!rawLines.length) return showError(tr('noCaptions'));
+
+                $('translateSelect').disabled = false;
+                $('transcriptStatus').textContent = `${rawLines.length} ${tr('lines')}`;
+                renderLines();
+                $('transcriptSectionBox').classList.remove('hidden');
+                $('transcriptSectionBox').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } catch (e) {
+                setLoading(false);
+                showError(tr('noCaptions'));
+            }
+        }
+
+        function renderLines() {
+            const box = $('transcriptOutput');
+            box.innerHTML = '';
+            rawLines.forEach((line, i) => {
+                const row = el('div', 'flex gap-3 hover:bg-gray-100 p-1.5 rounded-xl text-xs transition');
+                row.appendChild(el('span', 'text-primary font-mono font-bold shrink-0 w-14', `[${line.time}]`));
+                const body = el('div', 'text-gray-700 flex-1');
+                body.appendChild(document.createTextNode(line.text));
+                if (translatedTexts && translatedTexts[i]) {
+                    body.appendChild(el('div', 'text-gray-500 mt-0.5', translatedTexts[i]));
+                }
+                row.appendChild(body);
+                box.appendChild(row);
+            });
+        }
+
+        async function translateTranscript() {
+            const target = $('translateSelect').value;
+            clearError();
+            if (!target) {
+                translatedTexts = null;
+                renderLines();
+                return;
+            }
+            const texts = rawLines.map(l => l.text);
+            const out = [];
+            setLoading(true, tr('translating'), 60);
+            try {
+                // Backend accepts max 500 lines per request; send 200 at a time
+                for (let i = 0; i < texts.length; i += 200) {
+                    const data = await api('/api/translate-batch', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ lines: texts.slice(i, i + 200), target }),
+                    });
+                    out.push(...data.lines);
+                }
+                translatedTexts = out;
+                renderLines();
+            } catch (e) {
+                showError(tr('translateFailed'));
+                $('translateSelect').value = '';
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        function transcriptText() {
+            return rawLines.map((l, i) => {
+                const base = `[${l.time}] ${l.text}`;
+                return translatedTexts && translatedTexts[i] ? `${base}\n${translatedTexts[i]}` : base;
+            }).join('\n');
+        }
+
+        async function copyTranscript() {
+            if (!rawLines.length) return;
+            try {
+                await navigator.clipboard.writeText(transcriptText());
+                $('transcriptStatus').textContent = tr('copied');
+            } catch (_) {
+                showError(tr('searchFailed'));
+            }
+        }
+
+        function saveTranscript() {
+            if (!rawLines.length) return;
+            const name = (currentVideo?.title || 'transcript').replace(/[\\/:*?"<>|]+/g, '_').slice(0, 80);
+            const blob = new Blob([transcriptText()], { type: 'text/plain;charset=utf-8' });
+            const a = el('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${name}.txt`;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+
+        /* ---------- Media converter (user's own files) ---------- */
+        const conv = { jobId: null, name: '', hasVideo: false, hasAudio: false, pollToken: 0 };
+
+        function formatDuration(sec) {
+            const s = Math.round(sec);
+            const m = Math.floor(s / 60);
+            return `${m}:${String(s % 60).padStart(2, '0')}`;
+        }
+
+        async function onFileChosen(e) {
+            const file = e.target.files[0];
+            clearError();
+            $('qualityList').classList.add('hidden');
+            if (!file) return;
+            if (file.size > MAX_UPLOAD) return showError(tr('fileTooBig'));
+
+            setLoading(true, tr('uploading'), 50);
+            try {
+                const fd = new FormData();
+                fd.append('file', file);
+                const data = await api('/api/convert/upload', { method: 'POST', body: fd });
+                conv.jobId = data.job_id;
+                conv.name = data.name;
+                conv.hasVideo = data.has_video;
+                conv.hasAudio = data.has_audio;
+
+                $('fileLabel').textContent = file.name;
+                $('fileInfo').textContent = `${data.name} • ${formatDuration(data.duration)}`;
+                $('pickMp4').disabled = !data.has_video;
+                $('pickMp4').classList.toggle('opacity-40', !data.has_video);
+                $('pickMp3').disabled = !data.has_audio;
+                $('pickMp3').classList.toggle('opacity-40', !data.has_audio);
+                $('fileActions').classList.remove('hidden');
+            } catch (err) {
+                conv.jobId = null;
+                $('fileActions').classList.add('hidden');
+                showError(err.message || tr('uploadFailed'));
+            } finally {
+                setLoading(false);
+                e.target.value = '';
+            }
+        }
+
+        function showQualities(format) {
+            if (!conv.jobId) return;
+            const list = $('qualityList');
+            list.innerHTML = '';
+            const isMp3 = format === 'mp3';
+            (isMp3 ? MP3_OPTS : MP4_OPTS).forEach(q => {
+                const row = el('div', 'flex justify-between items-center bg-gray-50 border border-gray-200 p-3 rounded-2xl text-xs');
+                row.appendChild(el('span', 'font-bold text-gray-900', isMp3 ? `Audio ${q} kbps (MP3)` : `Video ${q}p (MP4)`));
+                const btn = el('button', `${isMp3 ? 'bg-green-600 hover:bg-green-700' : 'bg-gradient-to-r from-primary to-secondary'} text-white font-extrabold px-6 py-2 rounded-xl shadow text-xs`, 'Go');
+                btn.type = 'button';
+                btn.addEventListener('click', () => startConversion(format, q));
+                row.appendChild(btn);
+                list.appendChild(row);
+            });
+            list.classList.remove('hidden');
+        }
+
+        function openConvertModal() {
+            $('cvPreparing').classList.remove('hidden');
+            $('cvReady').classList.add('hidden');
+            $('cvError').classList.add('hidden');
+            $('cvBar').style.width = '5%';
+            $('cvPct').textContent = '0%';
+            openModal('convertModal');
+        }
+
+        async function startConversion(format, quality) {
+            const token = ++conv.pollToken;
+            openConvertModal();
+            try {
+                await api('/api/convert/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ job_id: conv.jobId, format, quality }),
+                });
+            } catch (err) {
+                return convertFailed(err.message);
+            }
+            pollStatus(token, format, quality);
+        }
+
+        async function pollStatus(token, format, quality) {
+            while (token === conv.pollToken) {
+                try {
+                    const s = await api(`/api/convert/status/${encodeURIComponent(conv.jobId)}`);
+                    if (token !== conv.pollToken) return;
+                    if (s.status === 'done') return convertDone(format, quality);
+                    if (s.status === 'error') return convertFailed(s.error || tr('convertFailed'));
+                    $('cvBar').style.width = Math.max(5, s.progress) + '%';
+                    $('cvPct').textContent = s.progress + '%';
+                } catch (err) {
+                    return convertFailed(err.message);
+                }
+                await new Promise(r => setTimeout(r, 1000));
+            }
+        }
+
+        function convertDone(format, quality) {
+            $('cvBar').style.width = '100%';
+            $('cvPct').textContent = '100%';
+            $('cvPreparing').classList.add('hidden');
+            $('cvReady').classList.remove('hidden');
+            $('cvName').textContent = `${conv.name} • ${format.toUpperCase()} ${quality}${format === 'mp3' ? ' kbps' : 'p'}`;
+            const link = $('cvDownload');
+            link.href = `/api/convert/download/${encodeURIComponent(conv.jobId)}`;
+            link.setAttribute('download', '');
+        }
+
+        function convertFailed(msg) {
+            $('cvPreparing').classList.add('hidden');
+            $('cvReady').classList.add('hidden');
+            $('cvError').classList.remove('hidden');
+            $('cvErrorText').textContent = msg || tr('convertFailed');
+        }
+
+        /* ---------- Voice search (Web Speech API) ---------- */
+        const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let isListening = false;
+
+        function setVoiceStatus(msg, isError = false) {
+            const p = $('voiceStatus');
+            if (!msg) { p.classList.add('hidden'); return; }
+            p.textContent = msg;
+            p.className = `text-xs font-semibold mt-3 ${isError ? 'text-red-600' : 'text-green-600'}`;
+        }
+
+        function setMicActive(active) {
+            isListening = active;
+            $('micBtn').classList.toggle('mic-listening', active);
+        }
+
+        function setupVoice() {
+            const micBtn = $('micBtn');
+            if (!SpeechRec) {
+                micBtn.classList.add('hidden');
+                return;
+            }
+
+            recognition = new SpeechRec();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.maxAlternatives = 1;
+
+            recognition.onstart = () => {
+                setMicActive(true);
+                setVoiceStatus(vmsg('listening'));
+            };
+
+            recognition.onresult = (e) => {
+                const last = e.results[e.results.length - 1];
+                const text = last[0].transcript.trim();
+                $('searchInput').value = text;
+                if (last.isFinal) {
+                    setVoiceStatus('');
+                    startSearch();
+                }
+            };
+
+            recognition.onerror = (e) => {
+                const map = { 'no-speech': 'noSpeech', 'not-allowed': 'denied', 'service-not-allowed': 'denied', 'language-not-supported': 'unsupported' };
+                setVoiceStatus(vmsg(map[e.error] || 'error'), true);
+            };
+
+            recognition.onend = () => setMicActive(false);
+
+            micBtn.addEventListener('click', toggleVoice);
+        }
+
+        function toggleVoice() {
+            if (!recognition) return;
+            if (isListening) {
+                recognition.stop();
+                return;
+            }
+            recognition.lang = VOICE_LANG[lang] || 'en-IN';
+            clearError();
+            try {
+                recognition.start();
+            } catch (_) {
+                // start() throws if already running; ignore
+            }
+        }
+
+        /* ---------- Modals ---------- */
+        function openModal(id) { $(id).classList.remove('hidden'); $(id).classList.add('flex'); }
+        function closeModal(id) {
+            if (id === 'convertModal') conv.pollToken++; // stop polling
+            $(id).classList.add('hidden');
+            $(id).classList.remove('flex');
+        }
+
+        function submitSupportForm(e) {
+            e.preventDefault();
+            const name = $('supName').value.trim();
+            const email = $('supEmail').value.trim();
+            const message = $('supMessage').value.trim();
+            const body = `From: ${name} <${email}>\n\n${message}`;
+            location.href = `mailto:?subject=${encodeURIComponent('TubePulse AI support')}&body=${encodeURIComponent(body)}`;
+            closeModal('contactModal');
+            e.target.reset();
+        }
+
+        /* ---------- Init ---------- */
+        document.addEventListener('DOMContentLoaded', () => {
+            applyLang(lang);
+            loadSettings();
+            setupVoice();
+
+            $('uiLangSelect').addEventListener('change', e => applyLang(e.target.value));
+            $('brandHome').addEventListener('click', () => location.reload());
+            $('searchBtn').addEventListener('click', startSearch);
+            $('searchInput').addEventListener('keydown', e => { if (e.key === 'Enter') startSearch(); });
+            $('loadMoreBtn').addEventListener('click', () => { displayedCount += 4; renderVideoGrid(); });
+            $('getTranscriptBtn').addEventListener('click', fetchTranscript);
+            $('translateSelect').addEventListener('change', translateTranscript);
+            $('btnCopy').addEventListener('click', copyTranscript);
+            $('btnSaveTxt').addEventListener('click', saveTranscript);
+            $('supportForm').addEventListener('submit', submitSupportForm);
+
+            $('fileInput').addEventListener('change', onFileChosen);
+            $('pickMp4').addEventListener('click', () => showQualities('mp4'));
+            $('pickMp3').addEventListener('click', () => showQualities('mp3'));
+
+            document.querySelectorAll('[data-modal]').forEach(b => b.addEventListener('click', () => openModal(b.dataset.modal)));
+            document.querySelectorAll('[data-close]').forEach(b => b.addEventListener('click', () => closeModal(b.dataset.close)));
+            document.querySelectorAll('.modal').forEach(m => m.addEventListener('click', e => { if (e.target === m) closeModal(m.id); }));
+            document.addEventListener('keydown', e => {
+                if (e.key === 'Escape') document.querySelectorAll('.modal').forEach(m => closeModal(m.id));
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const pct = h > 0 ? (document.documentElement.scrollTop / h) * 100 : 0;
+            $('scrollProgress').style.width = pct + '%';
+        });
+    </script>
+</body>
+  </html>
