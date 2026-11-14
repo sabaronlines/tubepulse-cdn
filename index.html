@@ -129,8 +129,8 @@
             <div id="resultBox" class="hidden space-y-6 mb-10">
                 <!-- Video Thumbnail & Real Metadata Card (Uncut Full Thumbnail) -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-8 flex flex-col items-center shadow-lg">
-                    <div class="w-full max-w-lg mb-4 rounded-2xl overflow-hidden border border-gray-200 shadow bg-black flex items-center justify-center">
-                        <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full h-auto object-contain max-h-[340px]">
+                    <div class="w-full max-w-xl mb-4 rounded-2xl overflow-hidden border border-gray-200 shadow bg-black flex items-center justify-center">
+                        <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full h-auto object-contain max-h-[360px]">
                     </div>
                     <div class="w-full text-center sm:text-left">
                         <div class="flex justify-center sm:justify-start items-center gap-2 mb-2">
@@ -141,13 +141,13 @@
                     </div>
                 </div>
 
-                <!-- GET VIDEO DETAILS Section with Y2Mate-style Convert MP3 / Convert MP4 Buttons -->
+                <!-- GET VIDEO DETAILS Section -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
                     <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-file-arrow-down mr-1"></i> GET VIDEO DETAILS</h3>
                     <div id="downloadsList" class="space-y-3"></div>
                 </div>
 
-                <!-- Dedicated Conversion Page View (Y2Mate style separate section with "Go" button) -->
+                <!-- Separate Conversion Page View (Y2Mate style separate section with "Go" button) -->
                 <div id="conversionSection" class="hidden bg-white border border-primary/30 rounded-3xl p-6 shadow-xl space-y-4">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-3">
                         <h4 id="conversionTitle" class="font-extrabold text-sm text-gray-900"><i class="fa-solid fa-rotate text-primary mr-1"></i> Select Format & Convert</h4>
@@ -178,7 +178,7 @@
                                 <option value="en">English</option>
                                 <option value="hi">Hindi (हिंदी)</option>
                                 <option value="or">Odia (ଓଡ଼ିଆ)</option>
-                                <option value="bn">Bengali (বাংলা)</option>
+                                <option value="bn">বাংলা (Bengali)</option>
                                 <option value="te">Telugu (తెలుగు)</option>
                             </select>
                         </div>
@@ -228,7 +228,7 @@
         </main>
     </div>
 
-    <!-- Y2Mate-style Preparing / Ready Modal Popup -->
+    <!-- Y2Mate-style Separate Conversion Page Modal / View -->
     <div id="convertModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white border border-gray-200 p-6 sm:p-8 rounded-3xl max-w-md w-full text-center relative shadow-2xl space-y-4">
             <div id="modalPreparingState">
@@ -595,7 +595,7 @@
             renderVideoGrid();
         }
 
-        // Dedicated Conversion View with "Go" button workflow
+        // Dedicated Conversion View with "Go" button workflow (Y2Mate style)
         function openConversionView(type) {
             const section = document.getElementById('conversionSection');
             const content = document.getElementById('conversionContent');
