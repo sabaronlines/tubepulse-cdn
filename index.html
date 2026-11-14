@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title-tag">TubePulse AI - Professional Media Extractor</title>
+    <title id="site-title-tag">TubePulse AI - Media & Transcript Extractor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -31,7 +31,7 @@
 <body class="bg-darkbg text-white min-h-screen font-sans selection:bg-primary selection:text-white flex flex-col justify-between">
 
     <div>
-        <!-- Professional Header -->
+        <!-- Header -->
         <header class="border-b border-gray-800/80 bg-cardbg/90 backdrop-blur sticky top-0 z-50 px-4 sm:px-8 py-3.5 flex justify-between items-center">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
                 <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-base neon-glow">
@@ -52,16 +52,16 @@
             </div>
         </header>
 
-        <!-- Main Container -->
+        <!-- Main Content -->
         <main class="max-w-3xl mx-auto px-4 py-8">
 
             <div id="ad-slot-header" class="my-3 text-center"></div>
 
-            <!-- Hero Search Card -->
+            <!-- Search Card -->
             <div class="bg-cardbg border border-gray-800/80 p-6 sm:p-8 rounded-2xl shadow-2xl neon-glow mb-8">
                 <div class="text-center mb-6">
                     <h2 class="text-xl sm:text-2xl font-extrabold tracking-tight mb-1">YouTube Transcript & Downloader</h2>
-                    <p class="text-xs text-gray-400">paste URL or search song titles to extract lyrics, transcripts & media streams instantly.</p>
+                    <p class="text-xs text-gray-400">Paste YouTube URL or search song titles to extract lyrics, transcripts & media streams.</p>
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3">
@@ -78,15 +78,14 @@
                 </div>
             </div>
 
-            <!-- Professional Clean Loading State -->
+            <!-- Clean Loading State -->
             <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-800/80 rounded-2xl p-6">
                 <div class="inline-block animate-spin rounded-full h-8 w-8 border-3 border-primary border-t-transparent mb-3"></div>
-                <p id="loadingStatusText" class="text-xs font-medium text-gray-300">Processing media streams & subtitles...</p>
+                <p id="loadingStatusText" class="text-xs font-medium text-gray-300">Fetching data from server...</p>
             </div>
 
             <!-- Results Section -->
             <div id="resultBox" class="hidden space-y-6">
-                <!-- Video Meta Card -->
                 <div class="bg-cardbg border border-gray-800/80 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-4 items-center">
                     <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-48 h-28 object-cover rounded-xl border border-gray-700/60">
                     <div class="flex-1 w-full">
@@ -101,14 +100,12 @@
 
                 <div id="ad-slot-middle" class="my-3 text-center"></div>
 
-                <!-- Tabs & Content Box -->
                 <div class="bg-cardbg border border-gray-800/80 rounded-2xl p-5 sm:p-6">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b border-gray-800 mb-4 pb-3 gap-3">
                         <div class="flex space-x-4">
                             <button onclick="switchTab('transcript')" id="tabTranscriptBtn" class="text-xs sm:text-sm font-bold text-primary border-b-2 border-primary pb-2">Transcript & Lyrics</button>
                             <button onclick="switchTab('downloads')" id="tabDownloadBtn" class="text-xs sm:text-sm font-semibold text-gray-400 pb-2 hover:text-white">Media Downloads</button>
                         </div>
-                        <!-- Language Translator Dropdown -->
                         <div class="flex items-center gap-2">
                             <span class="text-[11px] text-gray-400"><i class="fa-solid fa-language text-primary"></i> Translate:</span>
                             <select id="targetLangSelect" onchange="translateCurrentTranscript()" class="bg-gray-900 text-xs text-white px-2.5 py-1.5 rounded-lg border border-gray-700 focus:outline-none focus:border-primary">
@@ -143,13 +140,13 @@
         </main>
     </div>
 
-    <!-- Clean Footer -->
+    <!-- Footer -->
     <footer class="border-t border-gray-800/80 bg-cardbg py-5 px-4 text-center text-xs text-gray-400">
         <div class="max-w-3xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
             <p>© 2026 TubePulse AI. All rights reserved.</p>
             <div class="flex flex-wrap justify-center gap-4">
-                <span onclick="toggleModal('privacyModal')" class="hover:text-primary cursor-pointer">Privacy</span>
-                <span onclick="toggleModal('termsModal')" class="hover:text-primary cursor-pointer">Terms</span>
+                <span onclick="toggleModal('privacyModal')" class="hover:text-primary cursor-pointer">Privacy Policy</span>
+                <span onclick="toggleModal('termsModal')" class="hover:text-primary cursor-pointer">Terms & Conditions</span>
                 <span onclick="toggleModal('disclaimerModal')" class="hover:text-primary cursor-pointer">Disclaimer</span>
                 <a id="footerWhatsAppLink" href="https://wa.me/919876543210" target="_blank" class="hover:text-green-400"><i class="fa-brands fa-whatsapp text-green-500 mr-1"></i> Contact</a>
             </div>
@@ -193,9 +190,9 @@
     </div>
 
     <!-- Policy Modals -->
-    <div id="privacyModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p>Privacy Policy: We do not store personal records.</p><button onclick="toggleModal('privacyModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded">Close</button></div></div>
-    <div id="termsModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p>Terms: Use for educational and personal analysis only.</p><button onclick="toggleModal('termsModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded">Close</button></div></div>
-    <div id="disclaimerModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p>Disclaimer: Powered by public YouTube streams.</p><button onclick="toggleModal('disclaimerModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded">Close</button></div></div>
+    <div id="privacyModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p><b>Privacy Policy:</b> We respect your privacy. No personal user data is stored on our servers.</p><button onclick="toggleModal('privacyModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded text-xs">Close</button></div></div>
+    <div id="termsModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p><b>Terms & Conditions:</b> Use this platform strictly for educational and personal video analysis.</p><button onclick="toggleModal('termsModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded text-xs">Close</button></div></div>
+    <div id="disclaimerModal" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4"><div class="bg-cardbg p-5 rounded-2xl max-w-sm w-full text-xs text-gray-300"><p><b>Disclaimer:</b> Powered by public YouTube streams and official public APIs.</p><button onclick="toggleModal('disclaimerModal')" class="mt-3 bg-gray-800 text-white px-3 py-1.5 rounded text-xs">Close</button></div></div>
 
     <script>
         let rawTranscriptData = [];
@@ -229,7 +226,7 @@
 
             document.getElementById('loadingBox').classList.remove('hidden');
             document.getElementById('resultBox').classList.add('hidden');
-            document.getElementById('loadingStatusText').innerText = "Fetching video data and transcripts...";
+            document.getElementById('loadingStatusText').innerText = "Fetching data from backend server...";
 
             try {
                 const res = await fetch(`${backend}/api/extract?q=` + encodeURIComponent(query));
@@ -278,7 +275,7 @@
                     const timeStr = `${min}:${sec < 10 ? '0' : ''}${sec}`;
                     const div = document.createElement('div');
                     div.className = "flex gap-3 hover:bg-gray-800/50 p-1 rounded text-xs";
-                    div.innerHTML = `<span class="text-primary font-mono w-12">[$" + timeStr + "]</span> <span class="text-gray-200">${item.text}</span>`;
+                    div.innerHTML = `<span class="text-primary font-mono w-12">[${timeStr}]</span> <span class="text-gray-200">${item.text}</span>`;
                     tc.appendChild(div);
                 });
             } else {
