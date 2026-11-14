@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="site-title-tag">TubePulse AI - YouTube Transcript & Media Downloader</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts for Multi-Language Support (Odia, Hindi, Bengali, English) -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+Oriya:wght@400;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -69,7 +68,6 @@
             animation: waveMotion 12s linear infinite;
         }
     </style>
-    <!-- Dynamic Header Scripts & Verification Meta Tags Injection from Admin Panel -->
     <script>
         const savedHeadScripts = localStorage.getItem('admin_header_ads');
         if(savedHeadScripts) { document.write(savedHeadScripts); }
@@ -85,7 +83,7 @@
     <div class="floating-blob bottom-20 right-5" style="animation-delay: 4s;"></div>
 
     <div>
-        <!-- Responsive Header with Language Selector -->
+        <!-- Responsive Header -->
         <header class="border-b border-gray-200 bg-cardbg/90 backdrop-blur sticky top-0 z-40 px-4 sm:px-12 py-4 flex justify-between items-center shadow-sm">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="location.reload()">
                 <div id="logoIconBox" class="w-10 h-10 rounded-xl bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white font-bold text-lg neon-glow">
@@ -130,52 +128,41 @@
                 </div>
             </div>
 
-            <!-- Highlighted HOW TO USE Section -->
-            <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-10 shadow-sm">
-                <div class="flex items-center gap-3 mb-3">
-                    <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
-                        <i class="fa-solid fa-lightbulb"></i>
-                    </div>
-                    <h3 id="txtHowToUseTitle" class="text-sm font-extrabold text-gray-900 tracking-wide uppercase">HOW TO USE</h3>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-700">
-                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 1:</strong> <span id="txtStep1">Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.</span>
-                    </div>
-                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to instantly extract video metadata, thumbnail, and timestamped lyrics.</span>
-                    </div>
-                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
-                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fast Loading State -->
+            <!-- Professional Loading & Progress Bar State -->
             <div id="loadingBox" class="hidden text-center py-10 bg-cardbg border border-gray-200 rounded-3xl p-6 mb-8 shadow-md">
                 <div class="inline-block animate-spin rounded-full h-10 w-10 border-3 border-primary border-t-transparent mb-3"></div>
-                <p id="loadingStatusText" class="text-xs font-semibold text-gray-700 mb-2">Searching & extracting streams instantly...</p>
-                <div class="w-full bg-gray-100 rounded-full h-2 max-w-xs mx-auto overflow-hidden border border-gray-200">
-                    <div class="bg-gradient-to-r from-primary to-secondary h-2 rounded-full animate-pulse w-full"></div>
+                <p id="loadingStatusText" class="text-xs font-semibold text-gray-700 mb-2">Connecting to secure CDN node...</p>
+                <div class="w-full bg-gray-100 rounded-full h-2.5 max-w-xs mx-auto overflow-hidden border border-gray-200 mb-2">
+                    <div id="progressBar" class="bg-gradient-to-r from-primary to-secondary h-2.5 rounded-full transition-all duration-500" style="width: 25%;"></div>
+                </div>
+                <p id="timerText" class="text-[11px] text-gray-500">Please wait while we fetch and convert streams...</p>
+            </div>
+
+            <!-- Multi-Result Selection Grid Container -->
+            <div id="selectionGridBox" class="hidden space-y-4 mb-10">
+                <h3 class="text-xs font-extrabold text-gray-800 uppercase tracking-wider"><i class="fa-solid fa-list text-primary mr-1"></i> Select Video Result:</h3>
+                <div id="videoResultsList" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+                <div id="loadMoreBox" class="text-center pt-2">
+                    <button onclick="loadMoreResults()" class="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold text-xs px-6 py-2.5 rounded-xl border border-gray-300 transition shadow-sm">Load More Results <i class="fa-solid fa-chevron-down ml-1"></i></button>
                 </div>
             </div>
 
-            <!-- Single-Page Results Flow -->
+            <!-- Single-Page Results Flow (Thumbnail, Downloads, Transcript) -->
             <div id="resultBox" class="hidden space-y-6 mb-10">
                 <!-- 1. Video Thumbnail & Meta Card -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-4 sm:p-6 flex flex-col sm:flex-row gap-5 items-center shadow-md">
-                    <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-56 h-32 object-cover rounded-2xl border border-gray-200 shadow">
+                    <img id="vidThumbnail" src="" alt="Thumbnail" class="w-full sm:w-56 h-32 object-cover rounded-2xl border border-gray-200 shadow bg-gray-100">
                     <div class="flex-1 w-full text-left">
                         <div class="flex items-center gap-2 mb-2">
                             <span id="vidLangBadge" class="bg-primary/10 text-primary text-[10px] font-extrabold px-2.5 py-1 rounded-md uppercase tracking-wider">Detected: EN</span>
-                            <span class="bg-green-100 text-green-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md">Ready</span>
+                            <span class="bg-green-100 text-green-700 text-[10px] font-extrabold px-2.5 py-1 rounded-md">Ready to Download</span>
                         </div>
                         <h3 id="vidTitle" class="text-base sm:text-lg font-bold text-gray-900 line-clamp-2">Video Title</h3>
                         <p id="vidUploader" class="text-xs text-gray-500 mt-1"><i class="fa-solid fa-user mr-1 text-primary"></i> Creator</p>
                     </div>
                 </div>
 
-                <!-- 2. Media Download Links Section -->
+                <!-- 2. Media Download Links Section (MP4 & MP3 Proxy Streams) -->
                 <div class="bg-cardbg border border-gray-200 rounded-3xl p-5 sm:p-6 shadow-md">
                     <h3 id="txtDownloadHeading" class="text-xs font-extrabold text-primary mb-3 uppercase tracking-wider"><i class="fa-solid fa-download mr-1"></i> Media Download Links</h3>
                     <div id="downloadsList" class="space-y-2.5"></div>
@@ -205,6 +192,27 @@
                             </div>
                         </div>
                         <div id="transcriptOutput" class="bg-gray-50 border border-gray-200 rounded-2xl p-4 h-64 overflow-y-auto text-xs text-gray-800 space-y-2 font-mono shadow-inner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Highlighted HOW TO USE Section (Placed Below Results & Search) -->
+            <div class="bg-gradient-to-r from-primary/5 via-secondary/5 to-primary/5 border border-primary/20 p-5 sm:p-6 rounded-3xl mb-6 shadow-sm">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-8 h-8 rounded-xl bg-primary text-white flex items-center justify-center text-xs font-extrabold shadow">
+                        <i class="fa-solid fa-lightbulb"></i>
+                    </div>
+                    <h3 id="txtHowToUseTitle" class="text-sm font-extrabold text-gray-900 tracking-wide uppercase">HOW TO USE</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-gray-700">
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 1:</strong> <span id="txtStep1">Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.</span>
+                    </div>
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 2:</strong> <span id="txtStep2">Click 'Search' to view matching results, select your preferred video, and extract streams.</span>
+                    </div>
+                    <div class="bg-white/80 p-3.5 rounded-2xl border border-gray-200 shadow-sm">
+                        <strong class="text-primary block mb-1">Step 3:</strong> <span id="txtStep3">Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!</span>
                     </div>
                 </div>
             </div>
@@ -304,10 +312,12 @@
         </div>
     </div>
 
-    <!-- Script Engine with Multi-Language Dictionaries -->
+    <!-- Script Engine -->
     <script>
         let rawTranscriptData = [];
         let currentVideoTitle = "media";
+        let allSearchResults = [];
+        let displayedCount = 4;
 
         const translations = {
             en: {
@@ -317,7 +327,7 @@
                 searchBtn: "Search",
                 howToUseTitle: "HOW TO USE",
                 step1: "Paste YouTube video link or type song title (Odia, Hindi, etc.) in the search box.",
-                step2: "Click 'Search' to instantly extract video metadata, thumbnail, and timestamped lyrics.",
+                step2: "Click 'Search' to view matching results, select your preferred video, and extract streams.",
                 step3: "Download MP4 video, MP3 audio, or copy translated transcripts in 1 click!",
                 downloadHeading: "Media Download Links",
                 transcriptHeading: "Auto-Detected Transcript & Lyrics",
@@ -329,10 +339,10 @@
                 heroTitle: "यूट्यूब ट्रांसक्रिप्ट और डाउनलोडर",
                 heroDesc: "यूट्यूब यूआरएल पेस्ट करें या गाने का नाम खोजें (ओडिया, हिंदी, अंग्रेजी, बंगाली) और तुरंत लिरिक्स और मीडिया डाउनलोड करें।",
                 searchPlaceholder: "https://youtube.com/watch?v=... या गाने का नाम",
-                searchBtn: "खोजें (Search)",
+                searchBtn: "खोजें",
                 howToUseTitle: "कैसे उपयोग करें (HOW TO USE)",
                 step1: "सर्च बॉक्स में यूट्यूब वीडियो लिंक पेस्ट करें या गाने का नाम टाइप करें।",
-                step2: "वीडियो डिटेल्स, थंबनेल और टाइमस्टैम्पेड लिरिक्स तुरंत देखने के लिए 'Search' पर क्लिक करें।",
+                step2: "मिलते-जुलते वीडियो परिणाम देखने के लिए 'Search' पर क्लिक करें और अपना पसंदीदा वीडियो चुनें।",
                 step3: "MP4 वीडियो, MP3 ऑडियो डाउनलोड करें या 1 क्लिक में ट्रांसक्रिप्ट कॉपी करें!",
                 downloadHeading: "मीडिया डाउनलोड लिंक",
                 transcriptHeading: "ऑटो-डिटेक्टेड ट्रांसक्रिप्ट और लिरिक्स",
@@ -344,10 +354,10 @@
                 heroTitle: "ୟୁଟ୍ୟୁବ୍ ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଡାଉନଲୋଡର୍",
                 heroDesc: "ୟୁଟ୍ୟୁବ୍ ଲିଙ୍କ୍ ଦିଅନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଖୋଜନ୍ତୁ (ଓଡ଼ିଆ, ହିନ୍ଦୀ, ଇଂରାଜୀ) ଏବଂ ତବ୍‌କ୍ଷଣାତ୍ ଡାଉନଲୋଡ୍ କରନ୍ତୁ।",
                 searchPlaceholder: "https://youtube.com/watch?v=... କିମ୍ବା ଗୀତର ନାମ",
-                searchBtn: "ଖୋଜନ୍ତୁ (Search)",
+                searchBtn: "ଖୋଜନ୍ତୁ",
                 howToUseTitle: "କିପରି ବ୍ୟବହାର କରିବେ (HOW TO USE)",
                 step1: "ସର୍ଚ୍ଚ ବକ୍ସରେ ୟୁଟ୍ୟୁବ୍ ଭିଡିଓ ଲିଙ୍କ୍ ପେଷ୍ଟ କରନ୍ତୁ କିମ୍ବା ଗୀତର ନାମ ଲେଖନ୍ତୁ।",
-                step2: "ଭିଡିଓ ଡେଟାଏଲ୍ସ ଏବଂ ଲିରିକ୍ସ ପାଇଁ 'Search' ଉପରେ କ୍ଲିକ୍ କରନ୍ତୁ।",
+                step2: "ରେଜଲ୍ଟ ଦେଖିବା ପାଇଁ 'Search' କ୍ଲିକ୍ କରନ୍ତୁ ଏବଂ ଆପଣଙ୍କ ପସନ୍ଦର ଭିଡିଓ ବାଛନ୍ତୁ।",
                 step3: "MP4 ଭିଡିଓ, MP3 ଅଡିଓ ଡାଉନଲୋଡ୍ କରନ୍ତୁ କିମ୍ବା ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ କପି କରନ୍ତୁ!",
                 downloadHeading: "ମିଡିଆ ଡାଉନଲୋଡ୍ ଲିଙ୍କ୍",
                 transcriptHeading: "ଟ୍ରାନ୍ସକ୍ରିପ୍ଟ ଏବଂ ଲିରିକ୍ସ",
@@ -359,10 +369,10 @@
                 heroTitle: "ইউটিউব ট্রান্সক্রিপ্ট এবং ডাউনলোডার",
                 heroDesc: "ইউটিউব ইউআরএল পেস্ট করুন বা গানের নাম খুঁজুন (বাংলা, হিন্দি, ইংরেজি) এবং তাৎক্ষণিকভাবে লিরিকস ও মিডিয়া ডাউনলোড করুন।",
                 searchPlaceholder: "https://youtube.com/watch?v=... বা গানের নাম",
-                searchBtn: "অনুসন্ধান (Search)",
+                searchBtn: "অনুসন্ধান",
                 howToUseTitle: "কীভাবে ব্যবহার করবেন (HOW TO USE)",
                 step1: "সার্চ বক্সে ইউটিউব ভিডিও লিঙ্ক পেস্ট করুন বা গানের নাম টাইপ করুন।",
-                step2: "ভিডিও মেটাডাটা এবং লিরিকস দেখতে 'Search' এ ক্লিক করুন।",
+                step2: "ফলাফল দেখতে 'Search' এ ক্লিক করুন এবং আপনার পছন্দের ভিডিওটি নির্বাচন করুন।",
                 step3: "MP4 ভিডিও, MP3 অডিও ডাউনলোড করুন বা এক ক্লিকে ট্রান্সক্রিপ্ট কপি করুন!",
                 downloadHeading: "মিডিয়া ডাউনলোড লিঙ্ক",
                 transcriptHeading: "স্বয়ংক্রিয় ট্রান্সক্রিপ্ট এবং লিরিকস",
@@ -431,23 +441,106 @@
             const email = document.getElementById('supEmail').value;
             const msg = document.getElementById('supMessage').value;
             const fileInput = document.getElementById('supFile');
-            
             let fileInfo = fileInput.files.length > 0 ? ` (Attached: ${fileInput.files[0].name})` : '';
             alert(`Thank you, ${name}! Your support request has been submitted successfully.\nWe will contact you at ${email} shortly.${fileInfo}`);
             toggleModal('contactModal');
             e.target.reset();
         }
 
+        // Search flow with progress bar simulation & multi-result grid
         async function startSearch() {
             const query = document.getElementById('searchInput').value.trim();
             if(!query) { alert('कृपया YouTube URL या गाने का नाम दर्ज करें!'); return; }
 
             document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('selectionGridBox').classList.add('hidden');
             document.getElementById('loadingBox').classList.remove('hidden');
+
+            const statusEl = document.getElementById('loadingStatusText');
+            const progressEl = document.getElementById('progressBar');
+            const timerEl = document.getElementById('timerText');
+
+            statusEl.innerText = "Connecting to secure CDN node...";
+            progressEl.style.width = "30%";
 
             const backend = getBackendUrl();
             try {
-                const res = await fetch(`${backend}/api/extract?q=` + encodeURIComponent(query));
+                setTimeout(() => {
+                    statusEl.innerText = "Searching video streams & metadata...";
+                    progressEl.style.width = "65%";
+                }, 500);
+
+                const res = await fetch(`${backend}/api/search?q=` + encodeURIComponent(query));
+                const data = await res.json();
+                
+                progressEl.style.width = "100%";
+                statusEl.innerText = "Results loaded successfully!";
+                timerEl.innerHTML = `<span class="text-green-600 font-bold"><i class="fa-solid fa-circle-check mr-1"></i> Ready!</span>`;
+
+                setTimeout(() => {
+                    document.getElementById('loadingBox').classList.add('hidden');
+                    if(data.results && data.results.length > 0) {
+                        allSearchResults = data.results;
+                        if(allSearchResults.length === 1) {
+                            // Direct select if only 1 result (or direct URL)
+                            selectVideoToExtract(allSearchResults[0].video_id);
+                        } else {
+                            displayedCount = Math.min(4, allSearchResults.length);
+                            renderVideoGrid();
+                            document.getElementById('selectionGridBox').classList.remove('hidden');
+                        }
+                    } else {
+                        alert('कोई वीडियो नहीं मिला। कृपया दूसरा कीवर्ड दें।');
+                    }
+                }, 600);
+            } catch (err) {
+                document.getElementById('loadingBox').classList.add('hidden');
+                alert('कनेक्शन एरर: ' + err.message);
+            }
+        }
+
+        function renderVideoGrid() {
+            const listEl = document.getElementById('videoResultsList');
+            listEl.innerHTML = '';
+            
+            const sliceItems = allSearchResults.slice(0, displayedCount);
+            sliceItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-cardbg border border-gray-200 hover:border-primary p-3 rounded-2xl flex gap-3 items-center cursor-pointer transition shadow-sm hover:shadow";
+                card.onclick = () => selectVideoToExtract(item.video_id);
+                card.innerHTML = `
+                    <img src="${item.thumbnail}" alt="Thumb" class="w-28 h-16 object-cover rounded-xl border border-gray-200">
+                    <div class="flex-1 overflow-hidden">
+                        <h4 class="font-bold text-xs text-gray-900 line-clamp-2">${item.title}</h4>
+                        <p class="text-[11px] text-gray-500 mt-0.5"><i class="fa-solid fa-user text-primary mr-1"></i> ${item.uploader}</p>
+                        <span class="inline-block mt-1 bg-primary/10 text-primary font-bold text-[10px] px-2 py-0.5 rounded">Select & Convert</span>
+                    </div>
+                `;
+                listEl.appendChild(card);
+            });
+
+            if(displayedCount >= allSearchResults.length) {
+                document.getElementById('loadMoreBox').classList.add('hidden');
+            } else {
+                document.getElementById('loadMoreBox').classList.remove('hidden');
+            }
+        }
+
+        function loadMoreResults() {
+            displayedCount += 4;
+            renderVideoGrid();
+        }
+
+        async function selectVideoToExtract(videoId) {
+            document.getElementById('selectionGridBox').classList.add('hidden');
+            document.getElementById('loadingBox').classList.remove('hidden');
+            document.getElementById('loadingStatusText').innerText = "Preparing secure download streams & transcripts...";
+            document.getElementById('progressBar').style.width = "50%";
+            document.getElementById('timerText').innerHTML = "Extracting HD formats...";
+
+            const backend = getBackendUrl();
+            try {
+                const res = await fetch(`${backend}/api/extract?q=` + videoId);
                 const data = await res.json();
                 
                 document.getElementById('loadingBox').classList.add('hidden');
@@ -455,7 +548,7 @@
                     currentVideoTitle = data.title || "video";
                     document.getElementById('vidTitle').innerText = currentVideoTitle;
                     document.getElementById('vidUploader').innerHTML = `<i class="fa-solid fa-user mr-1 text-primary"></i> ${data.uploader || 'Creator'}`;
-                    document.getElementById('vidThumbnail').src = data.thumbnail;
+                    document.getElementById('vidThumbnail').src = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
                     document.getElementById('vidLangBadge').innerText = `Detected: ${data.language || 'en'}`.toUpperCase();
 
                     rawTranscriptData = data.transcript || [];
@@ -493,7 +586,7 @@
                     }
 
                     const thumbA = document.createElement('a');
-                    thumbA.href = data.thumbnail;
+                    thumbA.href = data.thumbnail || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
                     thumbA.target = "_blank";
                     thumbA.className = "flex justify-between items-center bg-gray-50 border border-gray-200 hover:border-secondary p-3.5 rounded-2xl transition text-xs text-gray-800 shadow-sm";
                     thumbA.innerHTML = `<span><i class="fa-solid fa-image text-secondary mr-2"></i> Max Resolution Thumbnail</span> <span class="text-secondary font-extrabold"><i class="fa-solid fa-download"></i> Download Image</span>`;
@@ -501,7 +594,7 @@
 
                     document.getElementById('resultBox').classList.remove('hidden');
                 } else {
-                    alert('डाटा फेच करने में समस्या आई। कृपया सही URL या नाम दें।');
+                    alert('डाटा फेच करने में समस्या आई। कृपया पुनः प्रयास करें।');
                 }
             } catch (err) {
                 document.getElementById('loadingBox').classList.add('hidden');
