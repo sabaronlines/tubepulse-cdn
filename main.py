@@ -7,8 +7,6 @@ import yt_dlp
 import re
 import httpx
 import urllib.parse
-import os
-import speech_recognition as sr
 
 app = FastAPI()
 
